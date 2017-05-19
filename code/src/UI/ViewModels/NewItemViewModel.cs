@@ -80,7 +80,14 @@ namespace Microsoft.Templates.UI.ViewModels
                 SetProperty(ref _templateSelected, value);
                 if (value != null)
                 {
-                    ItemName = Naming.Infer(new List<string>(), value.Name);
+                    if (_templateSelected.GetMultipleInstance())
+                    {
+                        ItemName = Naming.Infer(new List<string>(), value.Name);
+                    }
+                    else
+                    {
+                        ItemName = _templateSelected.GetDefaultName();
+                    }
                 }
             }
         }
@@ -171,7 +178,8 @@ namespace Microsoft.Templates.UI.ViewModels
             var userSelection = new UserSelection()
             {
                 ProjectType = _contextProjectType,
-                Framework = _contextFramework
+                Framework = _contextFramework,
+                HomeName = ""
             };
             AddTemplate(userSelection, TemplateSelected);
             var dependencies = GenComposer.GetAllDependencies(TemplateSelected, _contextFramework);
