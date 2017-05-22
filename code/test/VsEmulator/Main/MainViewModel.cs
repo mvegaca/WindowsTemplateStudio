@@ -27,6 +27,7 @@ using Microsoft.VisualStudio.TemplateWizard;
 using Microsoft.Templates.UI;
 using Microsoft.Templates.VsEmulator.NewItem;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace Microsoft.Templates.VsEmulator.Main
 {
@@ -43,6 +44,7 @@ namespace Microsoft.Templates.VsEmulator.Main
 
         public string ProjectName { get; private set; }
         public string OutputPath { get; private set; }
+        public List<string> ProjectItems { get; } = new List<string>();
 
         public RelayCommand NewProjectCommand => new RelayCommand(NewProject);
         public RelayCommand NewItemCommand => new RelayCommand(NewItem);
