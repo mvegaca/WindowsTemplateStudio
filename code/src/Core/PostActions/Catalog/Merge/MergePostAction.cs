@@ -10,6 +10,7 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 // ******************************************************************
 
+using Microsoft.Templates.Core.Diagnostics;
 using System;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,11 @@ namespace Microsoft.Templates.Core.PostActions.Catalog.Merge
 
             if (string.IsNullOrEmpty(originalFilePath))
             {
-                throw new FileNotFoundException($"There is no merge target for file '{_config}'");
+                //TODO: Change this to show all merges that were not successfull
+                AppHealth.Current.Error.TrackAsync($"There is no merge target for file '{_config}'").FireAndForget();
+                File.Delete(_config);
+                return;
+                //throw new FileNotFoundException($"There is no merge target for file '{_config}'");
             }
 
             var source = File.ReadAllLines(originalFilePath).ToList();

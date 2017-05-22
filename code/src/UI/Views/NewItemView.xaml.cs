@@ -22,16 +22,20 @@ namespace Microsoft.Templates.UI.Views
     /// </summary>
     public partial class NewItemView : Window
     {
+        private string _projectType;
+        private string _framework;
+
         public NewItemViewModel ViewModel { get; }
 
         public UserSelection Result { get; set; }
 
         public ProjectTemplatesViewModel ProjectTemplates { get; private set; } = new ProjectTemplatesViewModel();
 
-        public NewItemView()
+        public NewItemView(string projectType, string framework)
         {
             ViewModel = new NewItemViewModel(this);
-            
+            _projectType = projectType;
+            _framework = framework;
             DataContext = ViewModel;
             Loaded += NewItemViewModel_Loaded;
             InitializeComponent();
@@ -39,7 +43,7 @@ namespace Microsoft.Templates.UI.Views
 
         private async void NewItemViewModel_Loaded(object sender, RoutedEventArgs e)
         {
-            await ViewModel.InitializeAsync();
+            await ViewModel.InitializeAsync(_projectType, _framework);
             
         }
     }

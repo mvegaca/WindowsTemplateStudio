@@ -10,7 +10,7 @@
     "wts.type": "composition",    
     "wts.version": "1.0.0",    
     "wts.licenses": "[MVVM Light](http://mvvmlight.codeplex.com/license)",
-    "wts.compositionFilter": "$framework == MVVMLight & wts.type == project"
+    "wts.compositionFilter": "$framework == MVVMLight & wts.type == project|projectincremental"
   },
   "sourceName": "wts.ItemName",
   "preferNameDirectory": true,

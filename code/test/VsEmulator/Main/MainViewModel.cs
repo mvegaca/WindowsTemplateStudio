@@ -26,6 +26,7 @@ using Microsoft.Templates.VsEmulator.TemplatesContent;
 using Microsoft.VisualStudio.TemplateWizard;
 using Microsoft.Templates.UI;
 using Microsoft.Templates.VsEmulator.NewItem;
+using System.Xml.Linq;
 
 namespace Microsoft.Templates.VsEmulator.Main
 {
@@ -172,11 +173,23 @@ namespace Microsoft.Templates.VsEmulator.Main
 
                     GenContext.Current = this;
 
-                    var userSelection = GenController.GetUserSelectionNewItem();
+                    var path = Path.Combine(GenContext.Current.OutputPath, "Package.appxmanifest");
+                    var manifest = XElement.Load(path);
+
+                    var metadata = manifest.Descendants().FirstOrDefault(e => e.Name.LocalName == "Metadata");
+                    var projectType = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "projectType")?.Attribute("Value")?.Value;
+                    var framework = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "framework")?.Attribute("Value")?.Value;
+                    var projectIncremental = false;
+                    if (string.IsNullOrEmpty(projectType) || string.IsNullOrEmpty(framework))
+                    {
+                        projectIncremental = true;
+                    }
+
+                    var userSelection = GenController.GetUserSelectionNewItem(projectType, framework);
 
                     if (userSelection != null)
                     {
-                        await GenController.GenerateAsync(userSelection, true);
+                        await GenController.GenerateAsync(userSelection, false, projectIncremental);
 
                         GenContext.ToolBox.Shell.ShowStatusBarMessage("Project created!!!");
                     }

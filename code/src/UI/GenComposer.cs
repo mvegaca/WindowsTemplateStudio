@@ -108,7 +108,7 @@ namespace Microsoft.Templates.UI
 
         
 
-        public static IEnumerable<GenInfo> Compose(UserSelection userSelection, bool partialGeneration = false)
+        public static IEnumerable<GenInfo> Compose(UserSelection userSelection, bool projectGeneration = true, bool projectIncremental = false)
         {
             var genQueue = new List<GenInfo>();
 
@@ -117,9 +117,9 @@ namespace Microsoft.Templates.UI
                 return genQueue;
             }
 
-            if (!partialGeneration)
+            if (projectGeneration || projectIncremental)
             {
-                AddProject(userSelection, genQueue);
+                AddProject(userSelection, genQueue, projectIncremental);
             }
             AddTemplates(userSelection.Pages, genQueue, userSelection);
             AddTemplates(userSelection.Features, genQueue, userSelection);
@@ -129,9 +129,9 @@ namespace Microsoft.Templates.UI
             return genQueue;
         }        
 
-        private static void AddProject(UserSelection userSelection, List<GenInfo> genQueue)
+        private static void AddProject(UserSelection userSelection, List<GenInfo> genQueue, bool projectIncremental = false)
         {
-            var projectTemplate = GetProjectTemplate(userSelection.ProjectType, userSelection.Framework);
+            var projectTemplate = GetProjectTemplate(userSelection.ProjectType, userSelection.Framework, projectIncremental);
             var genProject = CreateGenInfo(GenContext.Current.ProjectName, projectTemplate, genQueue);
 
             genProject.Parameters.Add(GenParams.Username, Environment.UserName);
@@ -141,12 +141,22 @@ namespace Microsoft.Templates.UI
             genProject.Parameters.Add(GenParams.Framework, userSelection.Framework);
         }
 
-        private static ITemplateInfo GetProjectTemplate(string projectType, string framework)
+        private static ITemplateInfo GetProjectTemplate(string projectType, string framework, bool projectIncremental = false)
         {
-            return GenContext.ToolBox.Repo
-                                    .Find(t => t.GetTemplateType() == TemplateType.Project
-                                            && t.GetProjectTypeList().Any(p => p == projectType)
-                                            && t.GetFrameworkList().Any(f => f == framework));
+            if (projectIncremental)
+            {
+                return GenContext.ToolBox.Repo
+                                        .Find(t => t.GetTemplateType() == TemplateType.ProjectIncremental
+                                                && t.GetProjectTypeList().Any(p => p == projectType)
+                                                && t.GetFrameworkList().Any(f => f == framework));
+            }
+            else
+            {
+                return GenContext.ToolBox.Repo
+                                        .Find(t => t.GetTemplateType() == TemplateType.Project
+                                                && t.GetProjectTypeList().Any(p => p == projectType)
+                                                && t.GetFrameworkList().Any(f => f == framework));
+            }
         }
 
         private static void AddTemplates(IEnumerable<(string name, ITemplateInfo template)> templates, List<GenInfo> genQueue, UserSelection userSelection)

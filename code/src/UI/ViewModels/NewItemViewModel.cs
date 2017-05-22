@@ -47,10 +47,9 @@ namespace Microsoft.Templates.UI.ViewModels
 
         public List<(string Name, ITemplateInfo Template)> SavedTemplates { get; } = new List<(string Name, ITemplateInfo Template)>();
 
-        public NewItemViewModel(NewItemView newItemView)
+        public NewItemViewModel(NewItemView newItemView )
         {
             _newItemView = newItemView;
-            
         }
 
         public ICommand OkCommand => new RelayCommand(SaveAndClose);
@@ -104,28 +103,22 @@ namespace Microsoft.Templates.UI.ViewModels
         }
 
   
-        public async Task InitializeAsync()
+        public async Task InitializeAsync(string projectType, string framework)
         {
             await GenContext.ToolBox.Repo.SynchronizeAsync();
-            var path =  Path.Combine(GenContext.Current.OutputPath, "Package.appxmanifest");
-            var manifest = XElement.Load(path);
-
-            var metadata = manifest.Descendants().FirstOrDefault(e => e.Name.LocalName == "Metadata");
-            var projectType = metadata?.Descendants().FirstOrDefault(m=> m.Attribute("Name").Value == "projectType")?.Attribute("Value")?.Value;
-            var framework = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "framework")?.Attribute("Value")?.Value;
 
             ProjectTypes.AddRange(GenContext.ToolBox.Repo.GetProjectTypes().Select(f => f.Name));
-            if (projectType != null)
+            if (!string.IsNullOrEmpty(projectType))
             {
-                ContextProjectType = projectType;
                 EnableContextSelection = false;
+                ContextProjectType = projectType;
             }
             else
             {
                 ContextProjectType = ProjectTypes.FirstOrDefault();
                 EnableContextSelection = true;
             }
-            if (framework != null)
+            if (!string.IsNullOrEmpty(framework))
             {
                 ContextFramework = framework;
             }

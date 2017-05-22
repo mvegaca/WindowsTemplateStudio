@@ -63,9 +63,9 @@ namespace Microsoft.Templates.UI
             return null;
         }
 
-        public static UserSelection GetUserSelectionNewItem()
+        public static UserSelection GetUserSelectionNewItem(string projectType, string framework)
         {
-            var newItem = new NewItemView();
+            var newItem = new NewItemView(projectType, framework);
 
             try
             {
@@ -98,11 +98,11 @@ namespace Microsoft.Templates.UI
         }
 
         //TODO: Review this!!
-        public static async Task GenerateAsync(UserSelection userSelection, bool partialGeneration = false)
+        public static async Task GenerateAsync(UserSelection userSelection, bool projectGeneration = true, bool projectIncremental = false)
         {
             try
             {
-                await UnsafeGenerateAsync(userSelection, partialGeneration);
+                await UnsafeGenerateAsync(userSelection, projectGeneration, projectIncremental);
             }
             catch (Exception ex)
             {
@@ -114,9 +114,9 @@ namespace Microsoft.Templates.UI
             }
         }
 
-        public static async Task UnsafeGenerateAsync(UserSelection userSelection, bool partialGeneration = false)
+        public static async Task UnsafeGenerateAsync(UserSelection userSelection, bool projectGeneration = true, bool projectIncremental = false)
         {
-            var genItems = GenComposer.Compose(userSelection, partialGeneration).ToList();
+            var genItems = GenComposer.Compose(userSelection, projectGeneration, projectIncremental).ToList();
             var chrono = Stopwatch.StartNew();
             var genResults = new Dictionary<string, TemplateCreationResult>();
 

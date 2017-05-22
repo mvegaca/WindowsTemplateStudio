@@ -43,6 +43,8 @@ namespace Microsoft.Templates.Core
                     return TemplateType.Feature;
                 case "composition":
                     return TemplateType.Composition;
+                case "projectincremental":
+                    return TemplateType.ProjectIncremental;
                 default:
                     return TemplateType.Unspecified;
             }
