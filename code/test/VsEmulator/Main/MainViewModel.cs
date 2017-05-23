@@ -170,10 +170,12 @@ namespace Microsoft.Templates.VsEmulator.Main
                 SolutionName = Path.GetFileNameWithoutExtension(SolutionPath);
 
                 var projFile = Directory.EnumerateFiles(Path.GetDirectoryName(SolutionPath), "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
-                ProjectName = Path.GetFileNameWithoutExtension(projFile);
-                OutputPath = Path.GetDirectoryName(projFile);
 
                 GenContext.Current = this;
+
+                ProjectName = Path.GetFileNameWithoutExtension(projFile);
+                OutputPath = Path.GetDirectoryName(projFile);
+                ProjectItems.Clear();
             }
         }
 
