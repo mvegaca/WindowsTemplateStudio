@@ -22,12 +22,12 @@ using System.Windows.Forms;
 
 namespace Microsoft.Templates.VsEmulator.NewItem
 {
-    public class NewItemViewModel : Observable
+    public class LoadProjectViewModel : Observable
     {
 
         private readonly Window _host;
 
-        public NewItemViewModel(Window host)
+        public LoadProjectViewModel(Window host)
         {
             _host = host;
         }
@@ -49,7 +49,6 @@ namespace Microsoft.Templates.VsEmulator.NewItem
             if (!String.IsNullOrEmpty(solutionPath))
             {
                 SolutionPath = solutionPath;
-
             }
         }
 
@@ -64,15 +63,15 @@ namespace Microsoft.Templates.VsEmulator.NewItem
 
         private void ShowFileDialog()
         {
-            using (var fbd = new OpenFileDialog())
+            using (var fd = new OpenFileDialog())
             {
-                fbd.Filter = "Solution Files (*.sln)|*.sln";
-                var result = fbd.ShowDialog();
+                fd.InitialDirectory = Path.GetDirectoryName(SolutionPath);
+                fd.Filter = "Solution Files (*.sln)|*.sln";
+                var result = fd.ShowDialog();
 
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.FileName))
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fd.FileName))
                 {
-                    SolutionPath = fbd.FileName;
-                    
+                    SolutionPath = fd.FileName;
                 }
             }
         }

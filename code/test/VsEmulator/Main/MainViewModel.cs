@@ -45,11 +45,14 @@ namespace Microsoft.Templates.VsEmulator.Main
         public string OutputPath { get; private set; }
 
         public RelayCommand NewProjectCommand => new RelayCommand(NewProject);
-        public RelayCommand NewItemCommand => new RelayCommand(NewItem);
+        public RelayCommand LoadProjectCommand => new RelayCommand(LoadProject);
 
         public RelayCommand OpenInVsCommand => new RelayCommand(OpenInVs);
         public RelayCommand OpenInVsCodeCommand => new RelayCommand(OpenInVsCode);
         public RelayCommand OpenInExplorerCommand => new RelayCommand(OpenInExplorer);
+
+        public RelayCommand AddNewItemCommand => new RelayCommand(AddNewItem);
+        
         public RelayCommand ConfigureVersionsCommand => new RelayCommand(ConfigureVersions);
 
 
@@ -155,57 +158,68 @@ namespace Microsoft.Templates.VsEmulator.Main
             }
         }
 
-        private async void NewItem()
+        private void LoadProject()
+        {
+            var loadProjectInfo = ShowLoadProjectDialog();
+
+            if (!string.IsNullOrEmpty(loadProjectInfo))
+            {
+                SolutionPath = loadProjectInfo;
+                SolutionName = Path.GetFileNameWithoutExtension(SolutionPath);
+
+                var projFile = Directory.EnumerateFiles(Path.GetDirectoryName(SolutionPath), "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
+                ProjectName = Path.GetFileNameWithoutExtension(projFile);
+                OutputPath = Path.GetDirectoryName(projFile);
+
+                GenContext.Current = this;
+            }
+        }
+
+        private async void AddNewItem()
         {
             ConfigureGenContext();
 
             try
             {
-                var newItemInfo = ShowNewItemDialog();
-                if (!string.IsNullOrEmpty(newItemInfo))
+                var projectConfig = ReadProjectConfiguration();
+                var projectIncremental = false;
+                if (string.IsNullOrEmpty(projectConfig.ProjectType) || string.IsNullOrEmpty(projectConfig.Framework))
                 {
-                    SolutionPath = newItemInfo;
-                    SolutionName = Path.GetFileNameWithoutExtension(SolutionPath);
-
-                    var projFile = Directory.EnumerateFiles(Path.GetDirectoryName(SolutionPath), "*.csproj", SearchOption.AllDirectories).FirstOrDefault();
-                    ProjectName = Path.GetFileNameWithoutExtension(projFile);
-                    OutputPath = Path.GetDirectoryName(projFile);
-
-                    GenContext.Current = this;
-
-                    var path = Path.Combine(GenContext.Current.OutputPath, "Package.appxmanifest");
-                    var manifest = XElement.Load(path);
-
-                    var metadata = manifest.Descendants().FirstOrDefault(e => e.Name.LocalName == "Metadata");
-                    var projectType = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "projectType")?.Attribute("Value")?.Value;
-                    var framework = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "framework")?.Attribute("Value")?.Value;
-                    var projectIncremental = false;
-                    if (string.IsNullOrEmpty(projectType) || string.IsNullOrEmpty(framework))
-                    {
-                        projectIncremental = true;
-                    }
-
-                    var userSelection = GenController.GetUserSelectionNewItem(projectType, framework);
-
-                    if (userSelection != null)
-                    {
-                        await GenController.GenerateAsync(userSelection, false, projectIncremental);
-
-                        GenContext.ToolBox.Shell.ShowStatusBarMessage("Project created!!!");
-                    }
+                    projectIncremental = true;
                 }
 
+                var userSelection = GenController.GetUserSelectionNewItem(projectConfig.ProjectType, projectConfig.Framework);
+
+                if (userSelection != null)
+                {
+                    await GenController.GenerateAsync(userSelection, false, projectIncremental);
+
+                    GenContext.ToolBox.Shell.ShowStatusBarMessage("Project created!!!");
+                }
             }
             catch (WizardBackoutException)
-            {
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard back out");
-            }
-            catch (WizardCancelledException)
-            {
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard cancelled");
-            }
-
+        {
+            GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard back out");
         }
+        catch (WizardCancelledException)
+        {
+            GenContext.ToolBox.Shell.ShowStatusBarMessage("Wizard cancelled");
+        }
+        
+    }
+
+        private static (string ProjectType, string Framework) ReadProjectConfiguration()
+        {
+            var path = Path.Combine(GenContext.Current.OutputPath, "Package.appxmanifest");
+            var manifest = XElement.Load(path);
+
+            var metadata = manifest.Descendants().FirstOrDefault(e => e.Name.LocalName == "Metadata");
+            var projectType = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "projectType")?.Attribute("Value")?.Value;
+            var framework = metadata?.Descendants().FirstOrDefault(m => m.Attribute("Name").Value == "framework")?.Attribute("Value")?.Value;
+
+            return (projectType, framework);
+        }
+
         private void ConfigureVersions()
         {
             var dialog = new TemplatesContentView(WizardVersion, TemplatesVersion)
@@ -330,9 +344,9 @@ namespace Microsoft.Templates.VsEmulator.Main
         }
 
 
-        private string ShowNewItemDialog()
+        private string ShowLoadProjectDialog()
         {
-            var dialog = new NewItemView(SolutionPath)
+            var dialog = new LoadProjectView(SolutionPath)
             {
                 Owner = _host
             };

@@ -110,10 +110,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Main\MainViewModel.cs" />
-    <Compile Include="NewItem\NewItemView.xaml.cs">
-      <DependentUpon>NewItemView.xaml</DependentUpon>
+    <Compile Include="NewItem\LoadProjectView.xaml.cs">
+      <DependentUpon>LoadProjectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NewItem\NewItemViewModel.cs" />
+    <Compile Include="NewItem\LoadProjectViewModel.cs" />
     <Compile Include="TemplatesContent\TemplatesContentView.xaml.cs">
       <DependentUpon>TemplatesContentView.xaml</DependentUpon>
     </Compile>
@@ -134,7 +134,7 @@
       <DependentUpon>MainView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NewItem\NewItemView.xaml">
+    <Page Include="NewItem\LoadProjectView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -206,6 +206,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\vscode.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\add.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

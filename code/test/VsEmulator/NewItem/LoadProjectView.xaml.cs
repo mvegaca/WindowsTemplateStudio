@@ -17,13 +17,13 @@ namespace Microsoft.Templates.VsEmulator.NewItem
     /// <summary>
     /// Interaction logic for NewProjectView.xaml
     /// </summary>
-    public partial class NewItemView : Window
+    public partial class LoadProjectView : Window
     {
-        public NewItemViewModel ViewModel { get; set; }
+        public LoadProjectViewModel ViewModel { get; set; }
 
-        public NewItemView(string solutionPath)
+        public LoadProjectView(string solutionPath)
         {
-            ViewModel = new NewItemViewModel(this);
+            ViewModel = new LoadProjectViewModel(this);
             InitializeComponent();
 
             DataContext = ViewModel;
