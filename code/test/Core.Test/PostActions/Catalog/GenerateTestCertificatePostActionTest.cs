@@ -11,6 +11,7 @@
 // ******************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Microsoft.Templates.Core.Gen;
@@ -26,6 +27,8 @@ namespace Microsoft.Templates.Core.Test.PostActions.Catalog
     {
         public string ProjectName { get; set; }
         public string OutputPath { get; set; }
+
+        public List<string> ProjectItems => throw new NotImplementedException();
 
         [Fact]
         public void Execute_Ok()

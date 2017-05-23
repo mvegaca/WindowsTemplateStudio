@@ -40,6 +40,7 @@ namespace Microsoft.Templates.Core.PostActions
 
             AddMergeActions(postActions, $"*{MergePostAction.GlobalExtension}*");
 
+            postActions.Add(new AddContextItemsToProjectPostAction());
             postActions.Add(new SetDefaultSolutionConfigurationPostAction());
             postActions.Add(new SortUsingsPostAction());
 
@@ -55,16 +56,10 @@ namespace Microsoft.Templates.Core.PostActions
                     postActions.Add(new GenerateTestCertificatePostAction(genInfo.GetUserName()));
                     break;
                 case TemplateType.Page:
-                    postActions.Add(new AddItemToProjectPostAction(genResult.ResultInfo.PrimaryOutputs));
-                    break;
                 case TemplateType.Feature:
-                    postActions.Add(new AddItemToProjectPostAction(genResult.ResultInfo.PrimaryOutputs));
-                    break;
                 case TemplateType.Composition:
-                    postActions.Add(new AddItemToProjectPostAction(genResult.ResultInfo.PrimaryOutputs));
-                    break;
                 case TemplateType.ProjectIncremental:
-                    postActions.Add(new AddItemToProjectPostAction(genResult.ResultInfo.PrimaryOutputs));
+                    postActions.Add(new AddItemToContextPostAction(genResult.ResultInfo.PrimaryOutputs));
                     break;
                 default:
                     break;

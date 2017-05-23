@@ -10,18 +10,21 @@
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
 // ******************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 using Microsoft.TemplateEngine.Abstractions;
 using Microsoft.Templates.Core.Gen;
 
 namespace Microsoft.Templates.Core.PostActions.Catalog
 {
-    public class AddItemToProjectPostAction : PostAction<IReadOnlyList<ICreationPath>>
+    public class AddItemToContextPostAction : PostAction<IReadOnlyList<ICreationPath>>
     {
-        public AddItemToProjectPostAction(IReadOnlyList<ICreationPath> config) : base(config)
+        public AddItemToContextPostAction(IReadOnlyList<ICreationPath> config) : base(config)
         {
         }
 
@@ -32,7 +35,8 @@ namespace Microsoft.Templates.Core.PostActions.Catalog
                                 .Select(o => Path.GetFullPath(Path.Combine(GenContext.Current.OutputPath, o.Path)))
                                 .ToList();
 
-            GenContext.ToolBox.Shell.AddItems(itemsToAdd.ToArray());
+
+            GenContext.Current.ProjectItems.AddRange(itemsToAdd);
         }
     }
 }
