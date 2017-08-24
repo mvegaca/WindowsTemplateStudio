@@ -25,5 +25,14 @@
         "order": "1",
         "licenses": "",
         "languages": [ "C#", "VisualBasic" ]
+    },
+    {
+        "name": "CustomFramework",
+        "displayName": "Custom framework",
+        "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
+        "author": "Martin",
+        "order": "4",
+        "licenses": "",
+        "languages": [ "C#" ]
     }
 ]
