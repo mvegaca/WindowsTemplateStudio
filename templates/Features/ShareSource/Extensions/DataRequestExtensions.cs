@@ -13,6 +13,29 @@ namespace Param_ItemNamespace.Extensions
 {
     public static class DataRequestExtensions
     {
+        // TODO WTS
+        // Step 1. Use the DataTransferManager to register an event handler to DataRequested.
+        // This event will be fired when the share operation starts.
+        // _dataTransferManager = DataTransferManager.GetForCurrentView();
+        // _dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager, DataRequestedEventArgs>(OnDataRequested);
+        //
+        // Step2. Code in OnDataRequested event handler.
+        // We need to add data to DataRequestedEventArgs through SetData extension method
+        // Create a ShareSourceData instance.
+        // var config = new ShareSourceData("ADD HERE THE SHARE TITLE");
+        // Set the data you want to share
+        // i.e. config.SetWebLink(new Uri("https://www.microsoft.com/");
+        // i.e. config.SetText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+        //
+        // Step 3. Call this SetData method befor ending the event handler
+        // args.Request.SetData(config);
+        // You can also register an event handler to ShareCompleted to run code when the share operation finishes.
+        // args.Request.Data.ShareCompleted += OnShareCompleted;
+        //
+        // Step 4. You can also register an event handler to ShareCompleted
+        // to run code when the share operation finishes.
+        // Do not forget unregister the event handler.
+        // sender.ShareCompleted -= OnShareCompleted;
         public static void SetData(this DataRequest dataRequest, ShareSourceFeatureData config)
         {
             var deferral = dataRequest.GetDeferral();
