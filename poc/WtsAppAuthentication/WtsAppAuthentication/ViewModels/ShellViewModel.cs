@@ -155,7 +155,7 @@ namespace WtsAppAuthentication.ViewModels
             // Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/projectTypes/navigationpane.md
             // Edit String/en-US/Resources.resw: Add a menu item title for each page
             _primaryItems.Add(ShellNavigationItem.FromType<MainPage>("Shell_Main".GetLocalized(), Symbol.Document));
-            _secondaryItems.Add(new ShellNavigationItem("Shell_Logout".GetLocalized(), Symbol.SetLockScreen, OnLogout));
+            _secondaryItems.Add(new ShellNavigationItem("Shell_Logout".GetLocalized(), Symbol.BlockContact, OnLogout));
             _secondaryItems.Add(ShellNavigationItem.FromType<SettingsPage>("Shell_Settings".GetLocalized(), Symbol.Setting));
         }
 
@@ -216,6 +216,8 @@ namespace WtsAppAuthentication.ViewModels
 
         private void OnLogout()
         {
+            NavigationService.Frame = Window.Current.Content as Frame;
+            NavigationService.Navigate<AuthenticationPage>(null, null, true);
         }
     }
 }

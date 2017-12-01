@@ -44,11 +44,15 @@ namespace WtsAppAuthentication.Services
 
         public static void GoForward() => Frame.GoForward();
 
-        public static bool Navigate(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null)
+        public static bool Navigate(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null, bool removeBackStack = false)
         {
             // Don't open the same page multiple times
             if (Frame.Content?.GetType() != pageType)
             {
+                if (removeBackStack)
+                {
+                    Frame.BackStack.Clear();
+                }
                 return Frame.Navigate(pageType, parameter, infoOverride);
             }
             else
@@ -57,7 +61,7 @@ namespace WtsAppAuthentication.Services
             }
         }
 
-        public static bool Navigate<T>(object parameter = null, NavigationTransitionInfo infoOverride = null)
+        public static bool Navigate<T>(object parameter = null, NavigationTransitionInfo infoOverride = null, bool removeBackStack = false)
             where T : Page
             => Navigate(typeof(T), parameter, infoOverride);
 
