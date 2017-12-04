@@ -30,56 +30,54 @@ namespace WtsAppAuthentication.Services
             var result = new AuthenticationResult();
             try
             {
-                string oauth_token = await GetTwitterRequestTokenAsync(_callbackURL, _consumerKey);
-                string TwitterUrl = $"{_baseTwitterUrl}authorize?oauth_token={oauth_token}";
-                Uri StartUri = new Uri(TwitterUrl);
-                Uri EndUri = new Uri(_callbackURL);
+                var oauthToken = await GetTwitterRequestTokenAsync();
+                var twitterUrl = $"{_baseTwitterUrl}authorize?oauth_token={oauthToken}";
+                var startUri = new Uri(twitterUrl);
+                var endUri = new Uri(_callbackURL);
 
-                WebAuthenticationResult WebAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, StartUri, EndUri);
-                if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
+                var webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, startUri, endUri);
+                if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
                 {
                     result.Success = true;
-                    result.ResponseData = WebAuthenticationResult.ResponseData.ToString();
-                    await GetTwitterUserNameAsync(WebAuthenticationResult.ResponseData.ToString());
+                    result.ResponseData = webAuthenticationResult.ResponseData.ToString();
+                    await GetTwitterUserNameAsync(webAuthenticationResult.ResponseData.ToString());
                 }
-                else if (WebAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
+                else if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
                 {
                 }
                 else
                 {
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result.Success = false;
             }
             return result;
         }
 
-        private async Task<string> GetTwitterRequestTokenAsync(string twitterCallbackUrl, string consumerKey)
+        private async Task<string> GetTwitterRequestTokenAsync()
         {
-            // Acquiring a request token
-            string TwitterUrl = "https://api.twitter.com/oauth/request_token";
+            var twitterUrl = $"{_baseTwitterUrl}request_token";
+            var nonce = GetNonce();
+            var timeStamp = GetTimeStamp();
+            var parameters = "oauth_callback=" + Uri.EscapeDataString(_callbackURL);
+            parameters += "&" + "oauth_consumer_key=" + _consumerKey;
+            parameters += "&" + "oauth_nonce=" + nonce;
+            parameters += "&" + "oauth_signature_method=HMAC-SHA1";
+            parameters += "&" + "oauth_timestamp=" + timeStamp;
+            parameters += "&" + "oauth_version=1.0";
+            var signatureString = "GET&";
+            signatureString += Uri.EscapeDataString(twitterUrl) + "&" + Uri.EscapeDataString(parameters);
+            var signature = GetSignature(signatureString);
 
-            string nonce = GetNonce();
-            string timeStamp = GetTimeStamp();
-            string SigBaseStringParams = "oauth_callback=" + Uri.EscapeDataString(twitterCallbackUrl);
-            SigBaseStringParams += "&" + "oauth_consumer_key=" + consumerKey;
-            SigBaseStringParams += "&" + "oauth_nonce=" + nonce;
-            SigBaseStringParams += "&" + "oauth_signature_method=HMAC-SHA1";
-            SigBaseStringParams += "&" + "oauth_timestamp=" + timeStamp;
-            SigBaseStringParams += "&" + "oauth_version=1.0";
-            string SigBaseString = "GET&";
-            SigBaseString += Uri.EscapeDataString(TwitterUrl) + "&" + Uri.EscapeDataString(SigBaseStringParams);
-            string Signature = GetSignature(SigBaseString, _consumerSecret);
+            twitterUrl += "?" + parameters + "&oauth_signature=" + Uri.EscapeDataString(signature);
+            var httpClient = new HttpClient();
+            var response = await httpClient.GetStringAsync(new Uri(twitterUrl));
 
-            TwitterUrl += "?" + SigBaseStringParams + "&oauth_signature=" + Uri.EscapeDataString(Signature);
-            HttpClient httpClient = new HttpClient();
-            string GetResponse = await httpClient.GetStringAsync(new Uri(TwitterUrl));
-
-            string request_token = null;
-            string oauth_token_secret = null;
-            string[] keyValPairs = GetResponse.Split('&');
+            string requestToken = null;
+            string oauthTokenSecret = null;
+            string[] keyValPairs = response.Split('&');
 
             for (int i = 0; i < keyValPairs.Length; i++)
             {
@@ -87,99 +85,94 @@ namespace WtsAppAuthentication.Services
                 switch (splits[0])
                 {
                     case "oauth_token":
-                        request_token = splits[1];
+                        requestToken = splits[1];
                         break;
                     case "oauth_token_secret":
-                        oauth_token_secret = splits[1];
+                        oauthTokenSecret = splits[1];
                         break;
                 }
             }
 
-            return request_token;
+            return requestToken;
         }
 
         private async Task GetTwitterUserNameAsync(string webAuthResultResponseData)
         {
-            // Acquiring a access_token first
             string responseData = webAuthResultResponseData.Substring(webAuthResultResponseData.IndexOf("oauth_token"));
-            string request_token = null;
-            string oauth_verifier = null;
-            String[] keyValPairs = responseData.Split('&');
+            string requestToken = null;
+            string oauthVerifier = null;
+            var keyValPairs = responseData.Split('&');
 
             for (int i = 0; i < keyValPairs.Length; i++)
             {
-                String[] splits = keyValPairs[i].Split('=');
+                var splits = keyValPairs[i].Split('=');
                 switch (splits[0])
                 {
                     case "oauth_token":
-                        request_token = splits[1];
+                        requestToken = splits[1];
                         break;
                     case "oauth_verifier":
-                        oauth_verifier = splits[1];
+                        oauthVerifier = splits[1];
                         break;
                 }
             }
 
-            String TwitterUrl = "https://api.twitter.com/oauth/access_token";
+            var twitterUrl = $"{_baseTwitterUrl}access_token";
 
-            string timeStamp = GetTimeStamp();
-            string nonce = GetNonce();
+            var timeStamp = GetTimeStamp();
+            var nonce = GetNonce();
 
-            string parameters = "oauth_consumer_key=" + _consumerKey;
+            var parameters = "oauth_consumer_key=" + _consumerKey;
             parameters += "&" + "oauth_nonce=" + nonce;
             parameters += "&" + "oauth_signature_method=HMAC-SHA1";
             parameters += "&" + "oauth_timestamp=" + timeStamp;
-            parameters += "&" + "oauth_token=" + request_token;
+            parameters += "&" + "oauth_token=" + requestToken;
             parameters += "&" + "oauth_version=1.0";
-            string signatureString = "POST&";
-            signatureString += Uri.EscapeDataString(TwitterUrl) + "&" + Uri.EscapeDataString(parameters);
+            var signatureString = "POST&";
+            signatureString += Uri.EscapeDataString(twitterUrl) + "&" + Uri.EscapeDataString(parameters);
 
-            string signature = GetSignature(signatureString, _consumerSecret);
+            var signature = GetSignature(signatureString);
 
-            HttpStringContent httpContent = new HttpStringContent("oauth_verifier=" + oauth_verifier, Windows.Storage.Streams.UnicodeEncoding.Utf8);
+            HttpStringContent httpContent = new HttpStringContent("oauth_verifier=" + oauthVerifier, Windows.Storage.Streams.UnicodeEncoding.Utf8);
             httpContent.Headers.ContentType = HttpMediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
-            string authorizationHeaderParams = "oauth_consumer_key=\"" + _consumerKey + "\", oauth_nonce=\"" + nonce + "\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"" + Uri.EscapeDataString(signature) + "\", oauth_timestamp=\"" + timeStamp + "\", oauth_token=\"" + Uri.EscapeDataString(request_token) + "\", oauth_version=\"1.0\"";
+            var authorizationHeaderParams = "oauth_consumer_key=\"" + _consumerKey + "\", oauth_nonce=\"" + nonce + "\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"" + Uri.EscapeDataString(signature) + "\", oauth_timestamp=\"" + timeStamp + "\", oauth_token=\"" + Uri.EscapeDataString(requestToken) + "\", oauth_version=\"1.0\"";
 
-            HttpClient httpClient = new HttpClient();
+            var httpClient = new HttpClient();
 
             httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("OAuth", authorizationHeaderParams);
-            var httpResponseMessage = await httpClient.PostAsync(new Uri(TwitterUrl), httpContent);
-            string response = await httpResponseMessage.Content.ReadAsStringAsync();
+            var httpResponseMessage = await httpClient.PostAsync(new Uri(twitterUrl), httpContent);
+            var response = await httpResponseMessage.Content.ReadAsStringAsync();
 
-            string[] tokens = response.Split('&');
-            string oauth_token_secret = null;
-            string access_token = null;
-            string screen_name = null;
+            var tokens = response.Split('&');
+            string oauthTokenSecret = null;
+            string accessToken = null;
+            string screenName = null;
 
             for (int i = 0; i < tokens.Length; i++)
             {
-                String[] splits = tokens[i].Split('=');
+                var splits = tokens[i].Split('=');
                 switch (splits[0])
                 {
                     case "screen_name":
-                        screen_name = splits[1];
+                        screenName = splits[1];
                         break;
                     case "oauth_token":
-                        access_token = splits[1];
+                        accessToken = splits[1];
                         break;
                     case "oauth_token_secret":
-                        oauth_token_secret = splits[1];
+                        oauthTokenSecret = splits[1];
                         break;
                 }
             }
 
-            if (access_token != null)
+            if (accessToken != null)
             {
-                // Store access_token for futher use. See Scenario 5 (Account Management).
             }
-
-            if (oauth_token_secret != null)
+            if (oauthTokenSecret != null)
             {
-                // Store oauth_token_secret for further use. See Scenario 5 (Account Management).
             }
-            if (screen_name != null)
+            if (screenName != null)
             {
-                //rootPage.NotifyUser(screen_name + " is connected!", NotifyType.StatusMessage);
             }
         }
 
@@ -196,9 +189,9 @@ namespace WtsAppAuthentication.Services
             return Math.Round(SinceEpoch.TotalSeconds).ToString();
         }
 
-        string GetSignature(string sigBaseString, string consumerSecretKey)
+        string GetSignature(string sigBaseString)
         {
-            IBuffer KeyMaterial = CryptographicBuffer.ConvertStringToBinary(consumerSecretKey + "&", BinaryStringEncoding.Utf8);
+            IBuffer KeyMaterial = CryptographicBuffer.ConvertStringToBinary(_consumerSecret + "&", BinaryStringEncoding.Utf8);
             MacAlgorithmProvider HmacSha1Provider = MacAlgorithmProvider.OpenAlgorithm("HMAC_SHA1");
             CryptographicKey MacKey = HmacSha1Provider.CreateKey(KeyMaterial);
             IBuffer DataToBeSigned = CryptographicBuffer.ConvertStringToBinary(sigBaseString, BinaryStringEncoding.Utf8);
