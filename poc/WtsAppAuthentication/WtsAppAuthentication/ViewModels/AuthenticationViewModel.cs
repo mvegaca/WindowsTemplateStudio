@@ -10,12 +10,27 @@ namespace WtsAppAuthentication.ViewModels
 {
     public class AuthenticationViewModel : Observable
     {
+        private bool _isLoading;
         private string _email;
         private string _password;
-        private ICommand _emailLoginCommand;
-        private ICommand _facebookLoginCommand;
-        private ICommand _googleLoginCommand;
-        private ICommand _forgotPasswordCommand;
+        private RelayCommand _emailLoginCommand;
+        private RelayCommand _facebookLoginCommand;
+        private RelayCommand _twitterLoginCommand;
+        private RelayCommand _googleLoginCommand;
+        private RelayCommand _forgotPasswordCommand;
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                Set(ref _isLoading, value);
+                EmailLoginCommand.OnCanExecuteChanged();
+                FacebookLoginCommand.OnCanExecuteChanged();
+                GoogleLoginCommand.OnCanExecuteChanged();
+                ForgotPasswordCommand.OnCanExecuteChanged();
+            }
+        }
 
         public string Email
         {
@@ -29,13 +44,15 @@ namespace WtsAppAuthentication.ViewModels
             set => Set(ref _password, value);
         }
 
-        public ICommand EmailLoginCommand => _emailLoginCommand ?? (_emailLoginCommand = new RelayCommand(OnEmailLogin));
+        public RelayCommand EmailLoginCommand => _emailLoginCommand ?? (_emailLoginCommand = new RelayCommand(OnEmailLogin, () => !IsLoading));
 
-        public ICommand FacebookLoginCommand => _facebookLoginCommand ?? (_facebookLoginCommand = new RelayCommand(OnFacebookLogin));
+        public RelayCommand FacebookLoginCommand => _facebookLoginCommand ?? (_facebookLoginCommand = new RelayCommand(OnFacebookLogin, () => !IsLoading));
 
-        public ICommand GoogleLoginCommand => _googleLoginCommand ?? (_googleLoginCommand = new RelayCommand(OnGoogleLogin));
+        public RelayCommand TwitterLoginCommand => _twitterLoginCommand ?? (_twitterLoginCommand = new RelayCommand(OnTwitterLogin, () => !IsLoading));        
 
-        public ICommand ForgotPasswordCommand => _forgotPasswordCommand ?? (_forgotPasswordCommand = new RelayCommand(OnForgotPassword));
+        public RelayCommand GoogleLoginCommand => _googleLoginCommand ?? (_googleLoginCommand = new RelayCommand(OnGoogleLogin, () => !IsLoading));
+
+        public RelayCommand ForgotPasswordCommand => _forgotPasswordCommand ?? (_forgotPasswordCommand = new RelayCommand(OnForgotPassword, () => !IsLoading));
 
         public AuthenticationViewModel()
         {
@@ -48,8 +65,18 @@ namespace WtsAppAuthentication.ViewModels
 
         private async void OnFacebookLogin()
         {
-            string clientID = "";
+            // TODO WTS: Add your Facebook Client ID
+            var clientID = "";
             await LoginAsync(new FacebookAuthenticationProvider(clientID));
+        }
+
+        private async void OnTwitterLogin()
+        {
+            // TODO WTS: Add your Twitter Consumer Key, Consumer Secret and CallBack URL
+            var consumerKey = "";
+            var consumerSecret = "";
+            var callbackURL = "https://github.com/Microsoft/WindowsTemplateStudio/";
+            await LoginAsync(new TwitterAuthenticationProvider(consumerKey, consumerSecret, callbackURL));
         }
 
         private async void OnGoogleLogin()
@@ -63,12 +90,23 @@ namespace WtsAppAuthentication.ViewModels
 
         private async Task LoginAsync(IAuthenticationProvider provider)
         {
-            AuthenticationService.Initialize(provider);
-            var result = await AuthenticationService.AuthenticateAsync();
-            if (result.Success)
+            try
             {
-                NavigationService.Navigate(typeof(ShellPage));
-                NavigationService.Navigate(typeof(MainPage));
+                IsLoading = true;
+                AuthenticationService.Initialize(provider);
+                var result = await AuthenticationService.AuthenticateAsync();
+                if (result.Success)
+                {
+                    NavigationService.Navigate(typeof(ShellPage));
+                    NavigationService.Navigate(typeof(MainPage));
+                }
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
     }

@@ -16,6 +16,9 @@
     <Style TargetType="Button" x:Key="GoogleLoginButtonStyle" BasedOn="{StaticResource BaseLoginButtonStyle}">
         <Setter Property="Background" Value="{StaticResource GoogleRedBrush}" />
     </Style>
+    <Style TargetType="Button" x:Key="TwitterLoginButtonStyle" BasedOn="{StaticResource BaseLoginButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource TwitterBlueBrush}" />
+    </Style>
     <Style TargetType="Button" x:Key="EmailLoginButtonStyle" BasedOn="{StaticResource BaseLoginButtonStyle}">
         <Setter Property="Background" Value="{StaticResource LoginGreenBrush}" />
     </Style>

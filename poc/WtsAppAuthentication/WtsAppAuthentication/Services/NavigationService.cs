@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -49,11 +49,16 @@ namespace WtsAppAuthentication.Services
             // Don't open the same page multiple times
             if (Frame.Content?.GetType() != pageType)
             {
+                var navigated = Frame.Navigate(pageType, parameter, infoOverride);
                 if (removeBackStack)
                 {
-                    Frame.BackStack.Clear();
+                    while (CanGoBack)
+                    {
+                        Frame.BackStack.RemoveAt(0);
+                    }
+                    SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
                 }
-                return Frame.Navigate(pageType, parameter, infoOverride);
+                return navigated;
             }
             else
             {
@@ -63,7 +68,7 @@ namespace WtsAppAuthentication.Services
 
         public static bool Navigate<T>(object parameter = null, NavigationTransitionInfo infoOverride = null, bool removeBackStack = false)
             where T : Page
-            => Navigate(typeof(T), parameter, infoOverride);
+            => Navigate(typeof(T), parameter, infoOverride, removeBackStack);
 
         private static void RegisterFrameEvents()
         {

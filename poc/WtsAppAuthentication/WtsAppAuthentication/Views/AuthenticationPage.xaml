@@ -31,9 +31,12 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="8"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" x:Uid="FacebookLoginButton" Command="{x:Bind ViewModel.FacebookLoginCommand}" CommandParameter="Facebook" Style="{StaticResource FacebookLoginButtonStyle}" />
-                        <Button Grid.Column="2" x:Uid="GoogleLoginButton" Command="{x:Bind ViewModel.GoogleLoginCommand}" CommandParameter="Google" Style="{StaticResource GoogleLoginButtonStyle}" />
+                        <Button Grid.Column="0" x:Uid="FacebookLoginButton" Command="{x:Bind ViewModel.FacebookLoginCommand}" Style="{StaticResource FacebookLoginButtonStyle}" />
+                        <Button Grid.Column="2" x:Uid="GoogleLoginButton" Command="{x:Bind ViewModel.GoogleLoginCommand}" Style="{StaticResource GoogleLoginButtonStyle}" />
+                        <Button Grid.Column="4" x:Uid="TwitterLoginButton" Command="{x:Bind ViewModel.TwitterLoginCommand}" Style="{StaticResource TwitterLoginButtonStyle}" />
                     </Grid>
                     <HyperlinkButton x:Uid="ForgotPasswordButton" Command="{x:Bind ViewModel.ForgotPasswordCommand}" Margin="0,18,0,0"/>
                 </StackPanel>

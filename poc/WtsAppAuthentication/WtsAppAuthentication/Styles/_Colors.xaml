@@ -5,6 +5,7 @@
     <SolidColorBrush x:Key="ThemeControlForegroundBaseHighBrush" Color="{ThemeResource SystemBaseHighColor}" />
     <SolidColorBrush x:Key="FacebookBlueBrush" Color="#3b5998" />
     <SolidColorBrush x:Key="GoogleRedBrush" Color="#db3236" />
+    <SolidColorBrush x:Key="TwitterBlueBrush" Color="#00aced" />
     <SolidColorBrush x:Key="LoginGreenBrush" Color="#2aa95a" />
 
 </ResourceDictionary>

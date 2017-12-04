@@ -218,4 +218,7 @@
   <data name="Shell_Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
+  <data name="TwitterLoginButton.Content" xml:space="preserve">
+    <value>Login with Twitter</value>
+  </data>
 </root>
