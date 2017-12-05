@@ -66,15 +66,15 @@ namespace WtsAppAuthentication.ViewModels
         private async void OnFacebookLogin()
         {
             // TODO WTS: Add your Facebook Client ID
-            var clientID = "";
+            var clientID = "338735353201434";
             await LoginAsync(new FacebookAuthenticationProvider(clientID));
         }
 
         private async void OnTwitterLogin()
         {
             // TODO WTS: Add your Twitter Consumer Key, Consumer Secret and CallBack URL
-            var consumerKey = "";
-            var consumerSecret = "";
+            var consumerKey = "JmAJn1YEGKaBiKqyT1t7pxv13";
+            var consumerSecret = "r0bsqp4JGPo2IIhjnyc3V8aw9nLD83OC3FMPxn4OaxtwGTFcRq";
             var callbackURL = "https://github.com/Microsoft/WindowsTemplateStudio/";
             await LoginAsync(new TwitterAuthenticationProvider(consumerKey, consumerSecret, callbackURL));
         }

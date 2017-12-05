@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\Observable.cs" />
@@ -120,14 +121,14 @@
     <Compile Include="Models\AuthenticationResult.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
-    <Compile Include="Services\AuthenticationService.cs" />
-    <Compile Include="Services\FacebookAuthenticationProvider.cs" />
-    <Compile Include="Services\EmailAuthenticationProvider.cs" />
-    <Compile Include="Services\GoogleAuthenticationProvider.cs" />
-    <Compile Include="Services\IAuthenticationProvider.cs" />
+    <Compile Include="Services\Authentication\AuthenticationService.cs" />
+    <Compile Include="Services\Authentication\FacebookAuthenticationProvider.cs" />
+    <Compile Include="Services\Authentication\EmailAuthenticationProvider.cs" />
+    <Compile Include="Services\Authentication\GoogleAuthenticationProvider.cs" />
+    <Compile Include="Services\Authentication\IAuthenticationProvider.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
-    <Compile Include="Services\TwitterAuthenticationProvider.cs" />
+    <Compile Include="Services\Authentication\TwitterAuthenticationProvider.cs" />
     <Compile Include="ViewModels\AuthenticationViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
