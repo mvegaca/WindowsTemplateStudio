@@ -221,4 +221,10 @@
   <data name="TwitterLoginButton.Content" xml:space="preserve">
     <value>Login with Twitter</value>
   </data>
+  <data name="MicrosoftLoginButton.Content" xml:space="preserve">
+    <value>Login with Microsoft</value>
+  </data>
+  <data name="WindowsHelloLoginButton.Content" xml:space="preserve">
+    <value>Login with Windows Hello</value>
+  </data>
 </root>

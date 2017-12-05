@@ -9,6 +9,7 @@ namespace WtsAppAuthentication.Models
     public class AuthenticationResult
     {
         public bool Success { get; set; }
-        public string ResponseData { get; set; }
+        public Dictionary<string, string> ResponseData { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }

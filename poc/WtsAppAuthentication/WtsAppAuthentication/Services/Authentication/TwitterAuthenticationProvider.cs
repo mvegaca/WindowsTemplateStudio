@@ -14,12 +14,13 @@ namespace WtsAppAuthentication.Services
 {
     public class TwitterAuthenticationProvider : IAuthenticationProvider
     {
-        private const string _baseTwitterUrl = "https://api.twitter.com/oauth/";
+        private const string _baseApiUrl = "https://api.twitter.com/oauth/";
         private const string _apiServiceRequestToken = "request_token";
         private const string _apiServiceAuthorize = "authorize";
         private const string _apiServiceAccessToken = "access_token";
         private const string _apiSignatureMethodSHA = "HMAC-SHA1";
         private const string _apiOauthVersion = "1.0";
+        private const string _apiCredentialsHeaderScheme = "OAuth";
         private const string _signatureMacAlgorithm = "HMAC_SHA1";
         private const string _requestHeadersContentType = "application/x-www-form-urlencoded";
 
@@ -52,22 +53,23 @@ namespace WtsAppAuthentication.Services
             try
             {
                 var requestToken = await RequestTokenAsync();
-                var twitterUrl = $"{_baseTwitterUrl}{_apiServiceAuthorize}?{_paramOauthToken}={requestToken[_paramOauthToken]}";
+                var twitterUrl = $"{_baseApiUrl}{_apiServiceAuthorize}?{_paramOauthToken}={requestToken[_paramOauthToken]}";
                 var startUri = new Uri(twitterUrl);
                 var endUri = new Uri(_callbackURL);
 
                 var webAuthenticationResult = await WebAuthenticationBroker.AuthenticateAsync(WebAuthenticationOptions.None, startUri, endUri);
-                if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.Success)
+                switch (webAuthenticationResult.ResponseStatus)
                 {
-                    result.Success = true;
-                    result.ResponseData = webAuthenticationResult.ResponseData.ToString();
-                    await GetTwitterUserNameAsync(webAuthenticationResult.ResponseData.ToString());
-                }
-                else if (webAuthenticationResult.ResponseStatus == WebAuthenticationStatus.ErrorHttp)
-                {
-                }
-                else
-                {
+                    case WebAuthenticationStatus.Success:
+                        result.Success = true;
+                        result.ResponseData = await GetTwitterUserNameAsync(webAuthenticationResult.ResponseData.ToString());
+                        break;
+                    case WebAuthenticationStatus.UserCancel:
+                        break;
+                    case WebAuthenticationStatus.ErrorHttp:
+                        break;
+                    default:
+                        break;
                 }
             }
             catch (Exception)
@@ -79,7 +81,7 @@ namespace WtsAppAuthentication.Services
 
         private async Task<Dictionary<string, string>> RequestTokenAsync()
         {
-            var twitterUrl = $"{_baseTwitterUrl}{_apiServiceRequestToken}";
+            var twitterUrl = $"{_baseApiUrl}{_apiServiceRequestToken}";
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             parameters.Add(_paramOauthCallback, Uri.EscapeDataString(_callbackURL));
             parameters.Add(_paramOauthConsumerKey, _consumerKey);
@@ -88,7 +90,7 @@ namespace WtsAppAuthentication.Services
             parameters.Add(_paramOauthTimeStamp, GetTimeStamp());
             parameters.Add(_paramOauthVersion, _apiOauthVersion);            
 
-            string requestParameters = GetRequestParameters(parameters);
+            string requestParameters = AuthenticationHelper.GetRequestParameters(parameters);
 
             var signatureString = $"GET&{Uri.EscapeDataString(twitterUrl)}&{Uri.EscapeDataString(requestParameters)}";
             var signature = GetSignature(signatureString);
@@ -103,7 +105,7 @@ namespace WtsAppAuthentication.Services
         {
             string responseData = webAuthResultResponseData.Substring(webAuthResultResponseData.IndexOf(_paramOauthToken));
             var readedParams = responseData.ReadParameters('&', '=');
-            var twitterUrl = $"{_baseTwitterUrl}{_apiServiceAccessToken}";
+            var twitterUrl = $"{_baseApiUrl}{_apiServiceAccessToken}";
             Dictionary<string, string> parameters = new Dictionary<string, string>();
             var nonce = GetNonce();
             var timeStamp = GetTimeStamp();
@@ -114,7 +116,7 @@ namespace WtsAppAuthentication.Services
             parameters.Add(_paramOauthToken, readedParams[_paramOauthToken]);
             parameters.Add(_paramOauthVersion, _apiOauthVersion);
 
-            string requestParameters = GetRequestParameters(parameters);
+            string requestParameters = AuthenticationHelper.GetRequestParameters(parameters);
             var signatureString = "POST&";
             signatureString += Uri.EscapeDataString(twitterUrl) + "&" + Uri.EscapeDataString(requestParameters);
 
@@ -122,11 +124,16 @@ namespace WtsAppAuthentication.Services
 
             HttpStringContent httpContent = new HttpStringContent($"{_paramOauthVerifier}={readedParams[_paramOauthVerifier]}", UnicodeEncoding.Utf8);
             httpContent.Headers.ContentType = HttpMediaTypeHeaderValue.Parse(_requestHeadersContentType);
-            var headerParams = $"{_paramOauthCallback}=\"{_consumerKey}\", {_paramOauthNonce}=\"{nonce}\", {_paramOauthSignatureMethod}=\"{_apiSignatureMethodSHA}\", {_paramOauthSignature}=\"{Uri.EscapeDataString(signature)}\", {_paramOauthTimeStamp}=\"{timeStamp}\", {_paramOauthToken}=\"{Uri.EscapeDataString(readedParams[_paramOauthToken])}\", {_paramOauthVersion}=\"{_apiOauthVersion}\"";
-
+            var headerParams = new Dictionary<string, string>();
+            headerParams.Add(_paramOauthCallback, _consumerKey);
+            headerParams.Add(_paramOauthNonce, nonce);
+            headerParams.Add(_paramOauthSignatureMethod, _apiSignatureMethodSHA);
+            headerParams.Add(_paramOauthSignature, Uri.EscapeDataString(signature));
+            headerParams.Add(_paramOauthTimeStamp, timeStamp);
+            headerParams.Add(_paramOauthToken, Uri.EscapeDataString(readedParams[_paramOauthToken]));
+            headerParams.Add(_paramOauthVersion, _apiOauthVersion);
             var httpClient = new HttpClient();
-
-            httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("OAuth", headerParams);
+            httpClient.DefaultRequestHeaders.Authorization = AuthenticationHelper.GetCredentialsHeader(_apiCredentialsHeaderScheme, headerParams);
             var httpResponseMessage = await httpClient.PostAsync(new Uri(twitterUrl), httpContent);
             var response = await httpResponseMessage.Content.ReadAsStringAsync();
             return response.ReadParameters('&', '=');
@@ -153,27 +160,6 @@ namespace WtsAppAuthentication.Services
             IBuffer dataToBeSigned = CryptographicBuffer.ConvertStringToBinary(sigBaseString, BinaryStringEncoding.Utf8);
             IBuffer signatureBuffer = CryptographicEngine.Sign(macKey, dataToBeSigned);
             return CryptographicBuffer.EncodeToBase64String(signatureBuffer);
-        }
-
-        private string GetRequestParameters(Dictionary<string, string> parameters)
-        {
-            var requestParameters = string.Empty;
-            foreach (var param in parameters)
-            {
-                if (string.IsNullOrEmpty(param.Key))
-                {
-                    throw new ArgumentNullException("parameterKey");
-                }
-                if (string.IsNullOrEmpty(requestParameters))
-                {
-                    requestParameters = $"{param.Key}={param.Value}";
-                }
-                else
-                {
-                    requestParameters += $"&{param.Key}={param.Value}";
-                }
-            }
-            return requestParameters;
         }
     }
 }

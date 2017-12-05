@@ -121,11 +121,13 @@
     <Compile Include="Models\AuthenticationResult.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
+    <Compile Include="Services\Authentication\AuthenticationHelper.cs" />
     <Compile Include="Services\Authentication\AuthenticationService.cs" />
     <Compile Include="Services\Authentication\FacebookAuthenticationProvider.cs" />
     <Compile Include="Services\Authentication\EmailAuthenticationProvider.cs" />
     <Compile Include="Services\Authentication\GoogleAuthenticationProvider.cs" />
     <Compile Include="Services\Authentication\IAuthenticationProvider.cs" />
+    <Compile Include="Services\Authentication\MicrosoftAuthenticationProvider.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\Authentication\TwitterAuthenticationProvider.cs" />

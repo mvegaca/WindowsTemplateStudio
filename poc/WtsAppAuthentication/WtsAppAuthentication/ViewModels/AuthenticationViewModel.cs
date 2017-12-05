@@ -14,6 +14,7 @@ namespace WtsAppAuthentication.ViewModels
         private string _email;
         private string _password;
         private RelayCommand _emailLoginCommand;
+        private RelayCommand _microsoftLoginCommand;
         private RelayCommand _facebookLoginCommand;
         private RelayCommand _twitterLoginCommand;
         private RelayCommand _googleLoginCommand;
@@ -27,6 +28,7 @@ namespace WtsAppAuthentication.ViewModels
                 Set(ref _isLoading, value);
                 EmailLoginCommand.OnCanExecuteChanged();
                 FacebookLoginCommand.OnCanExecuteChanged();
+                TwitterLoginCommand.OnCanExecuteChanged();
                 GoogleLoginCommand.OnCanExecuteChanged();
                 ForgotPasswordCommand.OnCanExecuteChanged();
             }
@@ -46,6 +48,8 @@ namespace WtsAppAuthentication.ViewModels
 
         public RelayCommand EmailLoginCommand => _emailLoginCommand ?? (_emailLoginCommand = new RelayCommand(OnEmailLogin, () => !IsLoading));
 
+        public RelayCommand MicrosoftLoginCommand => _microsoftLoginCommand ?? (_microsoftLoginCommand = new RelayCommand(OnMicrosoftLogin, () => !IsLoading));
+
         public RelayCommand FacebookLoginCommand => _facebookLoginCommand ?? (_facebookLoginCommand = new RelayCommand(OnFacebookLogin, () => !IsLoading));
 
         public RelayCommand TwitterLoginCommand => _twitterLoginCommand ?? (_twitterLoginCommand = new RelayCommand(OnTwitterLogin, () => !IsLoading));        
@@ -63,18 +67,23 @@ namespace WtsAppAuthentication.ViewModels
             await LoginAsync(new EmailAuthenticationProvider(Email, Password));
         }
 
+        private async void OnMicrosoftLogin()
+        {
+            await LoginAsync(new MicrosoftAuthenticationProvider());
+        }
+
         private async void OnFacebookLogin()
         {
             // TODO WTS: Add your Facebook Client ID
-            var clientID = "338735353201434";
+            var clientID = "";
             await LoginAsync(new FacebookAuthenticationProvider(clientID));
         }
 
         private async void OnTwitterLogin()
         {
             // TODO WTS: Add your Twitter Consumer Key, Consumer Secret and CallBack URL
-            var consumerKey = "JmAJn1YEGKaBiKqyT1t7pxv13";
-            var consumerSecret = "r0bsqp4JGPo2IIhjnyc3V8aw9nLD83OC3FMPxn4OaxtwGTFcRq";
+            var consumerKey = "";
+            var consumerSecret = "";
             var callbackURL = "https://github.com/Microsoft/WindowsTemplateStudio/";
             await LoginAsync(new TwitterAuthenticationProvider(consumerKey, consumerSecret, callbackURL));
         }
