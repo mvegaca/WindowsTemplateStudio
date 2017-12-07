@@ -227,4 +227,7 @@
   <data name="WindowsHelloLoginButton.Content" xml:space="preserve">
     <value>Login with Windows Hello</value>
   </data>
+  <data name="RememberCredentialsCheckBox.Content" xml:space="preserve">
+    <value>Remember user and password</value>
+  </data>
 </root>

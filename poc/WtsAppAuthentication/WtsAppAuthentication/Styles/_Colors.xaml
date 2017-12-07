@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="ThemeControlForegroundBaseHighBrush" Color="{ThemeResource SystemBaseHighColor}" />
+    <SolidColorBrush x:Key="MicrosoftOrangeBrush" Color="#F65314" />
+    <SolidColorBrush x:Key="MicrosoftYellowBrush" Color="#FFBB00" />
+    <SolidColorBrush x:Key="MicrosoftGreenBrush" Color="#7CBB00" />
+    <SolidColorBrush x:Key="MicrosoftBlueBrush" Color="#00A1F1" />
     <SolidColorBrush x:Key="FacebookBlueBrush" Color="#3b5998" />
     <SolidColorBrush x:Key="GoogleRedBrush" Color="#db3236" />
     <SolidColorBrush x:Key="TwitterBlueBrush" Color="#00aced" />

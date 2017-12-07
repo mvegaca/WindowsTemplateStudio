@@ -1,20 +1,33 @@
 ﻿using System.Threading.Tasks;
+using Windows.Storage;
 using WtsAppAuthentication.Models;
+using WtsAppAuthentication.Helpers;
+using System;
 
 namespace WtsAppAuthentication.Services
 {
     public static class AuthenticationService
     {
-        private static IAuthenticationProvider _provider;
+        private const string _settingsKeyAuthentication = "SettingsKeyAuthentication";
+        private static bool _isDataLoaded;
 
-        public static void Initialize(IAuthenticationProvider provider)
+        public static AuthenticationModel Data { get; private set; }
+
+        public static async Task InitializeAsync()
         {
-            _provider = provider;
+            if (!_isDataLoaded)
+            {
+                Data = await ApplicationData.Current.LocalFolder.ReadAsync<AuthenticationModel>(_settingsKeyAuthentication);
+                if (Data == null)
+                {
+                    Data = new AuthenticationModel();
+                }
+            }
         }
 
-        public static async Task<AuthenticationResult> AuthenticateAsync()
+        internal static async Task SaveDataAsync()
         {
-            return await _provider.AuthenticateAsync();
+            await ApplicationData.Current.LocalFolder.SaveAsync(_settingsKeyAuthentication, Data);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace WtsAppAuthentication.Services
         public static bool Navigate(Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null, bool removeBackStack = false)
         {
             // Don't open the same page multiple times
-            if (Frame.Content?.GetType() != pageType)
+            if (Frame?.Content?.GetType() != pageType)
             {
                 var navigated = Frame.Navigate(pageType, parameter, infoOverride);
                 if (removeBackStack)

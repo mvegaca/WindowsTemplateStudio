@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using WtsAppAuthentication.Models;
 
 namespace WtsAppAuthentication.Services
@@ -14,7 +15,12 @@ namespace WtsAppAuthentication.Services
             _password = password;
         }
 
-        public async Task<AuthenticationResult> AuthenticateAsync()
+        public Task<AuthenticationResult> AuthenticateAsync()
+        {
+            return AuthenticateAsync(null);
+        }
+
+        public async Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
         {
             await Task.CompletedTask;
             return new AuthenticationResult() { Success = true };

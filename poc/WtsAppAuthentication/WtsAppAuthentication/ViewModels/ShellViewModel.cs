@@ -214,10 +214,12 @@ namespace WtsAppAuthentication.ViewModels
         }
 
 
-        private void OnLogout()
+        private async void OnLogout()
         {
             NavigationService.Frame = Window.Current.Content as Frame;
             NavigationService.Navigate<AuthenticationPage>(null, null, true);
+            AuthenticationService.Data.IsLoggedIn = false;
+            await AuthenticationService.SaveDataAsync();
         }
     }
 }

@@ -26,7 +26,12 @@ namespace WtsAppAuthentication.Services
             _clientID = clientID;
         }
 
-        public async Task<AuthenticationResult> AuthenticateAsync()
+        public Task<AuthenticationResult> AuthenticateAsync()
+        {
+            return AuthenticateAsync(null);
+        }
+
+        public async Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
         {
             var result = new AuthenticationResult();
             try

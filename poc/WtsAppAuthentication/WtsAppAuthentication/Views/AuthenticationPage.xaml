@@ -25,6 +25,7 @@
                 <StackPanel MaxWidth="600" HorizontalAlignment="Left">
                     <TextBox x:Uid="LoginEmailTextBox" Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
                     <PasswordBox x:Uid="LoginPasswordBox" Password="{x:Bind ViewModel.Password, Mode=TwoWay}" Margin="0,8,0,0"/>
+                    <CheckBox x:Uid="RememberCredentialsCheckBox" />
                     <Button x:Uid="LoginButton" Command="{x:Bind ViewModel.EmailLoginCommand}" CommandParameter="Email" Style="{StaticResource EmailLoginButtonStyle}" Margin="0,8,0,0" />
                     <TextBlock Text="or" HorizontalAlignment="Center" Margin="0,16,0,0"/>
                     <Button x:Uid="MicrosoftLoginButton" Command="{x:Bind ViewModel.MicrosoftLoginCommand}" Style="{StaticResource MicrosoftLoginButtonStyle}" />

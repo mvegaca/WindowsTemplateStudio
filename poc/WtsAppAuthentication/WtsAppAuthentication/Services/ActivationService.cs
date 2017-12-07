@@ -39,7 +39,14 @@ namespace WtsAppAuthentication.Services
                 if (Window.Current.Content == null)
                 {
                     // Create a Frame to act as the navigation context and navigate to the first page
-                    Window.Current.Content = _shell;
+                    if (AuthenticationService.Data.IsLoggedIn)
+                    {
+                        Window.Current.Content = new Views.ShellPage();
+                    }
+                    else
+                    {
+                        Window.Current.Content = _shell;
+                    }
                     NavigationService.NavigationFailed += (sender, e) =>
                     {
                         throw e.Exception;
@@ -62,7 +69,15 @@ namespace WtsAppAuthentication.Services
 
             if (IsInteractive(activationArgs))
             {
-                var defaultHandler = new DefaultLaunchActivationHandler(_defaultNavItem);
+                DefaultLaunchActivationHandler defaultHandler;
+                if (AuthenticationService.Data.IsLoggedIn)
+                {
+                    defaultHandler = new DefaultLaunchActivationHandler(typeof(Views.MainPage));
+                }
+                else
+                {
+                    defaultHandler = new DefaultLaunchActivationHandler(_defaultNavItem);
+                }
                 if (defaultHandler.CanHandle(activationArgs))
                 {
                     await defaultHandler.HandleAsync(activationArgs);
@@ -79,6 +94,7 @@ namespace WtsAppAuthentication.Services
         private async Task InitializeAsync()
         {
             await ThemeSelectorService.InitializeAsync();
+            await AuthenticationService.InitializeAsync();
             await Task.CompletedTask;
         }
 
