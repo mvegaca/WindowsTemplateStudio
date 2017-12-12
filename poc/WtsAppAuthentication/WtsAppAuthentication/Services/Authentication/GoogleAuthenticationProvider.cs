@@ -13,6 +13,7 @@ namespace WtsAppAuthentication.Services
 
         public async Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
         {
+            // TODO pending to implement with Google Console and Authentication Broker
             await Task.CompletedTask;
             return new AuthenticationResult() { Success = true };
         }

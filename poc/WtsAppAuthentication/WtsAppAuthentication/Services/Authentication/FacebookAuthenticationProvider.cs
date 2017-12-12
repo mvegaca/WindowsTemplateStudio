@@ -53,10 +53,12 @@ namespace WtsAppAuthentication.Services
                         var data = webAuthenticationResult.ResponseData.ToString();
                         data = data.Substring(data.IndexOf(_paramAccessToken));
                         result.ResponseData = data.ReadParameters('&', '=');
+                        break;                    
+                    case WebAuthenticationStatus.UserCancel:
+                        result.Reason = ReasonType.UserCancel;
                         break;
                     case WebAuthenticationStatus.ErrorHttp:
-                        break;
-                    case WebAuthenticationStatus.UserCancel:
+                        result.Reason = ReasonType.ErrorHttp;
                         break;
                     default:
                         break;

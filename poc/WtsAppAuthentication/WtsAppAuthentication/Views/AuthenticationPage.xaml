@@ -14,7 +14,6 @@
         </Grid.RowDefinitions>
 
         <TextBlock
-            x:Name="TitlePage"
             x:Uid="Authentication_Pivot"
             Text="Navigation Item 1"
             Style="{StaticResource PageTitleStyle}"
@@ -22,42 +21,37 @@
 
         <Pivot Grid.Row="1">
             <PivotItem x:Uid="LoginSection">
-                <StackPanel MaxWidth="600" HorizontalAlignment="Left">
+                <StackPanel Width="500" HorizontalAlignment="Left">
                     <TextBox x:Uid="LoginEmailTextBox" Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
                     <PasswordBox x:Uid="LoginPasswordBox" Password="{x:Bind ViewModel.Password, Mode=TwoWay}" Margin="0,8,0,0"/>
-                    <CheckBox x:Uid="RememberCredentialsCheckBox" />
-                    <Button x:Uid="LoginButton" Command="{x:Bind ViewModel.EmailLoginCommand}" CommandParameter="Email" Style="{StaticResource EmailLoginButtonStyle}" Margin="0,8,0,0" />
-                    <TextBlock Text="or" HorizontalAlignment="Center" Margin="0,16,0,0"/>
-                    <Button x:Uid="MicrosoftLoginButton" Command="{x:Bind ViewModel.MicrosoftLoginCommand}" Style="{StaticResource MicrosoftLoginButtonStyle}" />
-                    <Button x:Uid="FacebookLoginButton" Command="{x:Bind ViewModel.FacebookLoginCommand}" Style="{StaticResource FacebookLoginButtonStyle}" />
-                    <Button x:Uid="GoogleLoginButton" Command="{x:Bind ViewModel.GoogleLoginCommand}" Style="{StaticResource GoogleLoginButtonStyle}" />
-                    <Button x:Uid="TwitterLoginButton" Command="{x:Bind ViewModel.TwitterLoginCommand}" Style="{StaticResource TwitterLoginButtonStyle}" />
+                    <CheckBox x:Uid="RememberCredentialsCheckBox" IsChecked="{x:Bind ViewModel.RememberCredentials, Mode=TwoWay}" />
+                    <TextBlock Text="{x:Bind ViewModel.LoginErrorMessage, Mode=OneWay}" Style="{StaticResource ErrorTextStyle}"/>
+                    <Button x:Uid="LoginButton" Command="{x:Bind ViewModel.EmailLoginCommand}" Style="{StaticResource EmailLoginButtonStyle}" Margin="0,16,0,0" />
+                    <TextBlock x:Uid="LoginOrTextBlock" HorizontalAlignment="Center" Margin="0,16,0,0" Style="{StaticResource BodyTextStyle}"/>
+                    <Button x:Uid="MicrosoftLoginButton" Command="{x:Bind ViewModel.MicrosoftLoginCommand}" Style="{StaticResource MicrosoftLoginButtonStyle}" Margin="0,8"/>
+                    <Grid Margin="0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" x:Uid="FacebookLoginButton" Command="{x:Bind ViewModel.FacebookLoginCommand}" Style="{StaticResource FacebookLoginButtonStyle}" />
+                        <Button Grid.Column="1" x:Uid="GoogleLoginButton" Command="{x:Bind ViewModel.GoogleLoginCommand}" Style="{StaticResource GoogleLoginButtonStyle}" Margin="8,0"/>
+                        <Button Grid.Column="2" x:Uid="TwitterLoginButton" Command="{x:Bind ViewModel.TwitterLoginCommand}" Style="{StaticResource TwitterLoginButtonStyle}" />
+                    </Grid>
                     <HyperlinkButton x:Uid="ForgotPasswordButton" Command="{x:Bind ViewModel.ForgotPasswordCommand}" Margin="0,18,0,0"/>
                 </StackPanel>
             </PivotItem>
 
             <PivotItem x:Uid="RegisterSection">
-                <Grid>
-                </Grid>
+                <StackPanel Width="500" HorizontalAlignment="Left">
+                    <TextBox x:Uid="RegisterEmailTextBox" Text="{x:Bind ViewModel.NewEmail, Mode=TwoWay}" />
+                    <PasswordBox x:Uid="RegisterPasswordBox" Password="{x:Bind ViewModel.NewPassword, Mode=TwoWay}" Margin="0,8,0,0"/>
+                    <PasswordBox x:Uid="RegisterConfirmPasswordBox" Password="{x:Bind ViewModel.NewPasswordConfirmation, Mode=TwoWay}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.RegisterErrorMessage, Mode=OneWay}" Style="{StaticResource ErrorTextStyle}"/>
+                    <Button x:Uid="RegisterButton" Command="{x:Bind ViewModel.RegisterCommand}" Style="{StaticResource EmailLoginButtonStyle}" Margin="0,16,0,0" />
+                </StackPanel>
             </PivotItem>
         </Pivot>
-        <!--  Adaptive triggers  -->
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="WindowStates">
-                <VisualState x:Name="WideState">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="640"/>
-                    </VisualState.StateTriggers>
-                </VisualState>
-                <VisualState x:Name="NarrowState">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="0"/>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="TitlePage.Margin" Value="48,0,12,7"/>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

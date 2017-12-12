@@ -190,10 +190,10 @@
     <comment>Navigation view item name for Authentication</comment>
   </data>
   <data name="FacebookLoginButton.Content" xml:space="preserve">
-    <value>Login with Facebook</value>
+    <value>Facebook</value>
   </data>
   <data name="GoogleLoginButton.Content" xml:space="preserve">
-    <value>Login with Google</value>
+    <value>Google</value>
   </data>
   <data name="LoginButton.Content" xml:space="preserve">
     <value>Login</value>
@@ -219,7 +219,7 @@
     <value>Logout</value>
   </data>
   <data name="TwitterLoginButton.Content" xml:space="preserve">
-    <value>Login with Twitter</value>
+    <value>Twitter</value>
   </data>
   <data name="MicrosoftLoginButton.Content" xml:space="preserve">
     <value>Login with Microsoft</value>
@@ -229,5 +229,47 @@
   </data>
   <data name="RememberCredentialsCheckBox.Content" xml:space="preserve">
     <value>Remember user and password</value>
+  </data>
+  <data name="ErrorLoginEmailEmpty" xml:space="preserve">
+    <value>Email is empty.</value>
+  </data>
+  <data name="ErrorLoginPasswordEmpty" xml:space="preserve">
+    <value>Password is empty.</value>
+  </data>
+  <data name="LoginOrTextBlock.Text" xml:space="preserve">
+    <value>Or</value>
+  </data>
+  <data name="RegisterButton.Content" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="RegisterConfirmPasswordBox.PlaceholderText" xml:space="preserve">
+    <value>New user password confirmation</value>
+  </data>
+  <data name="RegisterEmailTextBox.PlaceholderText" xml:space="preserve">
+    <value>New user email</value>
+  </data>
+  <data name="RegisterPasswordBox.PlaceholderText" xml:space="preserve">
+    <value>New user password</value>
+  </data>
+  <data name="ErrorRegisterEmailEmpty" xml:space="preserve">
+    <value>New email is empty.</value>
+  </data>
+  <data name="ErrorRegisterPasswordConfirmationDoNotMatch" xml:space="preserve">
+    <value>Password and password confirmation do not match.</value>
+  </data>
+  <data name="ErrorRegisterPasswordConfirmationEmpty" xml:space="preserve">
+    <value>Password confirmation is empty.</value>
+  </data>
+  <data name="ErrorRegisterPasswordEmpty" xml:space="preserve">
+    <value>New password is empty.</value>
+  </data>
+  <data name="ErrorRegisterPasswordLength" xml:space="preserve">
+    <value>New password must have between 8 and 20 characters.</value>
+  </data>
+  <data name="ErrorLoginUnexpected" xml:space="preserve">
+    <value>There was an unexpected error trying to login.</value>
+  </data>
+  <data name="ErrorLoginHttp" xml:space="preserve">
+    <value>Unable to connect to the server.</value>
   </data>
 </root>

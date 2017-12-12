@@ -52,7 +52,7 @@ namespace WtsAppAuthentication.Services
                 var navigated = Frame.Navigate(pageType, parameter, infoOverride);
                 if (removeBackStack)
                 {
-                    while (CanGoBack)
+                    while (Frame.CanGoBack)
                     {
                         Frame.BackStack.RemoveAt(0);
                     }

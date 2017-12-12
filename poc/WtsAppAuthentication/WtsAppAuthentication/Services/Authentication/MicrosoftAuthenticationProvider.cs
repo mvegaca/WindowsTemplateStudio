@@ -113,10 +113,26 @@ namespace WtsAppAuthentication.Services
                         TryReadParameter(authenticationResult.ResponseData, jsonObject, _paramUpdatedTime);
                     }
                 }
+                else if(result.ResponseStatus == WebTokenRequestStatus.UserCancel)
+                {
+                    authenticationResult.Reason = ReasonType.UserCancel;
+                    authenticationResult.ErrorMessage = result.ResponseError.ErrorMessage;
+                }
+                else if (result.ResponseStatus == WebTokenRequestStatus.ProviderError)
+                {
+                    authenticationResult.Reason = ReasonType.ErrorHttp;
+                    authenticationResult.ErrorMessage = result.ResponseError.ErrorMessage;
+                }
+                else
+                {
+                    authenticationResult.Reason = ReasonType.Unexpected;
+                    authenticationResult.ErrorMessage = result.ResponseError.ErrorMessage;
+                }
             }
             catch (Exception)
             {
                 authenticationResult.Success = false;
+                authenticationResult.Reason = ReasonType.Unexpected;
             }
             finally
             {

@@ -70,16 +70,20 @@ namespace WtsAppAuthentication.Services
                         result.ResponseData = await GetTwitterUserNameAsync(webAuthenticationResult.ResponseData.ToString());
                         break;
                     case WebAuthenticationStatus.UserCancel:
+                        result.Reason = ReasonType.UserCancel;
                         break;
                     case WebAuthenticationStatus.ErrorHttp:
+                        result.Reason = ReasonType.ErrorHttp;
                         break;
                     default:
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 result.Success = false;
+                result.Reason = ReasonType.Unexpected;
+                result.ErrorMessage = ex.Message;
             }
             return result;
         }
