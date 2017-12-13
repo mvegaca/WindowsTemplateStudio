@@ -67,6 +67,7 @@ namespace WtsAppAuthentication.Services
             catch (Exception)
             {
                 result.Success = false;
+                result.Reason = ReasonType.Unexpected;
             }
 
             return result;
