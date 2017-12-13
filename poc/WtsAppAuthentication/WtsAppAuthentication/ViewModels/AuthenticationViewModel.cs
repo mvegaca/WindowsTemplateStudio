@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Xaml.Controls;
 using WtsAppAuthentication.Helpers;
 using WtsAppAuthentication.Services;
 using WtsAppAuthentication.Views;
@@ -111,83 +115,54 @@ namespace WtsAppAuthentication.ViewModels
 
         public void LoadData()
         {
-            Email = AuthenticationService.Data.Email;
-            Password = AuthenticationService.Data.Password;
-            RememberCredentials = AuthenticationService.Data.RememberCredentials;
+            RememberCredentials = AuthenticationService.RememberCredentials;
+            if (RememberCredentials)
+            {
+                Email = AuthenticationService.LastUserName;
+                Password = AuthenticationService.RetrievePassword(Email);
+            }
+            AuthenticationService.OnPrivacyPolicyInvoked += AuthenticationServiceOnPrivacyPolicyInvoked;
         }
 
         private async void OnEmailLogin()
         {
-            if(IsValidEmailLogin())
+            if (IsValidEmailLogin())
             {
-                await LoginAsync(new EmailAuthenticationProvider(Email, Password));
-                AuthenticationService.Data.RememberCredentials = RememberCredentials;
-                AuthenticationService.Data.Email = RememberCredentials ? Email : string.Empty;
-                AuthenticationService.Data.Password = RememberCredentials ? Password : string.Empty;
-                await AuthenticationService.SaveDataAsync();
+                AuthenticationService.ConfigureProviderParameter(EmailAuthenticationProvider.EmailProviderId, EmailAuthenticationProvider.EmailParameter, Email);
+                AuthenticationService.ConfigureProviderParameter(EmailAuthenticationProvider.EmailProviderId, EmailAuthenticationProvider.PasswordParameter, Password);
+                await LoginAsync(EmailAuthenticationProvider.EmailProviderId);
+                await AuthenticationService.SetRememberCredentialsAsync(RememberCredentials);
+                if (RememberCredentials)
+                {
+                    AuthenticationService.SaveCredentials(Email, Password);
+                    await AuthenticationService.SetLastUserNameAsync(Email);
+                }
+                else
+                {
+                    AuthenticationService.DeleteCredentials(Email, Password);
+                }
             }
         }
 
-        private async void OnMicrosoftLogin()
-        {
-            await LoginAsync(new MicrosoftAuthenticationProvider());
-        }
+        private async void OnMicrosoftLogin() => await LoginAsync(MicrosoftAuthenticationProvider.MicrosoftProviderId);
 
-        private async void OnFacebookLogin()
-        {
-            // TODO WTS: Add your Facebook Client ID
-            var clientID = "";
-            await LoginAsync(new FacebookAuthenticationProvider(clientID));
-        }
+        private async void OnFacebookLogin() => await LoginAsync(FacebookAuthenticationProvider.FacebookProviderId);
 
-        private async void OnTwitterLogin()
-        {
-            // TODO WTS: Add your Twitter Consumer Key, Consumer Secret and CallBack URL
-            var consumerKey = "";
-            var consumerSecret = "";
-            var callbackURL = "https://github.com/Microsoft/WindowsTemplateStudio/";
-            await LoginAsync(new TwitterAuthenticationProvider(consumerKey, consumerSecret, callbackURL));
-        }
+        private async void OnTwitterLogin() => await LoginAsync(TwitterAuthenticationProvider.TwitterProviderId);
 
-        private async void OnGoogleLogin()
-        {
-            await LoginAsync(new GoogleAuthenticationProvider());
-        }
+        private async void OnGoogleLogin() => await LoginAsync(GoogleAuthenticationProvider.GoogleProviderId);
 
         private void OnForgotPassword()
         {
         }
 
-        private async void OnRegister()
-        {
-            IsLoading = true;
-            try
-            {
-                if (IsValidEmailRegister())
-                {
-                    // WTS: TODO register with backend API
-                    AuthenticationService.Data.Email = NewEmail;
-                    AuthenticationService.Data.Password = NewPassword;
-                    AuthenticationService.Data.RememberCredentials = true;
-                    await SuccessLoginAsync();
-                }
-            }
-            catch (Exception)
-            {
-            }
-            finally
-            {
-                IsLoading = false;
-            }
-        }
-
-        private async Task LoginAsync(IAuthenticationProvider provider)
+        private async Task LoginAsync(string providerID)
         {
             try
             {
                 IsLoading = true;
                 LoginErrorMessage = string.Empty;
-                var result = await provider.AuthenticateAsync(OnPrivacyPolicyInvoked);
+                var result = await AuthenticationService.AuthenticateAsync(providerID);
                 if (result.Success)
                 {
                     await SuccessLoginAsync();
@@ -214,11 +189,31 @@ namespace WtsAppAuthentication.ViewModels
             }
         }
 
+        private async void OnRegister()
+        {
+            IsLoading = true;
+            try
+            {
+                if (IsValidEmailRegister())
+                {
+                    // WTS: TODO register with backend API
+                    AuthenticationService.SaveCredentials(NewEmail, NewPassword);
+                    await AuthenticationService.SetRememberCredentialsAsync(true);
+                    await SuccessLoginAsync();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+
         private async Task SuccessLoginAsync()
         {
-            AuthenticationService.Data.IsLoggedIn = true;
-            await AuthenticationService.SaveDataAsync();
-
+            await AuthenticationService.LogInAsync();
             // ShellPage will replace the NavigationService Frame
             NavigationService.Navigate(typeof(ShellPage));
             // Then we navigate to MainPage on Shell Frame
@@ -278,7 +273,7 @@ namespace WtsAppAuthentication.ViewModels
             }
         }
 
-        private async void OnPrivacyPolicyInvoked()
+        private async void AuthenticationServiceOnPrivacyPolicyInvoked(object sender, EventArgs e)
         {
             IsLoading = false;
             await Launcher.LaunchUriAsync(new Uri("https://aka.ms/wts"));

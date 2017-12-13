@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Security.Authentication.Web;
 using WtsAppAuthentication.Extensions;
+using WtsAppAuthentication.Helpers;
 using WtsAppAuthentication.Models;
 
 namespace WtsAppAuthentication.Services
 {
-    public class FacebookAuthenticationProvider : IAuthenticationProvider
+    public class FacebookAuthenticationProvider : AuthenticationProviderBase
     {
+        public static string FacebookProviderId = "Facebook";
+
         private const string _baseApiUrl = "https://www.facebook.com/v2.11/dialog/oauth?";
         private const string _apiDialogOauthDisplay = "popup";
         private const string _apiDialogOauthResponseType = "token";
@@ -21,17 +24,12 @@ namespace WtsAppAuthentication.Services
 
         private string _clientID;
 
-        public FacebookAuthenticationProvider(string clientID)
+        public FacebookAuthenticationProvider(string clientID) : base(FacebookProviderId)
         {
             _clientID = clientID;
         }
 
-        public Task<AuthenticationResult> AuthenticateAsync()
-        {
-            return AuthenticateAsync(null);
-        }
-
-        public async Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
+        public override async Task<AuthenticationResult> AuthenticateAsync()
         {
             var result = new AuthenticationResult();
             try

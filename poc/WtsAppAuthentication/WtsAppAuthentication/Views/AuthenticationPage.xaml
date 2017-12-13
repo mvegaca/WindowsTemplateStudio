@@ -22,6 +22,7 @@
         <Pivot Grid.Row="1">
             <PivotItem x:Uid="LoginSection">
                 <StackPanel Width="500" HorizontalAlignment="Left">
+                    <!--<TextBox x:Uid="LoginEmailTextBox" Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />-->
                     <TextBox x:Uid="LoginEmailTextBox" Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
                     <PasswordBox x:Uid="LoginPasswordBox" Password="{x:Bind ViewModel.Password, Mode=TwoWay}" Margin="0,8,0,0"/>
                     <CheckBox x:Uid="RememberCredentialsCheckBox" IsChecked="{x:Bind ViewModel.RememberCredentials, Mode=TwoWay}" />

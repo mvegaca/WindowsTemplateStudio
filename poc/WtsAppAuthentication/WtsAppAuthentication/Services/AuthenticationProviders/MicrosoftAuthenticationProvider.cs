@@ -11,8 +11,10 @@ using WtsAppAuthentication.Models;
 
 namespace WtsAppAuthentication.Services
 {
-    public class MicrosoftAuthenticationProvider : IAuthenticationProvider
+    public class MicrosoftAuthenticationProvider : AuthenticationProviderBase
     {
+        public static string MicrosoftProviderId = "Microsoft";
+
         private const string _baseApiUrl = "https://apis.live.net/v5.0/me?";
         private const string _authenticationProviderId = "https://login.microsoft.com";
         private const string _accountAuthority = "consumers";
@@ -28,25 +30,21 @@ namespace WtsAppAuthentication.Services
         private const string _paramUpdatedTime = "updated_time";
         private const string _paramToken = "token";
 
+        private Action _privacyPolicyInvokedAction;
+
         // TODO WTS: Read more information about using Web Account Manager
         // https://docs.microsoft.com/windows/uwp/security/web-account-manager
         private WebAccountProvider _provider;
         private TaskCompletionSource<AuthenticationResult> _tcs;
-        private Action _privacyPolicyInvokedAction;
 
-        public MicrosoftAuthenticationProvider()
+        public MicrosoftAuthenticationProvider(Action privacyPolicyInvokedAction) : base(MicrosoftProviderId)
         {
+            _privacyPolicyInvokedAction = privacyPolicyInvokedAction;
             _tcs = new TaskCompletionSource<AuthenticationResult>();
         }
 
-        public Task<AuthenticationResult> AuthenticateAsync()
+        public override Task<AuthenticationResult> AuthenticateAsync()
         {
-            return AuthenticateAsync(null);
-        }
-
-        public Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
-        {
-            _privacyPolicyInvokedAction = privacyPolicyInvokedAction;
             AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildPaneAsync;
             AccountsSettingsPane.Show();
             return _tcs.Task;

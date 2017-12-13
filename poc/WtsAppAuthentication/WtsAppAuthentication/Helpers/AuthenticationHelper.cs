@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Windows.Web.Http.Headers;
 
-namespace WtsAppAuthentication.Services
+namespace WtsAppAuthentication.Helpers
 {
     public static class AuthenticationHelper
     {

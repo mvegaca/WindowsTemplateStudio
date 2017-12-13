@@ -39,7 +39,7 @@ namespace WtsAppAuthentication.Services
                 if (Window.Current.Content == null)
                 {
                     // Create a Frame to act as the navigation context and navigate to the first page
-                    if (AuthenticationService.Data.IsLoggedIn)
+                    if (AuthenticationService.IsLoggedIn)
                     {
                         Window.Current.Content = new Views.ShellPage();
                     }
@@ -70,7 +70,7 @@ namespace WtsAppAuthentication.Services
             if (IsInteractive(activationArgs))
             {
                 DefaultLaunchActivationHandler defaultHandler;
-                if (AuthenticationService.Data.IsLoggedIn)
+                if (AuthenticationService.IsLoggedIn)
                 {
                     defaultHandler = new DefaultLaunchActivationHandler(typeof(Views.MainPage));
                 }

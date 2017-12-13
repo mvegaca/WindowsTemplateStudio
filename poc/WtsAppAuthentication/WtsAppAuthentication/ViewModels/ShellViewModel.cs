@@ -216,8 +216,7 @@ namespace WtsAppAuthentication.ViewModels
 
         private async void OnLogout()
         {
-            AuthenticationService.Data.IsLoggedIn = false;
-            await AuthenticationService.SaveDataAsync();
+            await AuthenticationService.LogOutAsync();
             var frame = new Frame();
             Window.Current.Content = frame;
             NavigationService.Frame = frame;

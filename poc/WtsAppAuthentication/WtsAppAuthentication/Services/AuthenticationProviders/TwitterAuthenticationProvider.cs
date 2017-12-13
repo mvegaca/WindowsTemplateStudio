@@ -8,12 +8,15 @@ using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 using WtsAppAuthentication.Extensions;
+using WtsAppAuthentication.Helpers;
 using WtsAppAuthentication.Models;
 
 namespace WtsAppAuthentication.Services
 {
-    public class TwitterAuthenticationProvider : IAuthenticationProvider
+    public class TwitterAuthenticationProvider : AuthenticationProviderBase
     {
+        public static string TwitterProviderId = "Twitter";
+
         private const string _baseApiUrl = "https://api.twitter.com/oauth/";
         private const string _apiServiceRequestToken = "request_token";
         private const string _apiServiceAuthorize = "authorize";
@@ -40,19 +43,16 @@ namespace WtsAppAuthentication.Services
         private string _consumerSecret;
         private string _callbackURL;
 
-        public TwitterAuthenticationProvider(string consumerKey, string consumerSecret, string callbackURL)
+        public string Id => "Twitter";
+
+        public TwitterAuthenticationProvider(string consumerKey, string consumerSecret, string callbackURL) : base(TwitterProviderId)
         {
             _consumerKey = consumerKey;
             _consumerSecret = consumerSecret;
             _callbackURL = callbackURL;
         }
 
-        public Task<AuthenticationResult> AuthenticateAsync()
-        {
-            return AuthenticateAsync(null);
-        }
-
-        public async Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
+        public override async Task<AuthenticationResult> AuthenticateAsync()
         {
             var result = new AuthenticationResult();
             try

@@ -4,14 +4,15 @@ using WtsAppAuthentication.Models;
 
 namespace WtsAppAuthentication.Services
 {
-    public class GoogleAuthenticationProvider : IAuthenticationProvider
+    public class GoogleAuthenticationProvider : AuthenticationProviderBase
     {
-        public Task<AuthenticationResult> AuthenticateAsync()
+        public static string GoogleProviderId = "Google";
+
+        public GoogleAuthenticationProvider() : base(GoogleProviderId)
         {
-            return AuthenticateAsync(null);
         }
 
-        public async Task<AuthenticationResult> AuthenticateAsync(Action privacyPolicyInvokedAction)
+        public override async Task<AuthenticationResult> AuthenticateAsync()
         {
             // TODO pending to implement with Google Console and Authentication Broker
             await Task.CompletedTask;
