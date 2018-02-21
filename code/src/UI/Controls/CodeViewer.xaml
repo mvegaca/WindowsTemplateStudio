@@ -9,6 +9,6 @@
              AutomationProperties.Name="{x:Static strings:StringRes.AccessibilityCodeViewerControl}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <WebBrowser x:Name="webBrowser" ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+        <WebBrowser x:Name="webBrowser" ScrollViewer.VerticalScrollBarVisibility="Hidden" Visibility="Collapsed" />
     </Grid>
 </UserControl>

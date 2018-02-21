@@ -5,9 +5,11 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Templates.Core;
 using Microsoft.Templates.UI.Services;
 using Microsoft.Templates.UI.ViewModels.Common;
 
@@ -45,11 +47,11 @@ namespace Microsoft.Templates.UI.Controls
 
             if (Item is NewItemFileViewModel item)
             {
-                UpdateCodeView(item);
+                UpdateCodeViewAsync(item).FireAndForget();
             }
         }
 
-        private void UpdateCodeView(Func<string, string> updateTextAction, string original, string modified = null, bool renderSideBySide = false)
+        private void UpdateWebBrowser(Func<string, string> updateTextAction, string original, string modified = null, bool renderSideBySide = false)
         {
             if (!_isInitialized)
             {
@@ -87,6 +89,10 @@ namespace Microsoft.Templates.UI.Controls
                 if (_currentHtml != patternText)
                 {
                     webBrowser.NavigateToString(patternText);
+                    DispatcherService.BeginInvoke(() =>
+                    {
+                        webBrowser.Visibility = Visibility.Visible;
+                    });
                     _currentHtml = patternText;
                 }
             }
@@ -150,33 +156,38 @@ namespace Microsoft.Templates.UI.Controls
             return string.Empty;
         }
 
-        private static void OnItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void OnItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = d as CodeViewer;
             var item = control.Item as NewItemFileViewModel;
             if (control != null && item != null)
             {
-                control.UpdateCodeView(item);
+                await control.UpdateCodeViewAsync(item);
             }
         }
 
-        public void UpdateCodeView(NewItemFileViewModel item)
+        public async Task UpdateCodeViewAsync(NewItemFileViewModel item)
         {
+            DispatcherService.BeginInvoke(() =>
+            {
+                webBrowser.Visibility = Visibility.Collapsed;
+            });
+            await Task.Delay(100);
             switch (item.FileStatus)
             {
                 case FileStatus.NewFile:
                 case FileStatus.WarningFile:
                 case FileStatus.UnchangedFile:
-                    UpdateCodeView(item.UpdateTextAction, item.TempFile);
+                    UpdateWebBrowser(item.UpdateTextAction, item.TempFile);
                     break;
                 case FileStatus.ModifiedFile:
-                    UpdateCodeView(item.UpdateTextAction, item.TempFile, item.ProjectFile);
+                    UpdateWebBrowser(item.UpdateTextAction, item.TempFile, item.ProjectFile);
                     break;
                 case FileStatus.ConflictingFile:
-                    UpdateCodeView(item.UpdateTextAction, item.TempFile, item.ProjectFile, true);
+                    UpdateWebBrowser(item.UpdateTextAction, item.TempFile, item.ProjectFile, true);
                     break;
                 case FileStatus.ConflictingStylesFile:
-                    UpdateCodeView(item.UpdateTextAction, item.FailedPostaction);
+                    UpdateWebBrowser(item.UpdateTextAction, item.FailedPostaction);
                     break;
             }
         }
