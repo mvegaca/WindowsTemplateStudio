@@ -4,15 +4,55 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:services="using:AppExtensionHost.Services"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
-    <Grid
-        x:Name="ContentArea"
-        Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.-->
-        </Grid>
+    <Page.Resources>
+        <DataTemplate x:Key="ExtensionItemTemplate" x:DataType="services:Extension">
+            <Grid Height="80" Width="400" Margin="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="80" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <CheckBox
+                    Grid.Column="0"
+                    IsChecked="{x:Bind IsEnabled, Mode=OneWay}"
+                    VerticalAlignment="Center"                     
+                    MinWidth="30">
+                    <i:Interaction.Behaviors>
+                        <ic:EventTriggerBehavior EventName="Checked">
+                            <ic:InvokeCommandAction Command="{x:Bind CheckedCommand}" />
+                        </ic:EventTriggerBehavior>
+                        <ic:EventTriggerBehavior EventName="Unchecked">
+                            <ic:InvokeCommandAction Command="{x:Bind UncheckedCommand}" />
+                        </ic:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </CheckBox>
+                <Image
+                    Grid.Column="1"
+                    Source="{x:Bind Logo}"
+                    Stretch="Uniform"
+                    x:Name="ExtensionLogo" />
+                <StackPanel Grid.Column="2" Margin="8,0,8,0">
+                    <TextBlock Text="{x:Bind AppExtension.DisplayName}" />
+                    <TextBlock Text="{x:Bind AppExtension.Description}" Margin="0,4,0,0" />
+                </StackPanel>
+                <Button
+                    Grid.Column="3"
+                    x:Uid="RemoveExtensionButton"
+                    Command="{x:Bind RemoveCommand}" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea">
+        <ItemsControl
+            HorizontalAlignment="Left"
+            ItemsSource="{x:Bind ViewModel.Items}"
+            ItemTemplate="{StaticResource ExtensionItemTemplate}" />
     </Grid>
 </Page>

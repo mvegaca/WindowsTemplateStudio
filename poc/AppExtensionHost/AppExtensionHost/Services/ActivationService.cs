@@ -83,6 +83,7 @@ namespace AppExtensionHost.Services
 
         private async Task StartupAsync()
         {
+            await App.ExtensionsService.InitializeAsync();
             await Task.CompletedTask;
         }
 

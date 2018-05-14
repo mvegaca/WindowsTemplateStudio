@@ -5,7 +5,8 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:genTemplate="http://schemas.microsoft.com/appx/developer/windowsTemplateStudio"
-  IgnorableNamespaces="uap mp genTemplate">
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap uap3 mp genTemplate">
 
   <Identity
     Name="FC2A5124-6155-43B2-A5F0-E5F5C5BB322A"
@@ -43,6 +44,21 @@
       </uap:VisualElements>
 
       <Extensions>
+        <uap:Extension Category="windows.appService">
+          <uap:AppService Name="com.microsoft.wts.extension" />
+        </uap:Extension>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension
+            Name="Microsoft.com.SampleExtension01"
+            Id="extension"
+            DisplayName="Extension"
+            Description="Sample Extension"
+            PublicFolder="Public">
+            <uap3:Properties>
+              <Service>com.microsoft.wts.extension</Service>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
       </Extensions>
     </Application>
   </Applications>

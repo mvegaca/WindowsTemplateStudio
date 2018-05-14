@@ -16,6 +16,8 @@ namespace AppExtensionHost
             get { return _activationService.Value; }
         }
 
+        public static ExtensionsManager ExtensionsService = new ExtensionsManager("Microsoft.com.SampleExtension01");
+
         public App()
         {
             InitializeComponent();
@@ -39,7 +41,7 @@ namespace AppExtensionHost
 
         private ActivationService CreateActivationService()
         {
-            return new ActivationService(this, typeof(Views.MainPage), new Lazy<UIElement>(CreateShell));
+            return new ActivationService(this, typeof(Views.ExtensionsPage), new Lazy<UIElement>(CreateShell));
         }
 
         private UIElement CreateShell()

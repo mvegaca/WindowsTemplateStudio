@@ -88,7 +88,7 @@ namespace AppExtension.Services
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()
         {
-            yield break;
+            yield return new AppExtensionService();
         }
 
         private bool IsInteractive(object args)
