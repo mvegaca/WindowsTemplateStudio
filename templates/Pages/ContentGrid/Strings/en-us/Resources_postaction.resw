@@ -1,0 +1,13 @@
+﻿<!--{**-->
+<!--This xml blocks include string resources for the ContentGridViewPage to your project.-->
+<!--**}-->
+
+<root>
+  <!--^^-->
+  <!--{[{-->
+  <data name="ContentGridView_Title.Text" xml:space="preserve">
+    <value>ContentGridView</value>
+    <comment>Page title for ContentGridView</comment>
+  </data>
+  <!--}]}-->
+</root>
