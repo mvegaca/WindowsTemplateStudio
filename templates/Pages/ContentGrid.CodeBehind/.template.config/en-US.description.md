@@ -1,1 +1,0 @@
-﻿This page allows you to add custom content in a GridView which is even responsive to the screensize change.
