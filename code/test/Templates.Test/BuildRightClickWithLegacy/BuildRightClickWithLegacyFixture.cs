@@ -37,22 +37,22 @@ namespace Microsoft.Templates.Test
 
                 InitializeTemplates(new LegacyTemplatesSourceV2(), language);
 
-                var projectTypes = GenContext.ToolBox.Repo.GetAll().Where(t => t.GetTemplateType() == TemplateType.Project
-                                                          && t.GetLanguage() == language).SelectMany(p => p.GetProjectTypeList()).Distinct();
+                // TODO: Re-enable for all platforms
+                ////foreach (var language in Platforms.GetAllPlarforms())
+                var projectTypes = GenContext.ToolBox.Repo.GetProjectTypes()
+                            .Where(m => !string.IsNullOrEmpty(m.Description))
+                            .Select(m => m.Name);
 
                 foreach (var projectType in projectTypes)
                 {
-                    var frameworks = GenComposer.GetSupportedFx(projectType);
+                    // TODO: Re-enable for all platforms
+                    // var projectFrameworks = GenComposer.GetSupportedFx(projectType, string.Empty);
+                    var targetFrameworks = GenContext.ToolBox.Repo.GetFrameworks()
+                                                .Select(m => m.Name).ToList();
 
-                    foreach (var framework in frameworks)
+                    foreach (var framework in targetFrameworks)
                     {
-                        // See https://github.com/Microsoft/WindowsTemplateStudio/issues/1985
-                        if (framework == "MVVMLight")
-                        {
-                            continue;
-                        }
-
-                        result.Add(new object[] { projectType, framework, language });
+                        result.Add(new object[] { projectType, framework, Platforms.Uwp, language });
                     }
                 }
             }
@@ -68,19 +68,23 @@ namespace Microsoft.Templates.Test
         {
             Configuration.Current.CdnUrl = "https://wtsrepository.blob.core.windows.net/pro/";
 
-            GenContext.Bootstrap(source, new FakeGenShell(language), new Version("1.7"), language);
+            GenContext.Bootstrap(source, new FakeGenShell(Platforms.Uwp, language), new Version("2.0"), language);
             if (!syncExecuted)
             {
-                GenContext.ToolBox.Repo.SynchronizeAsync(true).Wait();
+                GenContext.ToolBox.Repo.SynchronizeAsync(true, true).Wait();
 
                 syncExecuted = true;
             }
         }
 
-        public async Task ChangeTemplatesSourceAsync(TemplatesSource source, string language)
+        [SuppressMessage(
+         "Usage",
+         "VSTHRD002:Synchronously waiting on tasks or awaiters may cause deadlocks",
+         Justification = "Required for unit testing.")]
+        public void ChangeTemplatesSource(TemplatesSource source, string language, string platform)
         {
-            GenContext.Bootstrap(source, new FakeGenShell(language), language);
-            await GenContext.ToolBox.Repo.SynchronizeAsync(true);
+            GenContext.Bootstrap(source, new FakeGenShell(platform, language), language);
+            GenContext.ToolBox.Repo.SynchronizeAsync(true, true).Wait();
         }
 
         // Renamed second parameter as this fixture needs the language while others don't

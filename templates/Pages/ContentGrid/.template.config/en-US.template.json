@@ -1,6 +1,0 @@
-﻿{
-    "author": "Microsoft",
-    "name": "ContentGrid",
-    "description": "This page allows you to add custom items in form of an Adaptive Grid.",
-    "identity": "wts.Page.ContentGrid"
-}
