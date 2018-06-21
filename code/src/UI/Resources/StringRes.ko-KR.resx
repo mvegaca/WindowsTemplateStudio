@@ -345,6 +345,10 @@
     <value>이름이 예약됨</value>
     <comment>Validation error message: Reserved name</comment>
   </data>
+  <data name="NotificationValidationError_EndsWithPageSufix" xml:space="preserve">
+    <value>Page name can't end with 'Page' suffix.</value>
+    <comment>Validation error message: Ends with page sufix</comment>
+  </data>
   <data name="ProjectConfigurationDescriptionText" xml:space="preserve">
     <value>Package.appxmanifest 파일에서 프로젝트 구성 메타데이터를 찾을 수 없습니다. 프로젝트를 생성할 때 선택한 프로젝트 구성을 제공해주십시오.</value>
     <comment>ProjectConfiguration view description</comment>

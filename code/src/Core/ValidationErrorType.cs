@@ -10,6 +10,7 @@ namespace Microsoft.Templates.Core
         Empty,
         AlreadyExists,
         BadFormat,
-        ReservedName
+        ReservedName,
+        EndsWithPageSufix
     }
 }

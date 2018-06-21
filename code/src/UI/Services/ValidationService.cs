@@ -20,7 +20,11 @@ namespace Microsoft.Templates.UI.Services
 
         public static ValidationResult ValidateTemplateName(string templateName, bool includesDefaultNamesValidation, bool includesExistingNamesValidation)
         {
-            var validators = new List<Validator>() { new ReservedNamesValidator() };
+            var validators = new List<Validator>()
+            {
+                new ReservedNamesValidator(),
+                new PageSufixValidator()
+            };
 
             if (includesExistingNamesValidation)
             {
@@ -37,7 +41,11 @@ namespace Microsoft.Templates.UI.Services
 
         public static string InferTemplateName(string templateName, bool includesExistingNamesValidation, bool includesDefaultNamesValidation)
         {
-            var validators = new List<Validator>() { new ReservedNamesValidator() };
+            var validators = new List<Validator>()
+            {
+                new ReservedNamesValidator(),
+                new PageSufixValidator()
+            };
             if (includesDefaultNamesValidation)
             {
                 validators.Add(new DefaultNamesValidator());

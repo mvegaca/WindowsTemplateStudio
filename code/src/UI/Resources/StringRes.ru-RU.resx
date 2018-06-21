@@ -345,6 +345,10 @@
     <value>Имя зарезервировано</value>
     <comment>Validation error message: Reserved name</comment>
   </data>
+  <data name="NotificationValidationError_EndsWithPageSufix" xml:space="preserve">
+    <value>Page name can't end with 'Page' suffix.</value>
+    <comment>Validation error message: Ends with page sufix</comment>
+  </data>
   <data name="ProjectConfigurationDescriptionText" xml:space="preserve">
     <value>Не удается найти метаданные конфигурации проекта в файле Package.appxmanifest. Укажите конфигурацию, выбранную при создании проекта.</value>
     <comment>ProjectConfiguration view description</comment>

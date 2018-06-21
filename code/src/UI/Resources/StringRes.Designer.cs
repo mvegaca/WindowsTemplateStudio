@@ -916,6 +916,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page name can&apos;t end with &apos;Page&apos; suffix..
+        /// </summary>
+        public static string NotificationValidationError_EndsWithPageSufix {
+            get {
+                return ResourceManager.GetString("NotificationValidationError_EndsWithPageSufix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name is reserved.
         /// </summary>
         public static string NotificationValidationError_ReservedName {
