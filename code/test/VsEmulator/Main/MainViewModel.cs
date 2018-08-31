@@ -52,7 +52,7 @@ namespace Microsoft.Templates.VsEmulator.Main
 
         public string ProjectName { get; private set; }
 
-        public string OutputPath { get;  set; }
+        public string OutputPath { get; set; }
 
         public string DestinationPath { get; private set; }
 
@@ -401,7 +401,7 @@ namespace Microsoft.Templates.VsEmulator.Main
 
             try
             {
-                var userSelection = NewItemGenController.Instance.GetUserSelectionNewFeature(GenContext.CurrentLanguage, Services.FakeStyleValuesProvider.Instance);
+                var userSelection = NewItemGenController.Instance.GetUserSelectionNewTemplate(TemplateType.Feature, GenContext.CurrentLanguage, Services.FakeStyleValuesProvider.Instance);
 
                 if (userSelection != null)
                 {
@@ -435,7 +435,7 @@ namespace Microsoft.Templates.VsEmulator.Main
             ClearContext();
             try
             {
-                var userSelection = NewItemGenController.Instance.GetUserSelectionNewPage(GenContext.CurrentLanguage, Services.FakeStyleValuesProvider.Instance);
+                var userSelection = NewItemGenController.Instance.GetUserSelectionNewTemplate(TemplateType.Page, GenContext.CurrentLanguage, Services.FakeStyleValuesProvider.Instance);
 
                 if (userSelection != null)
                 {

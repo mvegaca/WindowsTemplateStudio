@@ -42,53 +42,30 @@ namespace Microsoft.Templates.UI
             PostactionFactory = postactionFactory;
         }
 
-        public UserSelection GetUserSelectionNewFeature(string language, BaseStyleValuesProvider provider)
+        public UserSelection GetUserSelectionNewTemplate(TemplateType templateType, string language, BaseStyleValuesProvider provider)
         {
-            var newItem = new Views.NewItem.WizardShell(TemplateType.Feature, language, provider);
+            var newItem = new Views.NewItem.WizardShell(templateType, language, provider);
             try
             {
                 CleanStatusBar();
 
                 GenContext.ToolBox.Shell.ShowModal(newItem);
+                WizardTypeEnum wizardTypeEnum = WizardTypeEnum.AddFeature;
+
+                if (templateType == TemplateType.Page)
+                {
+                    wizardTypeEnum = WizardTypeEnum.AddPage;
+                }
+
                 if (newItem.Result != null)
                 {
-                    TrackWizardCompletedTelemery(WizardTypeEnum.AddFeature, newItem.Result.ItemGenerationType);
+                    TrackWizardCompletedTelemery(wizardTypeEnum, newItem.Result.ItemGenerationType);
 
                     return newItem.Result;
                 }
                 else
                 {
-                    AppHealth.Current.Telemetry.TrackWizardCancelledAsync(WizardTypeEnum.AddFeature, GenContext.ToolBox.Shell.GetVsVersion(), GenContext.ToolBox.Repo.SyncInProgress).FireAndForget();
-                }
-            }
-            catch (Exception ex) when (!(ex is WizardBackoutException))
-            {
-                newItem.SafeClose();
-                ShowError(ex);
-            }
-
-            GenContext.ToolBox.Shell.CancelWizard();
-
-            return null;
-        }
-
-        public UserSelection GetUserSelectionNewPage(string language, BaseStyleValuesProvider provider)
-        {
-            var newItem = new Views.NewItem.WizardShell(TemplateType.Page, language, provider);
-            try
-            {
-                CleanStatusBar();
-
-                GenContext.ToolBox.Shell.ShowModal(newItem);
-                if (newItem.Result != null)
-                {
-                    TrackWizardCompletedTelemery(WizardTypeEnum.AddPage, newItem.Result.ItemGenerationType);
-
-                    return newItem.Result;
-                }
-                else
-                {
-                    AppHealth.Current.Telemetry.TrackWizardCancelledAsync(WizardTypeEnum.AddPage, GenContext.ToolBox.Shell.GetVsVersion(), GenContext.ToolBox.Repo.SyncInProgress).FireAndForget();
+                    AppHealth.Current.Telemetry.TrackWizardCancelledAsync(wizardTypeEnum, GenContext.ToolBox.Shell.GetVsVersion(), GenContext.ToolBox.Repo.SyncInProgress).FireAndForget();
                 }
             }
             catch (Exception ex) when (!(ex is WizardBackoutException))
@@ -106,7 +83,7 @@ namespace Microsoft.Templates.UI
         {
             try
             {
-               await UnsafeGenerateNewItemAsync(templateType, userSelection);
+                await UnsafeGenerateNewItemAsync(templateType, userSelection);
             }
             catch (Exception ex)
             {
