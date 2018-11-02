@@ -3,14 +3,14 @@
   "classifications": [
     "Universal"
   ],
-  "name": "CaliburnMicro.Project.TabbedPivot.AddTabbedPivotItems.ImageGallery",
+  "name": "CaliburnMicro.Project.TabbedPivot.AddTabbedPivotItems.NavigationService",
   "tags": {
     "language": "C#",
     "type": "item",
     "wts.type": "composition",
     "wts.platform" : "Uwp",
     "wts.version": "1.0.0",
-    "wts.compositionFilter": "$projectType == TabbedPivot & identity == wts.Page.ImageGallery.CaliburnMicro"
+    "wts.compositionFilter": "$framework == CaliburnMicro & $projectType == TabbedPivot & wts.type==page & groupidentity == wts.Page.ImageGallery|wts.Page.ContentGrid"
   },
   "sourceName": "wts.ItemName",
   "preferNameDirectory": true,
