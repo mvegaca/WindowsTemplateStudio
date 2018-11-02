@@ -8,13 +8,22 @@ namespace Param_ItemNamespace.Services
 {
     public static class SampleDataService
     {
+//{[{
+        private static IEnumerable<SampleOrder> _allOrders;
+//}]}
+
 //^^
 //{[{
 
         // TODO WTS: Remove this once your ContentGrid page is displaying real data
         public static ObservableCollection<SampleOrder> GetContentGridData()
         {
-            return new ObservableCollection<SampleOrder>(AllOrders());
+            if (_allOrders == null)
+            {
+                _allOrders = AllOrders();
+            }
+
+            return new ObservableCollection<SampleOrder>(_allOrders);
         }
 //}]}
     }
