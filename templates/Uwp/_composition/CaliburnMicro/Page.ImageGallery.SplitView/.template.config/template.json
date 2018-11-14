@@ -1,20 +1,21 @@
 ﻿{
-  "author": "Microsoft",
+  "author": "Microsoft Community",
   "classifications": [
     "Universal"
   ],
-  "name": "CaliburnMicro.Page.ImageGallery.LoadData.TabbedPivot",
+  "name": "CaliburnMicro.Page.ImageGallery.SplitView",
   "tags": {
     "language": "C#",
     "type": "item",
     "wts.type": "composition",
-    "wts.platform": "Uwp",
+    "wts.platform" : "Uwp",
     "wts.version": "1.0.0",
-    "wts.compositionFilter": "$projectType == TabbedPivot & identity == wts.Page.ImageGallery.CaliburnMicro"
+    "wts.compositionFilter": "identity == wts.Page.ImageGallery.CaliburnMicro & $projectType == SplitView"
   },
   "sourceName": "wts.ItemName",
   "preferNameDirectory": true,
-  "PrimaryOutputs": [],
+  "PrimaryOutputs": [
+  ],
   "symbols": {
     "wts.rootNamespace": {
       "type": "parameter",
@@ -23,6 +24,10 @@
     "wts.itemNamespace": {
       "type": "parameter",
       "replaces": "Param_ItemNamespace"
+    },
+    "wts.homePageName": {
+      "type":"parameter",
+      "replaces":"Param_HomeName"
     }
   }
 }

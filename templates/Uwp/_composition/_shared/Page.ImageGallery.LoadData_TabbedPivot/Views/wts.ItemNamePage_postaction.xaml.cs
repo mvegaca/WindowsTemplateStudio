@@ -1,4 +1,8 @@
-﻿namespace Param_ItemNamespace.Views
+﻿//{[{
+using Windows.UI.Xaml;
+using Param_ItemNamespace.Helpers;
+//}]}
+namespace Param_ItemNamespace.Views
 {
     public sealed partial class wts.ItemNamePage : Page
     {
@@ -10,9 +14,9 @@
         }
 
         //{[{
-        private async void wts.ItemNamePage_Loaded(object sender, RoutedEventArgs e)
+        private void wts.ItemNamePage_Loaded(object sender, RoutedEventArgs e)
         {
-            await ViewModel.LoadAnimationAsync();
+            ImagesNavigationHelper.RemoveImageId(wts.ItemNameViewModel.wts.ItemNameSelectedIdKey);
         }
         //}]}
     }

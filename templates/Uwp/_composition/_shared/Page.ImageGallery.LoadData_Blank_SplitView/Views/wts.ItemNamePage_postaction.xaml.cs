@@ -1,4 +1,8 @@
-﻿namespace Param_ItemNamespace.Views
+﻿//{[{
+using Windows.UI.Xaml.Navigation;
+using Param_ItemNamespace.Helpers;
+//}]}
+namespace Param_ItemNamespace.Views
 {
     public sealed partial class wts.ItemNamePage : Page
     {
@@ -7,12 +11,12 @@
         }
 
         //{[{
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.NavigationMode == NavigationMode.Back)
             {
-                await ViewModel.LoadAnimationAsync();
+                ImagesNavigationHelper.RemoveImageId(wts.ItemNameViewModel.wts.ItemNameSelectedIdKey);
             }
         }
         //}]}

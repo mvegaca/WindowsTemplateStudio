@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Caliburn.Micro;
 
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 using Param_ItemNamespace.Helpers;
@@ -19,7 +14,6 @@ namespace Param_ItemNamespace.ViewModels
 {
     public class ImageGalleryViewDetailViewModel : Screen
     {
-        private static UIElement _image;
         private readonly INavigationService _navigationService;
         private SampleImage _selectedImage;
 
@@ -50,10 +44,9 @@ namespace Param_ItemNamespace.ViewModels
             Source.AddRange(SampleDataService.GetGallerySampleData());
         }
 
-        public void Initialize(UIElement image, NavigationMode navigationMode)
+        public void Initialize(NavigationMode navigationMode)
         {
-            _image = image;
-            if (navigationMode == NavigationMode.New)
+            if (!string.IsNullOrEmpty(ID) && navigationMode == NavigationMode.New)
             {
                 SelectedImage = Source.FirstOrDefault(i => i.ID == ID);
             }
@@ -65,14 +58,6 @@ namespace Param_ItemNamespace.ViewModels
                     SelectedImage = Source.FirstOrDefault(i => i.ID == selectedImageId);
                 }
             }
-
-            var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(ImageGalleryViewViewModel.ImageGalleryViewAnimationOpen);
-            animation?.TryStart(_image);
-        }
-
-        public void SetAnimation()
-        {
-            ConnectedAnimationService.GetForCurrentView()?.PrepareToAnimate(ImageGalleryViewViewModel.ImageGalleryViewAnimationClose, _image);
         }
 
         public void OnPageKeyDown(KeyRoutedEventArgs e)

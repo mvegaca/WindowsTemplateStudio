@@ -3,15 +3,13 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+
+using Microsoft.Toolkit.Uwp.UI.Animations;
 
 using Param_ItemNamespace.Helpers;
 using Param_ItemNamespace.Models;
@@ -21,7 +19,6 @@ namespace Param_ItemNamespace.Views
 {
     public sealed partial class ImageGalleryViewDetailPage : Page, System.ComponentModel.INotifyPropertyChanged
     {
-        private DispatcherTimer _timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(500) };
         private object _selectedImage;
         private ObservableCollection<SampleImage> _source;
 
@@ -64,10 +61,6 @@ namespace Param_ItemNamespace.Views
                     SelectedImage = Source.FirstOrDefault(i => i.ID == selectedImageId);
                 }
             }
-
-            var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(ImageGalleryViewPage.ImageGalleryViewAnimationOpen);
-            animation?.TryStart(previewImage);
-            showFlipView.Begin();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -75,12 +68,9 @@ namespace Param_ItemNamespace.Views
             base.OnNavigatingFrom(e);
             if (e.NavigationMode == NavigationMode.Back)
             {
-                previewImage.Visibility = Visibility.Visible;
-                ConnectedAnimationService.GetForCurrentView()?.PrepareToAnimate(ImageGalleryViewPage.ImageGalleryViewAnimationClose, previewImage);
+                NavigationService.Frame.SetListDataItemForNextConnectedAnnimation(SelectedImage);
             }
         }
-
-        private void OnShowFlipViewCompleted(object sender, object e) => flipView.Focus(FocusState.Programmatic);
 
         private void OnPageKeyDown(object sender, KeyRoutedEventArgs e)
         {

@@ -24,9 +24,6 @@
   "preferNameDirectory": true,
   "PrimaryOutputs": [
     {
-      "path": ".\\Views\\IImageGalleryViewPage.cs"
-    },
-    {
       "path": ".\\Views\\ImageGalleryViewPage.xaml"
     },
     {

@@ -1,10 +1,9 @@
 ﻿using System;
-using Windows.UI.Xaml;
+using Param_ItemNamespace.ViewModels;
+using Microsoft.Toolkit.Uwp.UI.Animations;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using Param_ItemNamespace.Models;
-using Param_ItemNamespace.ViewModels;
 
 namespace Param_ItemNamespace.Views
 {
@@ -15,14 +14,12 @@ namespace Param_ItemNamespace.Views
         public ImageGalleryViewDetailPage()
         {
             InitializeComponent();
-            ViewModel.SetImage(previewImage);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             ViewModel.Initialize(e.Parameter as string, e.NavigationMode);
-            showFlipView.Begin();
         }
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
@@ -30,12 +27,8 @@ namespace Param_ItemNamespace.Views
             base.OnNavigatingFrom(e);
             if (e.NavigationMode == NavigationMode.Back)
             {
-                previewImage.Visibility = Visibility.Visible;
-                ViewModel.SetAnimation();
             }
         }
-
-        private void OnShowFlipViewCompleted(object sender, object e) => flipView.Focus(FocusState.Programmatic);
 
         private void OnPageKeyDown(object sender, KeyRoutedEventArgs e)
         {

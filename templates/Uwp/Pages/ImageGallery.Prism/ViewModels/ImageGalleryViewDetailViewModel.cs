@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 
-using Windows.Storage;
 using Windows.System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 using Param_ItemNamespace.Helpers;
@@ -23,7 +19,6 @@ namespace Param_ItemNamespace.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly ISampleDataService _sampleDataService;
-        private static UIElement _image;
         private object _selectedImage;
         private ObservableCollection<SampleImage> _source;
 
@@ -52,8 +47,6 @@ namespace Param_ItemNamespace.ViewModels
             Source = _sampleDataService.GetGallerySampleData();
         }
 
-        public void SetImage(UIElement image) => _image = image;
-
         public void Initialize(string sampleImageId, NavigationMode navigationMode)
         {
             if (!string.IsNullOrEmpty(sampleImageId) && navigationMode == NavigationMode.New)
@@ -68,14 +61,6 @@ namespace Param_ItemNamespace.ViewModels
                     SelectedImage = Source.FirstOrDefault(i => i.ID == selectedImageId);
                 }
             }
-
-            var animation = ConnectedAnimationService.GetForCurrentView().GetAnimation(ImageGalleryViewViewModel.ImageGalleryViewAnimationOpen);
-            animation?.TryStart(_image);
-        }
-
-        public void SetAnimation()
-        {
-            ConnectedAnimationService.GetForCurrentView()?.PrepareToAnimate(ImageGalleryViewViewModel.ImageGalleryViewAnimationClose, _image);
         }
 
         public void HandleKeyDown(KeyRoutedEventArgs e)
