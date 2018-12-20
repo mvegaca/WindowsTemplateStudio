@@ -128,6 +128,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             }
 
             template.IncreaseSelection();
+
+            if (!string.IsNullOrEmpty(template.StepConfig))
+            {
+                MainViewModel.Instance.AddNewStep(template.StepConfig);
+            }
+
             var savedTemplate = new SavedTemplateViewModel(template, templateOrigin);
             var focus = false;
             if (!IsTemplateAdded(template) || template.MultipleInstance)
@@ -238,6 +244,11 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
                 else if (Features.Contains(savedTemplate))
                 {
                     Features.Remove(savedTemplate);
+                }
+
+                if (!string.IsNullOrEmpty(savedTemplate.StepConfig))
+                {
+                    await BaseMainViewModel.BaseInstance.RemoveStepAsync(savedTemplate.StepConfig);
                 }
 
                 if (savedTemplate.HasErrors)

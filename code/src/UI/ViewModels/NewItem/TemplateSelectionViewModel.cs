@@ -119,6 +119,16 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                 Name = ValidationService.InferTemplateName(template.Name, false, template.ItemNameEditable);
                 HasErrors = false;
                 Template = template.Template;
+
+                if (!string.IsNullOrEmpty(template.StepConfig))
+                {
+                    BaseMainViewModel.BaseInstance.AddNewStep(template.StepConfig, true);
+                }
+                else
+                {
+                    BaseMainViewModel.BaseInstance.RemoveAddedByTemplatesSteps();
+                }
+
                 var licenses = GenComposer.GetAllLicences(template.Template, MainViewModel.Instance.ConfigFramework, MainViewModel.Instance.ConfigPlatform);
                 LicensesService.SyncLicenses(licenses, Licenses);
                 Dependencies.Clear();

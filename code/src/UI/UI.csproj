@@ -418,6 +418,7 @@
     <Compile Include="ViewModels\Common\DataItems\TemplateGroupViewModel.cs" />
     <Compile Include="ViewModels\Common\DataItems\TemplateInfoViewModel.cs" />
     <Compile Include="ViewModels\Common\ErrorDialogViewModel.cs" />
+    <Compile Include="ViewModels\Common\IdentityConfigViewModel.cs" />
     <Compile Include="ViewModels\Common\QuestionDialogViewModel.cs" />
     <Compile Include="ViewModels\Common\Selectable.cs" />
     <Compile Include="ViewModels\Common\SelectableGroup`1.cs" />
@@ -433,6 +434,9 @@
     <Compile Include="ViewModels\NewProject\MainViewModel.cs" />
     <Compile Include="ViewModels\NewProject\ProjectTypeViewModel.cs" />
     <Compile Include="ViewModels\NewProject\UserSelectionViewModel.cs" />
+    <Compile Include="Views\Common\IdentityConfigPage.xaml.cs">
+      <DependentUpon>IdentityConfigPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\CompositionToolWindow.xaml.cs">
       <DependentUpon>CompositionToolWindow.xaml</DependentUpon>
     </Compile>
@@ -619,6 +623,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\Grid.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Common\IdentityConfigPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -7,11 +7,22 @@ using Microsoft.Templates.UI.ViewModels.Common;
 
 namespace Microsoft.Templates.UI.Controls
 {
+    public enum StepType
+    {
+        Default,
+        AddedByTemplate
+    }
+
     public class Step : Selectable
     {
         private bool _completed;
+        private int _index;
 
-        public int Index { get; }
+        public int Index
+        {
+            get => _index;
+            set => SetProperty(ref _index, value);
+        }
 
         public string Title { get; }
 
@@ -22,6 +33,10 @@ namespace Microsoft.Templates.UI.Controls
             get => _completed;
             set => SetProperty(ref _completed, value);
         }
+
+        public string StepId { get; set; }
+
+        public StepType StepType { get; set; } = StepType.Default;
 
         public Step(int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
             : base(isSelected)

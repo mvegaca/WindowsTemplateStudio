@@ -112,6 +112,8 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
         }
 
+        public string StepConfig { get; set; }
+
         public TemplateOrigin TemplateOrigin { get; }
 
         public ICommand LostKeyboardFocusCommand => _lostKeyboardFocusCommand ?? (_lostKeyboardFocusCommand = new RelayCommand<KeyboardFocusChangedEventArgs>(OnLostKeyboardFocus));
@@ -131,6 +133,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             IsHidden = template.IsHidden;
             TemplateOrigin = templateOrigin;
             IsReorderEnabled = template.TemplateType == TemplateType.Page;
+            StepConfig = template.StepConfig;
         }
 
         public void SetName(string newName, bool fromNewTemplate = false)

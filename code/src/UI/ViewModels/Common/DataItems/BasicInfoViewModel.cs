@@ -74,6 +74,8 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             set => SetProperty(ref _isHidden, value);
         }
 
+        public string StepConfig { get; set; }
+
         public IEnumerable<BasicInfoViewModel> Dependencies { get; protected set; }
 
         public IEnumerable<LicenseViewModel> Licenses { get; protected set; }

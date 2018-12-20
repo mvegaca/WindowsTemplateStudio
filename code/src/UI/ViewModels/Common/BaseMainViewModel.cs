@@ -15,8 +15,10 @@ using Microsoft.Templates.Core.Locations;
 using Microsoft.Templates.UI.Controls;
 using Microsoft.Templates.UI.Extensions;
 using Microsoft.Templates.UI.Mvvm;
+using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.Services;
 using Microsoft.Templates.UI.Threading;
+using Microsoft.Templates.UI.Views.Common;
 
 namespace Microsoft.Templates.UI.ViewModels.Common
 {
@@ -90,6 +92,67 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             if (step != null)
             {
                 SetStepAsync(step.Index, false).FireAndForget();
+            }
+        }
+
+        public void AddNewStep(string stepId, bool fromRightClick = false)
+        {
+            Step step = null;
+            switch (stepId)
+            {
+                case "Identity":
+                    step = new Step(Steps.Count, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
+                    break;
+                default:
+                    return;
+            }
+
+            if (step != null)
+            {
+                step.StepId = stepId;
+                step.StepType = StepType.AddedByTemplate;
+                if (fromRightClick)
+                {
+                    Steps[1].Index = 2;
+                    step.Index = 1;
+                    Steps.Insert(1, step);
+                }
+                else
+                {
+                    Steps.Add(step);
+                }
+
+                UpdateBackForward();
+            }
+        }
+
+        public async Task RemoveStepAsync(string stepId)
+        {
+            var stepToRemove = Steps.FirstOrDefault(s => s.StepId == stepId);
+            if (stepToRemove != null)
+            {
+                var stepToRestore = stepToRemove.Index - 1;
+                Steps.Remove(stepToRemove);
+                if (stepToRemove.IsSelected)
+                {
+                    await SetStepAsync(stepToRemove.Index - 1);
+                }
+                else
+                {
+                    UpdateBackForward();
+                }
+            }
+        }
+
+        public void RemoveAddedByTemplatesSteps()
+        {
+            Steps.RemoveAll((s) => s.StepType == StepType.AddedByTemplate);
+            for (int index = 0; index < Steps.Count; index++)
+            {
+                if (Steps[index].Index != index)
+                {
+                    Steps[index].Index = index;
+                }
             }
         }
 
@@ -179,6 +242,11 @@ namespace Microsoft.Templates.UI.ViewModels.Common
                 }
             }
 
+            UpdateBackForward();
+        }
+
+        private void UpdateBackForward()
+        {
             _canGoBack = Step > 0;
             _canGoForward = Step < Steps.Count - 1;
         }

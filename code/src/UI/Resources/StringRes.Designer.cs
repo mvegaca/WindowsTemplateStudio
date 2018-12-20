@@ -586,6 +586,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Identity config.
+        /// </summary>
+        public static string IdentityStepTitle {
+            get {
+                return ResourceManager.GetString("IdentityStepTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is already part of your project. Please choose another feature..
         /// </summary>
         public static string NewItemHasNoChangesFeature {

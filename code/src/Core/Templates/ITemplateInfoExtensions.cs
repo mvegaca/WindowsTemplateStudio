@@ -375,6 +375,20 @@ namespace Microsoft.Templates.Core
             }
         }
 
+        public static string GetStepConfig(this ITemplateInfo ti)
+        {
+            var stepConfig = GetValueFromTag(ti, TagPrefix + "stepConfig");
+
+            if (stepConfig != null)
+            {
+                return stepConfig;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
         private static string GetValueFromTag(this ITemplateInfo templateInfo, string tagName)
         {
             if (templateInfo.Tags != null && !string.IsNullOrEmpty(tagName) && templateInfo.Tags.TryGetValue(tagName, out ICacheTag tagValue))

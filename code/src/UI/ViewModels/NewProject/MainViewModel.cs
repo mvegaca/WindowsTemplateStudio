@@ -38,6 +38,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         public AddPagesViewModel AddPages { get; } = new AddPagesViewModel();
 
+        public IdentityConfigViewModel IdentityConfig { get; } = new IdentityConfigViewModel();
+
         public AddFeaturesViewModel AddFeatures { get; } = new AddFeaturesViewModel();
 
         public UserSelectionViewModel UserSelection { get; } = new UserSelectionViewModel();
