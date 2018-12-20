@@ -14,7 +14,7 @@
     "wts.framework": "MVVMBasic|CodeBehind|CaliburnMicro",
     "wts.platform": "Uwp",
     "wts.version": "1.0.0",
-    "wts.displayOrder": "1",
+    "wts.displayOrder": "2",
     "wts.group": "ApplicationLaunching",
     "wts.defaultInstance": "DeepLinking",
     "wts.multipleInstance": "false",
