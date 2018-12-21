@@ -15,14 +15,14 @@ namespace Microsoft.Templates.UI.Views.NewItem
         public ChangesSummaryPage(NewItemGenerationResult output)
         {
             _output = output;
-            DataContext = MainViewModel.Instance;
+            DataContext = MainViewModel.Current;
 
             InitializeComponent();
         }
 
         private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            MainViewModel.Instance.ChangesSummary.Initialize(_output);
+            MainViewModel.Current.ChangesSummary.Initialize(_output);
         }
     }
 }

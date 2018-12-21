@@ -154,7 +154,7 @@
                     Style="{StaticResource ButtonRefreshTemplatesStyle}"
                     Content="{x:Static strings:StringRes.ButtonRefreshTemplatesCache}"
                     Command="{Binding RefreshTemplatesCacheCommand}"
-                    Visibility="{Binding RefreshTemplateCacheVisibility}" />
+                    Visibility="{Binding SystemService.DebugComponentVisibility}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

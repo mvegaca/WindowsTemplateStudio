@@ -30,11 +30,11 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         private TemplateInfoViewModel _selectedTemplate;
 
-        public static MainViewModel Instance { get; private set; }
+        public static MainViewModel Current { get; private set; }
 
-        public ProjectTypeViewModel ProjectType { get; } = new ProjectTypeViewModel(() => Instance.IsSelectionEnabled(MetadataType.ProjectType), () => Instance.OnProjectTypeSelected());
+        public ProjectTypeViewModel ProjectType { get; } = new ProjectTypeViewModel(() => Current.IsSelectionEnabled(MetadataType.ProjectType), () => Current.OnProjectTypeSelected());
 
-        public FrameworkViewModel Framework { get; } = new FrameworkViewModel(() => Instance.IsSelectionEnabled(MetadataType.Framework), () => Instance.OnFrameworkSelected());
+        public FrameworkViewModel Framework { get; } = new FrameworkViewModel(() => Current.IsSelectionEnabled(MetadataType.Framework), () => Current.OnFrameworkSelected());
 
         public AddPagesViewModel AddPages { get; } = new AddPagesViewModel();
 
@@ -51,37 +51,40 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         public RelayCommand CompositionToolCommand => _compositionToolCommand ?? (_compositionToolCommand = new RelayCommand(() => OnCompositionTool()));
 
-        public Visibility RefreshTemplateCacheVisibility
+        private static IEnumerable<Step> NewProjectSteps
         {
             get
             {
-#if DEBUG
-                return Visibility.Visible;
-#else
-                return Visibility.Collapsed;
-#endif
+                yield return new Step(0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
+                yield return new Step(1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
+                yield return new Step(2, StringRes.NewProjectStepThree, () => new AddPagesPage());
+                yield return new Step(3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
             }
         }
 
         public MainViewModel(Window mainView, BaseStyleValuesProvider provider)
-            : base(mainView, provider)
+            : base(mainView, provider, NewProjectSteps)
         {
-            Instance = this;
+            Current = this;
             ValidationService.Initialize(UserSelection.GetNames, UserSelection.GetPageNames);
+            Navigation.OnFinish += OnFinish;
+        }
+
+        public override void UnsubscribeEventHandlers()
+        {
+            base.UnsubscribeEventHandlers();
+            Navigation.OnFinish -= OnFinish;
+        }
+
+        private void OnFinish(object sender, EventArgs e)
+        {
+            WizardShell.Current.Result = UserSelection.GetUserSelection();
         }
 
         public override async Task InitializeAsync(string platform, string language)
         {
             WizardStatus.Title = $" ({GenContext.Current.ProjectName})";
             await base.InitializeAsync(platform, language);
-        }
-
-        protected override void OnCancel() => WizardShell.Current.Close();
-
-        protected override void OnFinish()
-        {
-            WizardShell.Current.Result = UserSelection.GetUserSelection();
-            base.OnFinish();
         }
 
         public override bool IsSelectionEnabled(MetadataType metadataType)
@@ -146,14 +149,6 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             ProjectType.LoadData(Platform);
             ShowNoContentPanel = !ProjectType.Items.Any();
             return Task.CompletedTask;
-        }
-
-        protected override IEnumerable<Step> GetSteps()
-        {
-            yield return new Step(0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
-            yield return new Step(1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
-            yield return new Step(2, StringRes.NewProjectStepThree, () => new AddPagesPage());
-            yield return new Step(3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
         }
 
         public override void ProcessItem(object item)

@@ -12,7 +12,7 @@ namespace Microsoft.Templates.UI.Views.NewItem
     {
         public TemplateSelectionPage()
         {
-            DataContext = MainViewModel.Instance;
+            DataContext = MainViewModel.Current;
             InitializeComponent();
         }
 

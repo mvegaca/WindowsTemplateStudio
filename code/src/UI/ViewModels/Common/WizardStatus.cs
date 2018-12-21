@@ -11,21 +11,21 @@ using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Resources;
+using Microsoft.Templates.UI.Services;
 
 namespace Microsoft.Templates.UI.ViewModels.Common
 {
     public class WizardStatus : Observable
     {
+        public static WizardStatus Current { get; private set; }
+
         private string _title;
         private string _versions;
         private bool _isBusy;
         private bool _isNotBusy;
         private bool _hasValidationErrors;
-        private bool _isSequentialFlowEnabled;
         private bool _isLoading = true;
         private ICommand _openWebSiteCommand;
-
-        public static WizardStatus Current { get; private set; }
 
         public double Width { get; }
 
@@ -59,19 +59,13 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             private set => SetProperty(ref _isNotBusy, value);
         }
 
-        public bool IsSequentialFlowEnabled
-        {
-            get => _isSequentialFlowEnabled;
-            private set => SetProperty(ref _isSequentialFlowEnabled, value);
-        }
-
         public bool HasValidationErrors
         {
             get => _hasValidationErrors;
             set
             {
                 SetProperty(ref _hasValidationErrors, value);
-                UpdateIsBusyAsync().FireAndForget();
+                UpdateIsBusy();
             }
         }
 
@@ -81,7 +75,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             set
             {
                 SetProperty(ref _isLoading, value);
-                UpdateIsBusyAsync().FireAndForget();
+                UpdateIsBusy();
             }
         }
 
@@ -90,10 +84,10 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         public WizardStatus()
         {
             Current = this;
-            var size = BaseMainViewModel.BaseInstance.SystemService.GetMainWindowSize();
+            var size = SystemService.Current.GetMainWindowSize();
             Width = size.width;
             Height = size.height;
-            UpdateIsBusyAsync().FireAndForget();
+            UpdateIsBusy();
             SetVersions();
         }
 
@@ -109,11 +103,10 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
         }
 
-        private async Task UpdateIsBusyAsync()
+        private void UpdateIsBusy()
         {
             IsBusy = IsLoading || HasValidationErrors;
             IsNotBusy = !IsBusy;
-            IsSequentialFlowEnabled = await BaseMainViewModel.BaseInstance.IsStepAvailableAsync();
         }
 
         private void OnOpenWebSite() => Process.Start("https://aka.ms/wts");

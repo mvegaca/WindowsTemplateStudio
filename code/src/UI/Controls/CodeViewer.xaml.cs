@@ -94,7 +94,7 @@ namespace Microsoft.Templates.UI.Controls
 
         private static string GetTheme()
         {
-            if (BaseMainViewModel.BaseInstance.SystemService.IsHighContrast)
+            if (SystemService.Current.IsHighContrast)
             {
                 return "theme: 'hc-black',";
             }

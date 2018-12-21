@@ -17,6 +17,8 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 {
     public class CompositionToolViewModel : Observable
     {
+        public static CompositionToolViewModel Current { get; private set; }
+
         private NewItemFileViewModel _selectedFile;
         private bool _isSelectedFileVisible;
 
@@ -34,6 +36,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public CompositionToolViewModel()
         {
+            Current = this;
         }
 
         public ObservableCollection<GenGroup> GenInfoGroups { get; } = new ObservableCollection<GenGroup>();

@@ -142,7 +142,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             {
                 var validationResult = ValidationService.ValidateTemplateName(newName, ItemNameEditable, true);
                 HasErrors = !validationResult.IsValid;
-                MainViewModel.Instance.WizardStatus.HasValidationErrors = !validationResult.IsValid;
+                WizardStatus.Current.HasValidationErrors = !validationResult.IsValid;
                 if (validationResult.IsValid)
                 {
                     NotificationsControl.CleanErrorNotificationsAsync(ErrorCategory.NamingValidation).FireAndForget();

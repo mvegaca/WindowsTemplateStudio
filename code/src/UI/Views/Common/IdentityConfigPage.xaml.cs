@@ -11,7 +11,7 @@ namespace Microsoft.Templates.UI.Views.Common
     {
         public IdentityConfigPage()
         {
-            DataContext = MainViewModel.Instance.IdentityConfig;
+            DataContext = MainViewModel.Current.IdentityConfig;
             InitializeComponent();
         }
     }

@@ -122,14 +122,14 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
                 if (!string.IsNullOrEmpty(template.StepConfig))
                 {
-                    BaseMainViewModel.BaseInstance.AddNewStep(template.StepConfig, true);
+                    WizardNavigation.Current.AddNewStep(template.StepConfig, true);
                 }
                 else
                 {
-                    BaseMainViewModel.BaseInstance.RemoveAddedByTemplatesSteps();
+                    WizardNavigation.Current.RemoveAddedByTemplatesSteps();
                 }
 
-                var licenses = GenComposer.GetAllLicences(template.Template, MainViewModel.Instance.ConfigFramework, MainViewModel.Instance.ConfigPlatform);
+                var licenses = GenComposer.GetAllLicences(template.Template, MainViewModel.Current.ConfigFramework, MainViewModel.Current.ConfigPlatform);
                 LicensesService.SyncLicenses(licenses, Licenses);
                 Dependencies.Clear();
                 foreach (var dependency in template.Dependencies)
@@ -154,7 +154,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             {
                 var validationResult = ValidationService.ValidateTemplateName(newName, NameEditable, false);
                 HasErrors = !validationResult.IsValid;
-                MainViewModel.Instance.WizardStatus.HasValidationErrors = !validationResult.IsValid;
+                WizardStatus.Current.HasValidationErrors = !validationResult.IsValid;
                 if (validationResult.IsValid)
                 {
                     NotificationsControl.CleanErrorNotificationsAsync(ErrorCategory.NamingValidation).FireAndForget();

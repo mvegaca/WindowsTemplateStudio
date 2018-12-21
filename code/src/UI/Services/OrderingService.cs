@@ -17,7 +17,7 @@ namespace Microsoft.Templates.UI.Services
 
         private static ObservableCollection<SavedTemplateViewModel> Pages
         {
-            get => MainViewModel.Instance.UserSelection.Pages;
+            get => UserSelectionViewModel.Current.Pages;
         }
 
         public static void Initialize(ListView listView)

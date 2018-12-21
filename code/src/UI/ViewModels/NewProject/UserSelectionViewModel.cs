@@ -28,6 +28,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
     public class UserSelectionViewModel : Observable
     {
+        public static UserSelectionViewModel Current { get; private set; }
+
         private SavedTemplateViewModel _selectedPage;
         private SavedTemplateViewModel _selectedFeature;
         private bool _isInitialized;
@@ -76,6 +78,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         public UserSelectionViewModel()
         {
+            Current = this;
         }
 
         public void Initialize(string projectTypeName, string frameworkName, string platform, string language)
@@ -95,7 +98,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             {
                 if (item.Template != null)
                 {
-                    var template = MainViewModel.Instance.GetTemplate(item.Template);
+                    var template = MainViewModel.Current.GetTemplate(item.Template);
                     if (template != null)
                     {
                         Add(TemplateOrigin.Layout, template, item.Layout.Name);
@@ -117,7 +120,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             var dependencies = GenComposer.GetAllDependencies(template.Template, _frameworkName, _platform);
             foreach (var dependency in dependencies)
             {
-                var dependencyTemplate = MainViewModel.Instance.GetTemplate(dependency);
+                var dependencyTemplate = MainViewModel.Current.GetTemplate(dependency);
                 if (dependencyTemplate == null)
                 {
                     // Case of hidden templates, it's not found on templat lists
@@ -131,7 +134,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
             if (!string.IsNullOrEmpty(template.StepConfig))
             {
-                MainViewModel.Instance.AddNewStep(template.StepConfig);
+                WizardNavigation.Current.AddNewStep(template.StepConfig);
             }
 
             var savedTemplate = new SavedTemplateViewModel(template, templateOrigin);
@@ -248,7 +251,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
                 if (!string.IsNullOrEmpty(savedTemplate.StepConfig))
                 {
-                    await BaseMainViewModel.BaseInstance.RemoveStepAsync(savedTemplate.StepConfig);
+                    await WizardNavigation.Current.RemoveStepAsync(savedTemplate.StepConfig);
                 }
 
                 if (savedTemplate.HasErrors)
@@ -258,7 +261,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
                 }
 
                 RaiseCollectionChanged(savedTemplate.TemplateType);
-                var template = MainViewModel.Instance.GetTemplate(savedTemplate.Template);
+                var template = MainViewModel.Current.GetTemplate(savedTemplate.Template);
                 template?.DecreaseSelection();
 
                 await TryRemoveHiddenDependenciesAsync(savedTemplate);

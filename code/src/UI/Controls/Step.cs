@@ -7,16 +7,11 @@ using Microsoft.Templates.UI.ViewModels.Common;
 
 namespace Microsoft.Templates.UI.Controls
 {
-    public enum StepType
-    {
-        Default,
-        AddedByTemplate
-    }
-
     public class Step : Selectable
     {
         private bool _completed;
         private int _index;
+        private string _stepText;
 
         public int Index
         {
@@ -32,6 +27,12 @@ namespace Microsoft.Templates.UI.Controls
         {
             get => _completed;
             set => SetProperty(ref _completed, value);
+        }
+
+        public string StepText
+        {
+            get => _stepText;
+            set => SetProperty(ref _stepText, value);
         }
 
         public string StepId { get; set; }

@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Templates.Core.Gen;
+using Microsoft.Templates.UI.ViewModels.Common;
 using Microsoft.Templates.UI.ViewModels.NewProject;
 
 namespace Microsoft.Templates.UI.Views.Common
@@ -17,18 +18,18 @@ namespace Microsoft.Templates.UI.Views.Common
         public CompositionToolWindow(UserSelection userSelection)
         {
             _userSelection = userSelection;
-            DataContext = MainViewModel.Instance.CompositionTool;
+            DataContext = MainViewModel.Current.CompositionTool;
             InitializeComponent();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            MainViewModel.Instance.CompositionTool.Initialize(_userSelection);
+            CompositionToolViewModel.Current.Initialize(_userSelection);
         }
 
         private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            MainViewModel.Instance.CompositionTool.SelectItem(e.NewValue);
+            CompositionToolViewModel.Current.SelectItem(e.NewValue);
         }
 
         private void OnKeyDown(object sender, System.Windows.Input.KeyEventArgs e)

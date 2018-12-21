@@ -91,9 +91,9 @@ namespace Microsoft.Templates.UI.Styles
             BaseMainViewModel.BaseInstance.ProcessItem(item);
         }
 
-        private async Task SelectStepAsync(Step step) => await BaseMainViewModel.BaseInstance.SetStepAsync(step.Index);
+        private async Task SelectStepAsync(Step step) => await WizardNavigation.Current.SetStepAsync(step.Index);
 
-        private void SelectFile(NewItemFileViewModel file) => ViewModels.NewItem.MainViewModel.Instance.ChangesSummary.SelectFile(file);
+        private void SelectFile(NewItemFileViewModel file) => ViewModels.NewItem.MainViewModel.Current.ChangesSummary.SelectFile(file);
 
         private bool IsOnDetailsLink(TextBlock textBlock)
         {

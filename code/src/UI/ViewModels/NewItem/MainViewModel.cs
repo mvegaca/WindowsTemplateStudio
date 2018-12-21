@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Diagnostics;
 using Microsoft.Templates.Core.Gen;
@@ -27,7 +26,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
     {
         private RelayCommand _refreshTemplatesCacheCommand;
 
-        private NewItemGenerationResult _output;
+        private static NewItemGenerationResult _output;
 
         private GenerationService _generationService = GenerationService.Instance;
 
@@ -39,7 +38,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         public string ConfigProjectType { get; private set; }
 
-        public static MainViewModel Instance { get; private set; }
+        public static MainViewModel Current { get; private set; }
 
         public TemplateSelectionViewModel TemplateSelection { get; } = new TemplateSelectionViewModel();
 
@@ -50,22 +49,22 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         public RelayCommand RefreshTemplatesCacheCommand => _refreshTemplatesCacheCommand ?? (_refreshTemplatesCacheCommand = new RelayCommand(
             () => SafeThreading.JoinableTaskFactory.RunAsync(async () => await OnRefreshTemplatesAsync())));
 
-        public Visibility RefreshTemplateCacheVisibility
+        private static IEnumerable<Step> NewItemSteps
         {
             get
             {
-#if DEBUG
-                return Visibility.Visible;
-#else
-                return Visibility.Collapsed;
-#endif
+                yield return new Step(0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
+                yield return new Step(1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
             }
         }
 
         public MainViewModel(WizardShell mainWindow, BaseStyleValuesProvider provider)
-            : base(mainWindow, provider, false)
+            : base(mainWindow, provider, NewItemSteps, false)
         {
-            Instance = this;
+            Current = this;
+            Navigation.OnFinish += OnFinish;
+            Navigation.OnStepUpdated += OnStepUpdated;
+            Navigation.IsStepAvailable = IsStepAvailableAsync;
         }
 
         public async Task InitializeAsync(TemplateType templateType, string language)
@@ -77,72 +76,21 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             await InitializeAsync(ConfigPlatform, language);
         }
 
-        protected override async Task<bool> IsStepAvailableAsync(int step)
+        public override void UnsubscribeEventHandlers()
         {
-            if (step == 1 && !WizardStatus.HasValidationErrors)
+            base.UnsubscribeEventHandlers();
+            Navigation.OnFinish -= OnFinish;
+        }
+
+        public override void ProcessItem(object item)
+        {
+            if (item is TemplateInfoViewModel template)
             {
-                _output = await CleanupAndGenerateNewItemAsync();
-                if (!_output.HasChangesToApply)
-                {
-                    var message = TemplateType == TemplateType.Page ? StringRes.NewItemHasNoChangesPage : StringRes.NewItemHasNoChangesFeature;
-                    message = string.Format(message, TemplateSelection.Name);
-                    var notification = Notification.Warning(message, Category.RightClickItemHasNoChanges);
-                    NotificationsControl.AddNotificationAsync(notification).FireAndForget();
-                }
-
-                return _output.HasChangesToApply;
+                TemplateSelection.SelectTemplate(template);
             }
-
-            return await base.IsStepAvailableAsync(step);
         }
 
-        protected override void UpdateStep(bool navigate)
-        {
-            base.UpdateStep(navigate);
-            if (Step == 0)
-            {
-                ChangesSummary.ClearSelected();
-            }
-
-            SetCanFinish(Step > 0);
-        }
-
-        private async Task<NewItemGenerationResult> CleanupAndGenerateNewItemAsync()
-        {
-            NewItemGenController.Instance.CleanupTempGeneration();
-            var userSelection = CreateUserSelection();
-            await _generationService.GenerateNewItemAsync(TemplateSelection.Template.GetTemplateType(), userSelection);
-            return NewItemGenController.Instance.CompareOutputAndProject();
-        }
-
-        private UserSelection CreateUserSelection()
-        {
-            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, ConfigPlatform, Language) { HomeName = string.Empty };
-            var dependencies = GenComposer.GetAllDependencies(TemplateSelection.Template, ConfigFramework, ConfigPlatform);
-            userSelection.Add((TemplateSelection.Name, TemplateSelection.Template));
-            foreach (var dependencyTemplate in dependencies)
-            {
-                userSelection.Add((dependencyTemplate.GetDefaultName(), dependencyTemplate));
-            }
-
-            return userSelection;
-        }
-
-        protected override void OnCancel() => WizardShell.Current.Close();
-
-        protected override void OnFinish()
-        {
-            WizardShell.Current.Result = GetUserSelection();
-            WizardShell.Current.Result.ItemGenerationType = ChangesSummary.DoNotMerge ? ItemGenerationType.Generate : ItemGenerationType.GenerateAndMerge;
-            base.OnFinish();
-        }
-
-        private UserSelection GetUserSelection()
-        {
-            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, ConfigPlatform, Language);
-            userSelection.Add((TemplateSelection.Name, TemplateSelection.Template));
-            return userSelection;
-        }
+        public override bool IsSelectionEnabled(MetadataType metadataType) => true;
 
         protected override async Task OnTemplatesAvailableAsync()
         {
@@ -180,6 +128,62 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             }
         }
 
+        private async Task<bool> IsStepAvailableAsync(Step step)
+        {
+            if (step.Index == 1 && !WizardStatus.HasValidationErrors)
+            {
+                _output = await CleanupAndGenerateNewItemAsync();
+                if (!_output.HasChangesToApply)
+                {
+                    var message = TemplateType == TemplateType.Page ? StringRes.NewItemHasNoChangesPage : StringRes.NewItemHasNoChangesFeature;
+                    message = string.Format(message, TemplateSelection.Name);
+                    var notification = Notification.Warning(message, Category.RightClickItemHasNoChanges);
+                    NotificationsControl.AddNotificationAsync(notification).FireAndForget();
+                }
+
+                return _output.HasChangesToApply;
+            }
+
+            return true;
+        }
+
+        private void OnStepUpdated(object sender, Step step)
+        {
+            if (step.Index == 0)
+            {
+                ChangesSummary.ClearSelected();
+            }
+        }
+
+        private void OnFinish(object sender, EventArgs e)
+        {
+            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, ConfigPlatform, Language);
+            userSelection.Add((TemplateSelection.Name, TemplateSelection.Template));
+            WizardShell.Current.Result = userSelection;
+            WizardShell.Current.Result.ItemGenerationType = ChangesSummary.DoNotMerge ? ItemGenerationType.Generate : ItemGenerationType.GenerateAndMerge;
+        }
+
+        private async Task<NewItemGenerationResult> CleanupAndGenerateNewItemAsync()
+        {
+            NewItemGenController.Instance.CleanupTempGeneration();
+            var userSelection = CreateUserSelection();
+            await _generationService.GenerateNewItemAsync(TemplateSelection.Template.GetTemplateType(), userSelection);
+            return NewItemGenController.Instance.CompareOutputAndProject();
+        }
+
+        private UserSelection CreateUserSelection()
+        {
+            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, ConfigPlatform, Language) { HomeName = string.Empty };
+            var dependencies = GenComposer.GetAllDependencies(TemplateSelection.Template, ConfigFramework, ConfigPlatform);
+            userSelection.Add((TemplateSelection.Name, TemplateSelection.Template));
+            foreach (var dependencyTemplate in dependencies)
+            {
+                userSelection.Add((dependencyTemplate.GetDefaultName(), dependencyTemplate));
+            }
+
+            return userSelection;
+        }
+
         private void SetProjectConfigInfo()
         {
             var configInfo = ProjectConfigInfo.ReadProjectConfiguration();
@@ -202,7 +206,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                 }
                 else
                 {
-                    OnCancel();
+                    Navigation.Cancel();
                 }
             }
             else
@@ -212,21 +216,5 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                 ConfigPlatform = configInfo.Platform;
             }
         }
-
-        protected override IEnumerable<Step> GetSteps()
-        {
-            yield return new Step(0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
-            yield return new Step(1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
-        }
-
-        public override void ProcessItem(object item)
-        {
-            if (item is TemplateInfoViewModel template)
-            {
-                TemplateSelection.SelectTemplate(template);
-            }
-        }
-
-        public override bool IsSelectionEnabled(MetadataType metadataType) => true;
     }
 }
