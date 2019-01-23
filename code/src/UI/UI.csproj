@@ -259,8 +259,8 @@
     <Compile Include="..\..\GlobalSuppressions.cs">
       <Link>GlobalSuppressions.cs</Link>
     </Compile>
-    <Compile Include="Generation\NewProjectController.cs" />
-    <Compile Include="Generation\NewItemController.cs" />
+    <Compile Include="Views\IWizardShell.cs" />
+    <Compile Include="Launcher\WizardLauncher.cs" />
     <Compile Include="Mvvm\Observable.cs" />
     <Compile Include="Mvvm\RelayCommand.cs" />
     <Compile Include="Resources\StringRes.cs-CZ.Designer.cs">
@@ -396,6 +396,7 @@
     <Compile Include="TemplateSelectors\FileExtensionTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\FileStatusTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\NotificationTemplateSelector.cs" />
+    <Compile Include="Validators\HasNoCoreProjectValidator.cs" />
     <Compile Include="Validators\HasPivotValidator.cs" />
     <Compile Include="Validators\HasHamburgerMenuValidator.cs" />
     <Compile Include="Validators\HasOldMvvmLightLocatorValidator.cs" />
@@ -500,6 +501,7 @@
     <None Include="..\..\TestKey.snk">
       <Link>TestKey.snk</Link>
     </None>
+    <None Include=".codeclonesettings" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.TemplateEngine.Edge.Template;
 using Microsoft.Templates.Core.Diagnostics;
+using Microsoft.Templates.Core.Helpers;
 using Microsoft.Templates.Core.PostActions;
 using Microsoft.Templates.Core.Resources;
 using Microsoft.Templates.Core.Templates;
@@ -52,13 +53,13 @@ namespace Microsoft.Templates.Core.Gen
 
                 ReplaceParamsInFilePath(genInfo.GenerationPath, genInfo.Parameters);
 
-                await ExecutePostActionsAsync(genInfo, result);
+                ExecutePostActions(genInfo, result);
             }
 
             chrono.Stop();
             CalculateGenerationTime(chrono.Elapsed.TotalSeconds);
 
-            await ExecuteGlobalPostActionsAsync();
+            ExecuteGlobalPostActions();
 
             return genResults;
         }
@@ -106,24 +107,24 @@ namespace Microsoft.Templates.Core.Gen
             GenContext.Current.ProjectMetrics[ProjectMetricsEnum.Generation] = generationTime;
         }
 
-        internal async Task ExecutePostActionsAsync(GenInfo genInfo, TemplateCreationResult generationResult)
+        internal void ExecutePostActions(GenInfo genInfo, TemplateCreationResult generationResult)
         {
             // Get post actions from template
             var postActions = PostactionFactory.FindPostActions(genInfo, generationResult);
 
             foreach (var postAction in postActions)
             {
-                await postAction.ExecuteAsync();
+                postAction.Execute();
             }
         }
 
-        internal async Task ExecuteGlobalPostActionsAsync()
+        internal void ExecuteGlobalPostActions()
         {
             var postActions = PostactionFactory.FindGlobalPostActions();
 
             foreach (var postAction in postActions)
             {
-                await postAction.ExecuteAsync();
+                postAction.Execute();
             }
         }
 
@@ -139,6 +140,19 @@ namespace Microsoft.Templates.Core.Gen
                     return string.Format(StringRes.StatusBarGeneratingFeatureMessage, $"{genInfo.Name} ({genInfo.Template.Name})");
                 default:
                     return null;
+            }
+        }
+
+        internal static void VerifyGenContextPaths()
+        {
+            if (string.IsNullOrEmpty(GenContext.Current.GenerationOutputPath))
+            {
+                throw new ArgumentNullException(nameof(GenContext.Current.GenerationOutputPath));
+            }
+
+            if (string.IsNullOrEmpty(GenContext.Current.DestinationPath))
+            {
+                throw new ArgumentNullException(nameof(GenContext.Current.DestinationPath));
             }
         }
     }

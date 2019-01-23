@@ -220,6 +220,12 @@
     <Compile Include="Naming\NamingTests.cs" />
     <Compile Include="Naming\SuggestedDirectoryNameValidatorTests.cs" />
     <Compile Include="Composition\CompositionQueryTest.cs" />
+    <None Include="TestData\Merge\Source_expectedWithOptionalContextLines.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Merge\SourceWithOptionalContextLines.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\GenerationSummary_expected.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -278,6 +284,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Templates\TemplateLicenseEqualityComparerTest.cs" />
     <Compile Include="Templates\TemplatesFixture.cs" />
     <None Include="Packaging\SampleConfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

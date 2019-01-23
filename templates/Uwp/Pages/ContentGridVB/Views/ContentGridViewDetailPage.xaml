@@ -9,7 +9,6 @@
 
     <Grid
         x:Name="ContentArea"
-        Margin="{StaticResource MediumLeftRightMargin}"
         animations:Connected.AnchorElement="{x:Bind itemHero}">
 
         <VisualStateManager.VisualStateGroups>
@@ -20,18 +19,18 @@
                         <AdaptiveTrigger MinWindowWidth="641" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="contentPanel.Margin" Value="0" />
-                        <Setter Target="propertiesGroup1.(RelativePanel.RightOf)" Value="itemHero"/>
-                        <Setter Target="propertiesGroup1.(RelativePanel.Below)" Value="title"/>
-                        <Setter Target="propertiesGroup2.(RelativePanel.RightOf)" Value="propertiesGroup1"/>
-                        <Setter Target="propertiesGroup2.(RelativePanel.Below)" Value="title"/>
-                        <Setter Target="propertiesGroup1.Width" Value="200"/>
+                        <Setter Target="propertiesGroup1.(RelativePanel.RightOf)" Value="itemHero" />
+                        <Setter Target="propertiesGroup1.(RelativePanel.Below)" Value="title" />
+                        <Setter Target="propertiesGroup2.(RelativePanel.RightOf)" Value="propertiesGroup1" />
+                        <Setter Target="propertiesGroup2.(RelativePanel.Below)" Value="title" />
+                        <Setter Target="propertiesGroup1.Width" Value="200" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <StackPanel x:Name="contentPanel" Margin="0,48,0,0">
+        <StackPanel
+            x:Name="contentPanel">
 
             <RelativePanel>
                 <Grid

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Templates.Core.Helpers;
 using Microsoft.Templates.Core.Resources;
 
 namespace Microsoft.Templates.Core.Gen
@@ -24,7 +25,7 @@ namespace Microsoft.Templates.Core.Gen
 
         public abstract void ShowStatusBarMessage(string message);
 
-        public abstract Task AddContextItemsToSolutionAsync(ProjectInfo projectInfo);
+        public abstract void AddContextItemsToSolution(ProjectInfo projectInfo);
 
         public abstract string GetActiveProjectNamespace();
 

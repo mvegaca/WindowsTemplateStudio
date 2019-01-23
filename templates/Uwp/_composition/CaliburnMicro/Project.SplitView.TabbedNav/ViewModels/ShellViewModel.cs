@@ -52,6 +52,10 @@ namespace wts.ItemName.ViewModels
 
             if (_navigationService != null)
             {
+                _navigationService.NavigationFailed += (sender, e) =>
+                {
+                    throw e.Exception;
+                };
                 _navigationService.Navigated += NavigationService_Navigated;
                 _navigationView.BackRequested += OnBackRequested;
             }
@@ -67,7 +71,7 @@ namespace wts.ItemName.ViewModels
             }
         }
 
-        public void OnItemInvoked(WinUI.NavigationViewItemInvokedEventArgs args)
+        private void OnItemInvoked(WinUI.NavigationViewItemInvokedEventArgs args)
         {
             var item = _navigationView.MenuItems
                             .OfType<WinUI.NavigationViewItem>()

@@ -487,29 +487,20 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable add project items..
+        ///   Looks up a localized string similar to Unable to add files and projects..
         /// </summary>
-        public static string ErrorUnableAddItemsToProject {
+        public static string ErrorUnableAddFilesAndProjects {
             get {
-                return ResourceManager.GetString("ErrorUnableAddItemsToProject", resourceCulture);
+                return ResourceManager.GetString("ErrorUnableAddFilesAndProjects", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unable to add the project to the solution. Make sure you have the expected SDK installed..
+        ///   Looks up a localized string similar to Unable to find project {0}.
         /// </summary>
-        public static string ErrorUnableAddProjectToSolution {
+        public static string ErrorUnableGetProjectByPath {
             get {
-                return ResourceManager.GetString("ErrorUnableAddProjectToSolution", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to refresh the project. Try to refresh it manually..
-        /// </summary>
-        public static string ErrorUnableToRefreshProject {
-            get {
-                return ResourceManager.GetString("ErrorUnableToRefreshProject", resourceCulture);
+                return ResourceManager.GetString("ErrorUnableGetProjectByPath", resourceCulture);
             }
         }
         
@@ -528,24 +519,6 @@ namespace Microsoft.Templates.UI.Resources {
         public static string ErrorVsGenShellCollapseSolutionItemsMessage {
             get {
                 return ResourceManager.GetString("ErrorVsGenShellCollapseSolutionItemsMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There was an error restoring the packages. Ex:.
-        /// </summary>
-        public static string ErrorVsGenShellRestorePackagesErrorMessage {
-            get {
-                return ResourceManager.GetString("ErrorVsGenShellRestorePackagesErrorMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unable to automatically Restore NuGet Packages for the solution. Manually restore the NuGet packages..
-        /// </summary>
-        public static string ErrorVsGenShellRestorePackagesWarningMessage {
-            get {
-                return ResourceManager.GetString("ErrorVsGenShellRestorePackagesWarningMessage", resourceCulture);
             }
         }
         
@@ -1099,6 +1072,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adding references between projects....
+        /// </summary>
+        public static string StatusAddingProjectReferences {
+            get {
+                return ResourceManager.GetString("StatusAddingProjectReferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creating Windows Template Studio project....
         /// </summary>
         public static string StatusBarCreatingProject {
@@ -1149,15 +1131,6 @@ namespace Microsoft.Templates.UI.Resources {
         public static string StatusBarNewItemAddPageSuccess {
             get {
                 return ResourceManager.GetString("StatusBarNewItemAddPageSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Restoring packages....
-        /// </summary>
-        public static string StatusBarRestoring {
-            get {
-                return ResourceManager.GetString("StatusBarRestoring", resourceCulture);
             }
         }
         
@@ -1302,6 +1275,33 @@ namespace Microsoft.Templates.UI.Resources {
         public static string ValidatorHasHamburgerMenuMessage {
             get {
                 return ResourceManager.GetString("ValidatorHasHamburgerMenuMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}updatetomultiproject.md.
+        /// </summary>
+        public static string ValidatorHasNoCoreProjectLink {
+            get {
+                return ResourceManager.GetString("ValidatorHasNoCoreProjectLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to See documentation to update..
+        /// </summary>
+        public static string ValidatorHasNoCoreProjectLinkMessage {
+            get {
+                return ResourceManager.GetString("ValidatorHasNoCoreProjectLinkMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows Template Studio is now adding a core project. .
+        /// </summary>
+        public static string ValidatorHasNoCoreProjectMessage {
+            get {
+                return ResourceManager.GetString("ValidatorHasNoCoreProjectMessage", resourceCulture);
             }
         }
         

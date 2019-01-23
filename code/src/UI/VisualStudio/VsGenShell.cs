@@ -13,6 +13,7 @@ using EnvDTE;
 using Microsoft.Internal.VisualStudio.PlatformUI;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.Core.Diagnostics;
+using Microsoft.Templates.Core.Extensions;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.Threading;
@@ -380,7 +381,7 @@ namespace Microsoft.Templates.UI.VisualStudio
             }
         }
 
-        private void AddSdksForProjectAsync(string projectPath, IEnumerable<SdkReference> sdkReferences)
+        private void AddSdksForProject(string projectPath, IEnumerable<SdkReference> sdkReferences)
         {
             var project = GetProjectByPath(projectPath);
             var proj = (VSProject)project.Object;
@@ -394,7 +395,7 @@ namespace Microsoft.Templates.UI.VisualStudio
             project.Save();
         }
 
-        public override async System.Threading.Tasks.Task AddContextItemsToSolutionAsync(ProjectInfo projectInfo)
+        public override void AddContextItemsToSolution(ProjectInfo projectInfo)
         {
             try
             {
@@ -414,12 +415,12 @@ namespace Microsoft.Templates.UI.VisualStudio
 
                 foreach (var nuget in nugetsForExistingProjects)
                 {
-                    await AddNugetsForProjectAsync(nuget.Key, nuget);
+                    AddNugetsForProject(nuget.Key, nuget);
                 }
 
                 foreach (var sdk in sdksForExistingProjects)
                 {
-                    AddSdksForProjectAsync(sdk.Key, sdk);
+                    AddSdksForProject(sdk.Key, sdk);
                 }
 
                 // Ensure projectsToAdd are ordered correctly.
@@ -437,10 +438,11 @@ namespace Microsoft.Templates.UI.VisualStudio
                     GenContext.ToolBox.Shell.ShowStatusBarMessage(string.Format(StringRes.StatusAddingProject, Path.GetFileName(project)));
 
                     Dte.Solution.AddFromFile(project);
+
                     secAddProjects += chrono.Elapsed.TotalSeconds;
                     chrono.Restart();
 
-                    if (!IsCpsProject(project))
+                    if (!IsCpsProject(project) && filesByProject.ContainsKey(project))
                     {
                         AddItems(project, filesByProject[project]);
                     }
@@ -448,16 +450,24 @@ namespace Microsoft.Templates.UI.VisualStudio
                     secAddFiles += chrono.Elapsed.TotalSeconds;
                     chrono.Restart();
 
-                    await AddNugetsForProjectAsync(project, projectInfo.NugetReferences.Where(n => n.Project == project));
+                    var projNugetReferences = projectInfo.NugetReferences.Where(n => n.Project == project);
+                    if (projNugetReferences.Any())
+                    {
+                        AddNugetsForProject(project, projNugetReferences);
+                    }
 
                     secAddNuget += chrono.Elapsed.TotalSeconds;
 
-                    AddSdksForProjectAsync(project, projectInfo.SdkReferences.Where(n => n.Project == project));
+                    var projSdksReferences = projectInfo.SdkReferences.Where(n => n.Project == project);
+                    if (projSdksReferences.Any())
+                    {
+                        AddSdksForProject(project, projSdksReferences);
+                    }
 
                     chrono.Stop();
                 }
 
-                GenContext.ToolBox.Shell.ShowStatusBarMessage("Add references between projects");
+                GenContext.ToolBox.Shell.ShowStatusBarMessage(StringRes.StatusAddingProjectReferences);
 
                 AddReferencesToProjects(projectInfo.ProjectReferences);
 
@@ -465,10 +475,10 @@ namespace Microsoft.Templates.UI.VisualStudio
                 GenContext.Current.ProjectMetrics[ProjectMetricsEnum.AddFilesToProject] = secAddFiles;
                 GenContext.Current.ProjectMetrics[ProjectMetricsEnum.AddNugetToProject] = secAddNuget;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Handle this
-                AppHealth.Current.Info.TrackAsync(StringRes.ErrorUnableAddProjectToSolution).FireAndForget();
+                AppHealth.Current.Error.TrackAsync(StringRes.ErrorUnableAddFilesAndProjects, ex).FireAndForget();
+                throw;
             }
         }
 
@@ -575,7 +585,7 @@ namespace Microsoft.Templates.UI.VisualStudio
             }
             catch (Exception ex)
             {
-                AppHealth.Current.Error.TrackAsync(StringRes.ErrorUnableAddItemsToProject, ex).FireAndForget();
+                AppHealth.Current.Error.TrackAsync(string.Format(StringRes.ErrorUnableGetProjectByPath, projFile), ex).FireAndForget();
             }
 
             return p;
@@ -627,23 +637,14 @@ namespace Microsoft.Templates.UI.VisualStudio
             item.UIHierarchyItems.Expanded = false;
         }
 
-        private async System.Threading.Tasks.Task AddNugetsForProjectAsync(string projectPath, IEnumerable<NugetReference> projectNugets)
+        private void AddNugetsForProject(string projectPath, IEnumerable<NugetReference> projectNugets)
         {
             try
             {
                 var project = GetProjectByPath(projectPath);
                 if (IsCpsProject(projectPath))
                 {
-                    if (project is IVsBrowseObjectContext browseObjectContext)
-                    {
-                        var configuredProject = await browseObjectContext.UnconfiguredProject.GetSuggestedConfiguredProjectAsync();
-
-                        foreach (var reference in projectNugets)
-                        {
-                            GenContext.ToolBox.Shell.ShowStatusBarMessage(string.Format(StringRes.StatusAddingNuget, Path.GetFileName(reference.PackageId)));
-                            await configuredProject.Services.PackageReferences.AddAsync(reference.PackageId, reference.Version);
-                        }
-                    }
+                    AddNugetToCPSProject(project, projectNugets);
                 }
                 else
                 {
@@ -651,7 +652,6 @@ namespace Microsoft.Templates.UI.VisualStudio
                     {
                         var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
                         var installerServices = componentModel.GetService<IVsPackageInstallerServices>();
-                        var packageSourceProvider = componentModel.GetService<IVsPackageSourceProvider>();
 
                         if (!installerServices.IsPackageInstalledEx(project, reference.PackageId, reference.Version))
                         {
@@ -672,9 +672,30 @@ namespace Microsoft.Templates.UI.VisualStudio
             }
         }
 
+        private static void AddNugetToCPSProject(Project project, IEnumerable<NugetReference> projectNugets)
+        {
+            if (project is IVsBrowseObjectContext browseObjectContext)
+            {
+                var threadingService = browseObjectContext.UnconfiguredProject.ProjectService.Services.ThreadingPolicy;
+
+                threadingService.ExecuteSynchronously(
+                async () =>
+                {
+                    var configuredProject = await browseObjectContext.UnconfiguredProject.GetSuggestedConfiguredProjectAsync().ConfigureAwait(false);
+
+                    foreach (var reference in projectNugets)
+                    {
+                        GenContext.ToolBox.Shell.ShowStatusBarMessage(string.Format(StringRes.StatusAddingNuget, Path.GetFileName(reference.PackageId)));
+
+                        await configuredProject.Services.PackageReferences.AddAsync(reference.PackageId, reference.Version).ConfigureAwait(false);
+                    }
+                });
+            }
+        }
+
         private void WriteMissingNugetPackagesInfo(string projectPath, IEnumerable<NugetReference> projectNugets)
         {
-            var relPath = projectPath.Replace(Directory.GetParent(GenContext.Current.DestinationPath).FullName, string.Empty);
+            var relPath = projectPath.GetPathRelativeToDestinationParentPath();
             var sb = new StringBuilder();
 
             foreach (var nuget in projectNugets)

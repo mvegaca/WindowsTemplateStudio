@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.Templates.Core;
+using Microsoft.Templates.Core.Helpers;
 using Microsoft.Templates.Fakes;
 using Xunit;
 
@@ -158,7 +159,7 @@ namespace Microsoft.Templates.Test
                 if (vbCommentLines.Length != csCommentLines.Length)
                 {
                     failures.Add(
-                        $"File '{allVbFiles[i].FullName}' does not have the same number of comments as its C# equivalent.");
+                        $"File '{allVbFiles[i].FullName}' does not have the same number of comments as its C# equivalent. C# version has {csCommentLines.Length} while VB version has {vbCommentLines.Length}.");
                     continue;
                 }
 
