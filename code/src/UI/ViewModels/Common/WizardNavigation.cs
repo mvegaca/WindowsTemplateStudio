@@ -166,7 +166,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             switch (stepId)
             {
                 case "Identity":
-                    step = new Step(Steps.Count, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
+                    step = Microsoft.Templates.UI.Controls.Step.MainStep(Steps.Count, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
                     break;
                 default:
                     return;

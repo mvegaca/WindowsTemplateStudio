@@ -178,6 +178,24 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add services.
+        /// </summary>
+        public static string AddServicesTitle {
+            get {
+                return ResourceManager.GetString("AddServicesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add testing.
+        /// </summary>
+        public static string AddTestingTitle {
+            get {
+                return ResourceManager.GetString("AddTestingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Breaking changes.
         /// </summary>
         public static string BreakingChanges {
@@ -658,6 +676,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Testing.
+        /// </summary>
+        public static string NewProjectStepFive {
+            get {
+                return ResourceManager.GetString("NewProjectStepFive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Features.
         /// </summary>
         public static string NewProjectStepFour {
@@ -672,6 +699,15 @@ namespace Microsoft.Templates.UI.Resources {
         public static string NewProjectStepOne {
             get {
                 return ResourceManager.GetString("NewProjectStepOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Services.
+        /// </summary>
+        public static string NewProjectStepSix {
+            get {
+                return ResourceManager.GetString("NewProjectStepSix", resourceCulture);
             }
         }
         

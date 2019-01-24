@@ -42,6 +42,10 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         public AddFeaturesViewModel AddFeatures { get; } = new AddFeaturesViewModel();
 
+        public AddTestingViewModel AddTesting { get; } = new AddTestingViewModel();
+
+        public AddServicesViewModel AddServices { get; } = new AddServicesViewModel();
+
         public UserSelectionViewModel UserSelection { get; } = new UserSelectionViewModel();
 
         public CompositionToolViewModel CompositionTool { get; } = new CompositionToolViewModel();
@@ -55,10 +59,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         {
             get
             {
-                yield return new Step(0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
-                yield return new Step(1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
-                yield return new Step(2, StringRes.NewProjectStepThree, () => new AddPagesPage());
-                yield return new Step(3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
+                yield return Step.MainStep(0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
+                yield return Step.MainStep(1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
+                yield return Step.MainStep(2, StringRes.NewProjectStepThree, () => new AddPagesPage());
+                yield return Step.MainStep(3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
+                yield return Step.MainStep(4, StringRes.NewProjectStepFive, () => new AddTestingPage());
+                yield return Step.MainStep(5, StringRes.NewProjectStepSix, () => new AddServicesPage());
             }
         }
 

@@ -53,8 +53,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         {
             get
             {
-                yield return new Step(0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
-                yield return new Step(1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
+                yield return Step.MainStep(0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
+                yield return Step.MainStep(1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
             }
         }
 

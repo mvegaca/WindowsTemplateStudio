@@ -259,6 +259,8 @@
     <Compile Include="..\..\GlobalSuppressions.cs">
       <Link>GlobalSuppressions.cs</Link>
     </Compile>
+    <Compile Include="ViewModels\NewProject\AddServicesViewModel.cs" />
+    <Compile Include="ViewModels\NewProject\AddTestingViewModel.cs" />
     <Compile Include="Views\IWizardShell.cs" />
     <Compile Include="Launcher\WizardLauncher.cs" />
     <Compile Include="Mvvm\Observable.cs" />
@@ -464,6 +466,12 @@
     <Compile Include="Views\NewItem\WizardShell.xaml.cs">
       <DependentUpon>WizardShell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NewProject\AddServicesPage.xaml.cs">
+      <DependentUpon>AddServicesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NewProject\AddTestingPage.xaml.cs">
+      <DependentUpon>AddTestingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NewProject\AddFeaturesPage.xaml.cs">
       <DependentUpon>AddFeaturesPage.xaml</DependentUpon>
     </Compile>
@@ -663,6 +671,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewItem\WizardShell.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NewProject\AddServicesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\NewProject\AddTestingPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

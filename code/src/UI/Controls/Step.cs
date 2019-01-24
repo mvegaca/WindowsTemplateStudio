@@ -39,13 +39,20 @@ namespace Microsoft.Templates.UI.Controls
 
         public StepType StepType { get; set; } = StepType.Default;
 
-        public Step(int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        private Step(string title, Func<object> getPage, bool completed = false, bool isSelected = false)
             : base(isSelected)
         {
-            Index = index;
             Title = title;
             GetPage = getPage;
             Completed = completed;
+        }
+
+        public static Step MainStep(int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        {
+            return new Step(title, getPage, completed, isSelected)
+            {
+                Index = index,
+            };
         }
 
         public override bool Equals(object obj)
