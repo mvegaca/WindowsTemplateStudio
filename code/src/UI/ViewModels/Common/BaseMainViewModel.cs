@@ -36,7 +36,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public WizardNavigation Navigation { get; }
 
-        public BaseMainViewModel(Window mainView, BaseStyleValuesProvider provider, IEnumerable<Step> steps, bool canFinish = true)
+        public BaseMainViewModel(Window mainView, BaseStyleValuesProvider provider, IEnumerable<StepData> steps, bool canFinish = true)
         {
             BaseInstance = this;
             _mainView = mainView;

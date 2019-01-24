@@ -249,7 +249,6 @@
     <Compile Include="Controls\NotificationMarkdownBlock.xaml.cs">
       <DependentUpon>NotificationMarkdownBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\StepType.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\ImageExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
@@ -351,7 +350,7 @@
     <Compile Include="Controls\SequentialFlow.xaml.cs">
       <DependentUpon>SequentialFlow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Step.cs" />
+    <Compile Include="Controls\StepData.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\HasItemsVisibilityConverter.cs" />
     <Compile Include="Converters\IntegerVisibilityConverter.cs" />

@@ -134,7 +134,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
             if (!string.IsNullOrEmpty(template.StepConfig))
             {
-                WizardNavigation.Current.AddNewStep(template.StepConfig);
+                var mainStepId = MainViewModel.NewProjectStepFeatures;
+                WizardNavigation.Current.AddNewStep(template.StepConfig, mainStepId);
             }
 
             var savedTemplate = new SavedTemplateViewModel(template, templateOrigin);

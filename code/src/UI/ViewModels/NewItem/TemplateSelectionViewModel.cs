@@ -122,11 +122,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
                 if (!string.IsNullOrEmpty(template.StepConfig))
                 {
-                    WizardNavigation.Current.AddNewStep(template.StepConfig, true);
+                    var mainStepId = MainViewModel.NewItemStepTemplateSelection;
+                    WizardNavigation.Current.AddNewStep(template.StepConfig, mainStepId);
                 }
                 else
                 {
-                    WizardNavigation.Current.RemoveAddedByTemplatesSteps();
+                    WizardNavigation.Current.RemoveAllSubSteps();
                 }
 
                 var licenses = GenComposer.GetAllLicences(template.Template, MainViewModel.Current.ConfigFramework, MainViewModel.Current.ConfigPlatform);

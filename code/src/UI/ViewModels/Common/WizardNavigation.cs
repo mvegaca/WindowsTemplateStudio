@@ -26,8 +26,8 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private bool _canGoBack = false;
         private bool _canGoForward = true;
         private bool _canFinish;
-        private int _origStep;
-        private int _step;
+        private StepData _origStep;
+        private StepData _currentStep;
 
         private RelayCommand _cancelCommand;
         private RelayCommand _goBackCommand;
@@ -42,26 +42,26 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public RelayCommand FinishCommand => _finishCommand ?? (_finishCommand = new RelayCommand(Finish, CanFinish));
 
-        public ObservableCollection<Step> Steps { get; }
+        public ObservableCollection<StepData> Steps { get; }
 
-        public Func<Step, Task<bool>> IsStepAvailable { get; set; }
+        public Func<StepData, Task<bool>> IsStepAvailable { get; set; }
 
-        public int Step
+        public StepData CurrentStep
         {
-            get => _step;
-            private set => SetStepAsync(value).FireAndForget();
+            get => _currentStep;
         }
 
         public event EventHandler OnFinish;
 
-        public event EventHandler<Step> OnStepUpdated;
+        public event EventHandler<StepData> OnStepUpdated;
 
-        public WizardNavigation(Window wizardShell, IEnumerable<Step> steps, bool canFinish)
+        public WizardNavigation(Window wizardShell, IEnumerable<StepData> steps, bool canFinish)
         {
             Current = this;
             _wizardShell = wizardShell;
             _canFinish = canFinish;
-            Steps = new ObservableCollection<Step>(steps);
+            Steps = new ObservableCollection<StepData>(steps);
+            SetStepAsync(Steps.First()).FireAndForget();
         }
 
         private bool CanGoBack() => _canGoBack && !WizardStatus.Current.IsBusy;
@@ -72,9 +72,17 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public void Cancel() => _wizardShell.Close();
 
-        private void GoBack() => Step--;
+        private async void GoBack()
+        {
+            var stepIndex = Steps.IndexOf(CurrentStep);
+            await SetStepAsync(Steps.ElementAt(stepIndex - 1));
+        }
 
-        private void GoForward() => Step++;
+        private async void GoForward()
+        {
+            var stepIndex = Steps.IndexOf(CurrentStep);
+            await SetStepAsync(Steps.ElementAt(stepIndex + 1));
+        }
 
         private void Finish()
         {
@@ -83,16 +91,16 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             _wizardShell.Close();
         }
 
-        public Step GetCurrentStep() => GetStep(Step);
+        public StepData GetCurrentStep() => GetStep(CurrentStep);
 
-        private Step GetStep(int step) => Steps.FirstOrDefault(s => s.Equals(step));
+        private StepData GetStep(StepData step) => Steps.FirstOrDefault(s => s.Equals(step));
 
-        public async Task SetStepAsync(int newStep, bool navigate = true)
+        public async Task SetStepAsync(StepData newStep, bool navigate = true)
         {
-            _origStep = _step;
-            if (newStep != _step)
+            _origStep = _currentStep;
+            if (newStep != _currentStep)
             {
-                _step = newStep;
+                _currentStep = newStep;
             }
 
             if (IsStepAvailable != null)
@@ -101,21 +109,21 @@ namespace Microsoft.Templates.UI.ViewModels.Common
                 {
                     DispatcherService.BeginInvoke(() =>
                     {
-                        _step = _origStep;
-                        OnPropertyChanged(nameof(Step));
+                        _currentStep = _origStep;
+                        OnPropertyChanged(nameof(CurrentStep));
                     });
 
                     return;
                 }
             }
 
-            OnPropertyChanged(nameof(Step));
+            OnPropertyChanged(nameof(CurrentStep));
             UpdateStep(navigate);
         }
 
         private void UpdateStep(bool navigate)
         {
-            var compleatedSteps = Steps.Where(s => s.IsPrevious(Step));
+            var compleatedSteps = Steps.Where(s => IsPrevious(s, CurrentStep));
             foreach (var step in compleatedSteps)
             {
                 step.Completed = true;
@@ -140,10 +148,18 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             OnStepUpdated?.Invoke(this, selectedStep);
         }
 
+        private bool IsPrevious(StepData value1, StepData value2)
+        {
+            var index1 = Steps.IndexOf(value1);
+            var index2 = Steps.IndexOf(value2);
+            return index1 < index2;
+        }
+
         private void UpdateBackForward()
         {
-            _canGoBack = Step > 0;
-            _canGoForward = Step < Steps.Count - 1;
+            var stepIndex = Steps.IndexOf(CurrentStep);
+            _canGoBack = stepIndex > 0;
+            _canGoForward = stepIndex < Steps.Count - 1;
         }
 
         public void SetCanFinish(bool canFinish)
@@ -156,17 +172,17 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             var step = Steps.FirstOrDefault(s => s.Equals(navigatedPage.GetType()));
             if (step != null)
             {
-                SetStepAsync(step.Index, false).FireAndForget();
+                SetStepAsync(step, false).FireAndForget();
             }
         }
 
-        public void AddNewStep(string stepId, bool fromRightClick = false)
+        public void AddNewStep(string stepId, string mainStepId)
         {
-            Step step = null;
+            StepData step = null;
             switch (stepId)
             {
                 case "Identity":
-                    step = Microsoft.Templates.UI.Controls.Step.MainStep(Steps.Count, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
+                    step = StepData.SubStep(stepId, Steps.Count, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
                     break;
                 default:
                     return;
@@ -174,33 +190,23 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
             if (step != null)
             {
-                step.StepId = stepId;
-                step.StepType = StepType.AddedByTemplate;
-                if (fromRightClick)
-                {
-                    Steps[1].Index = 2;
-                    step.Index = 1;
-                    Steps.Insert(1, step);
-                }
-                else
-                {
-                    Steps.Add(step);
-                }
-
+                var fatherStep = Steps.First(s => s.Id == mainStepId);
+                var fatherStepIndex = Steps.IndexOf(fatherStep);
+                Steps.Insert(fatherStepIndex + 1, step);
                 UpdateBackForward();
             }
         }
 
         public async Task RemoveStepAsync(string stepId)
         {
-            var stepToRemove = Steps.FirstOrDefault(s => s.StepId == stepId);
+            var stepToRemove = Steps.FirstOrDefault(s => s.Id == stepId);
             if (stepToRemove != null)
             {
                 var stepToRestore = stepToRemove.Index - 1;
                 Steps.Remove(stepToRemove);
                 if (stepToRemove.IsSelected)
                 {
-                    await SetStepAsync(stepToRemove.Index - 1);
+                    await SetStepAsync(Steps.ElementAt(stepToRestore));
                 }
                 else
                 {
@@ -209,9 +215,9 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
         }
 
-        public void RemoveAddedByTemplatesSteps()
+        public void RemoveAllSubSteps()
         {
-            Steps.RemoveAll((s) => s.StepType == StepType.AddedByTemplate);
+            Steps.RemoveAll((s) => s.IsSubStep == true);
             for (int index = 0; index < Steps.Count; index++)
             {
                 if (Steps[index].Index != index)

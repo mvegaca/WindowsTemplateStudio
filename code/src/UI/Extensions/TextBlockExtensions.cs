@@ -16,7 +16,7 @@ namespace Microsoft.Templates.UI.Extensions
     {
         public static readonly DependencyProperty SequentialFlowStepProperty = DependencyProperty.RegisterAttached(
           "SequentialFlowStep",
-          typeof(Step),
+          typeof(StepData),
           typeof(TextBlockExtensions),
           new PropertyMetadata(null, OnSequentialFlowStepChanged));
 
@@ -32,14 +32,14 @@ namespace Microsoft.Templates.UI.Extensions
           typeof(TextBlockExtensions),
           new PropertyMetadata(false, OnSequentialFlowStepChanged));
 
-        public static void SetSequentialFlowStep(UIElement element, Step value)
+        public static void SetSequentialFlowStep(UIElement element, StepData value)
         {
             element.SetValue(SequentialFlowStepProperty, value);
         }
 
-        public static Step GetSequentialFlowStep(UIElement element)
+        public static StepData GetSequentialFlowStep(UIElement element)
         {
-            return (Step)element.GetValue(SequentialFlowStepProperty);
+            return (StepData)element.GetValue(SequentialFlowStepProperty);
         }
 
         public static void SetSequentialFlowStepIndex(UIElement element, int value)

@@ -25,6 +25,13 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 {
     public class MainViewModel : BaseMainViewModel
     {
+        public const string NewProjectStepProjectType = "ProjectType";
+        public const string NewProjectStepFramework = "Framework";
+        public const string NewProjectStepPages = "Pages";
+        public const string NewProjectStepFeatures = "Features";
+        public const string NewProjectStepTests = "Tests";
+        public const string NewProjectStepServices = "Services";
+
         private RelayCommand _refreshTemplatesCacheCommand;
         private RelayCommand _compositionToolCommand;
 
@@ -55,16 +62,16 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
         public RelayCommand CompositionToolCommand => _compositionToolCommand ?? (_compositionToolCommand = new RelayCommand(() => OnCompositionTool()));
 
-        private static IEnumerable<Step> NewProjectSteps
+        private static IEnumerable<StepData> NewProjectSteps
         {
             get
             {
-                yield return Step.MainStep(0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
-                yield return Step.MainStep(1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
-                yield return Step.MainStep(2, StringRes.NewProjectStepThree, () => new AddPagesPage());
-                yield return Step.MainStep(3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
-                yield return Step.MainStep(4, StringRes.NewProjectStepFive, () => new AddTestingPage());
-                yield return Step.MainStep(5, StringRes.NewProjectStepSix, () => new AddServicesPage());
+                yield return StepData.MainStep(NewProjectStepProjectType, 0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
+                yield return StepData.MainStep(NewProjectStepFramework, 1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
+                yield return StepData.MainStep(NewProjectStepPages, 2, StringRes.NewProjectStepThree, () => new AddPagesPage());
+                yield return StepData.MainStep(NewProjectStepFeatures, 3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
+                yield return StepData.MainStep(NewProjectStepTests, 4, StringRes.NewProjectStepFive, () => new AddTestingPage());
+                yield return StepData.MainStep(NewProjectStepServices, 5, StringRes.NewProjectStepSix, () => new AddServicesPage());
             }
         }
 

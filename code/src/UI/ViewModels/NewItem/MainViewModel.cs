@@ -24,6 +24,9 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 {
     public class MainViewModel : BaseMainViewModel
     {
+        public const string NewItemStepTemplateSelection = "TemplateSelection";
+        public const string NewItemStepChangesSummary = "ChangesSummary";
+
         private RelayCommand _refreshTemplatesCacheCommand;
 
         private static NewItemGenerationResult _output;
@@ -49,12 +52,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         public RelayCommand RefreshTemplatesCacheCommand => _refreshTemplatesCacheCommand ?? (_refreshTemplatesCacheCommand = new RelayCommand(
             () => SafeThreading.JoinableTaskFactory.RunAsync(async () => await OnRefreshTemplatesAsync())));
 
-        private static IEnumerable<Step> NewItemSteps
+        private static IEnumerable<StepData> NewItemSteps
         {
             get
             {
-                yield return Step.MainStep(0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
-                yield return Step.MainStep(1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
+                yield return StepData.MainStep(NewItemStepTemplateSelection, 0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
+                yield return StepData.MainStep(NewItemStepChangesSummary, 1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
             }
         }
 
@@ -128,7 +131,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             }
         }
 
-        private async Task<bool> IsStepAvailableAsync(Step step)
+        private async Task<bool> IsStepAvailableAsync(StepData step)
         {
             if (step.Index == 1 && !WizardStatus.HasValidationErrors)
             {
@@ -147,7 +150,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             return true;
         }
 
-        private void OnStepUpdated(object sender, Step step)
+        private void OnStepUpdated(object sender, StepData step)
         {
             if (step.Index == 0)
             {

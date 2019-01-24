@@ -7,7 +7,7 @@ using Microsoft.Templates.UI.ViewModels.Common;
 
 namespace Microsoft.Templates.UI.Controls
 {
-    public class Step : Selectable
+    public class StepData : Selectable
     {
         private bool _completed;
         private int _index;
@@ -35,23 +35,34 @@ namespace Microsoft.Templates.UI.Controls
             set => SetProperty(ref _stepText, value);
         }
 
-        public string StepId { get; set; }
+        public string Id { get; set; }
 
-        public StepType StepType { get; set; } = StepType.Default;
+        public bool IsSubStep { get; private set; }
 
-        private Step(string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        private StepData(string stepId, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
             : base(isSelected)
         {
+            Id = stepId;
             Title = title;
             GetPage = getPage;
             Completed = completed;
         }
 
-        public static Step MainStep(int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        public static StepData MainStep(string stepId, int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
         {
-            return new Step(title, getPage, completed, isSelected)
+            return new StepData(stepId, title, getPage, completed, isSelected)
             {
                 Index = index,
+                IsSubStep = false,
+            };
+        }
+
+        public static StepData SubStep(string stepId, int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        {
+            return new StepData(stepId, title, getPage, completed, isSelected)
+            {
+                Index = index,
+                IsSubStep = true,
             };
         }
 
@@ -59,6 +70,8 @@ namespace Microsoft.Templates.UI.Controls
         {
             switch (obj)
             {
+                case StepData step:
+                    return Index == step.Index;
                 case int index:
                     return Index.Equals(index);
                 case Type type:
@@ -69,7 +82,5 @@ namespace Microsoft.Templates.UI.Controls
         }
 
         public override int GetHashCode() => base.GetHashCode();
-
-        public bool IsPrevious(int index) => Index <= index;
     }
 }
