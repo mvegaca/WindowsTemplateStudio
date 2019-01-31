@@ -22,9 +22,9 @@ namespace Microsoft.Templates.UI.Extensions
 
         public static readonly DependencyProperty SequentialFlowStepIndexProperty = DependencyProperty.RegisterAttached(
           "SequentialFlowStepIndex",
-          typeof(int),
+          typeof(string),
           typeof(TextBlockExtensions),
-          new PropertyMetadata(0, OnSequentialFlowStepChanged));
+          new PropertyMetadata(string.Empty, OnSequentialFlowStepChanged));
 
         public static readonly DependencyProperty SequentialFlowStepCompletedProperty = DependencyProperty.RegisterAttached(
           "SequentialFlowStepCompleted",
@@ -42,14 +42,14 @@ namespace Microsoft.Templates.UI.Extensions
             return (StepData)element.GetValue(SequentialFlowStepProperty);
         }
 
-        public static void SetSequentialFlowStepIndex(UIElement element, int value)
+        public static void SetSequentialFlowStepIndex(UIElement element, string value)
         {
             element.SetValue(SequentialFlowStepIndexProperty, value);
         }
 
-        public static int GetSequentialFlowStepIndex(UIElement element)
+        public static string GetSequentialFlowStepIndex(UIElement element)
         {
-            return (int)element.GetValue(SequentialFlowStepIndexProperty);
+            return (string)element.GetValue(SequentialFlowStepIndexProperty);
         }
 
         public static void SetSequentialFlowStepCompleted(UIElement element, bool value)
@@ -80,7 +80,7 @@ namespace Microsoft.Templates.UI.Extensions
             }
             else
             {
-                textBlock.Inlines.Add($"{step.Index + 1}.  {step.Title}");
+                textBlock.Inlines.Add($"{step.Index}.  {step.Title}");
             }
         }
     }

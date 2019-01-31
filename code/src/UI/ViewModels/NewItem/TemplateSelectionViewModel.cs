@@ -123,7 +123,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                 if (!string.IsNullOrEmpty(template.StepConfig))
                 {
                     var mainStepId = MainViewModel.NewItemStepTemplateSelection;
-                    WizardNavigation.Current.AddNewStep(template.StepConfig, mainStepId);
+                    WizardNavigation.Current.AddSubStep(template.StepConfig, mainStepId);
                 }
                 else
                 {

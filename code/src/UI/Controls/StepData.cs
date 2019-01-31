@@ -10,10 +10,10 @@ namespace Microsoft.Templates.UI.Controls
     public class StepData : Selectable
     {
         private bool _completed;
-        private int _index;
+        private string _index;
         private string _stepText;
 
-        public int Index
+        public string Index
         {
             get => _index;
             set => SetProperty(ref _index, value);
@@ -37,6 +37,8 @@ namespace Microsoft.Templates.UI.Controls
 
         public string Id { get; set; }
 
+        public string FatherId { get; set; }
+
         public bool IsSubStep { get; private set; }
 
         private StepData(string stepId, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
@@ -48,7 +50,7 @@ namespace Microsoft.Templates.UI.Controls
             Completed = completed;
         }
 
-        public static StepData MainStep(string stepId, int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        public static StepData MainStep(string stepId, string index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
         {
             return new StepData(stepId, title, getPage, completed, isSelected)
             {
@@ -57,10 +59,11 @@ namespace Microsoft.Templates.UI.Controls
             };
         }
 
-        public static StepData SubStep(string stepId, int index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        public static StepData SubStep(string stepId, string fatherStepId, string index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
         {
             return new StepData(stepId, title, getPage, completed, isSelected)
             {
+                FatherId = fatherStepId,
                 Index = index,
                 IsSubStep = true,
             };

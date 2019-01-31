@@ -176,13 +176,16 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
         }
 
-        public void AddNewStep(string stepId, string mainStepId)
+        public void AddSubStep(string stepId, string mainStepId)
         {
             StepData step = null;
+            var fatherStep = Steps.First(s => s.Id == mainStepId);
+            var stepsFromFather = Steps.Where(s => s.IsSubStep && s.FatherId == mainStepId);
+            var index = $"{fatherStep.Index}.{stepsFromFather.Count() + 1}";
             switch (stepId)
             {
                 case "Identity":
-                    step = StepData.SubStep(stepId, Steps.Count, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
+                    step = StepData.SubStep(stepId, mainStepId, index, StringRes.IdentityStepTitle, () => new IdentityConfigPage());
                     break;
                 default:
                     return;
@@ -190,7 +193,6 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
             if (step != null)
             {
-                var fatherStep = Steps.First(s => s.Id == mainStepId);
                 var fatherStepIndex = Steps.IndexOf(fatherStep);
                 Steps.Insert(fatherStepIndex + 1, step);
                 UpdateBackForward();
@@ -202,11 +204,11 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             var stepToRemove = Steps.FirstOrDefault(s => s.Id == stepId);
             if (stepToRemove != null)
             {
-                var stepToRestore = stepToRemove.Index - 1;
+                var stepToRemoveIndex = Steps.IndexOf(stepToRemove);
                 Steps.Remove(stepToRemove);
                 if (stepToRemove.IsSelected)
                 {
-                    await SetStepAsync(Steps.ElementAt(stepToRestore));
+                    await SetStepAsync(Steps.ElementAt(stepToRemoveIndex - 1));
                 }
                 else
                 {
@@ -218,12 +220,10 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         public void RemoveAllSubSteps()
         {
             Steps.RemoveAll((s) => s.IsSubStep == true);
-            for (int index = 0; index < Steps.Count; index++)
+            var stepCount = 1;
+            foreach (var step in Steps)
             {
-                if (Steps[index].Index != index)
-                {
-                    Steps[index].Index = index;
-                }
+                step.Index = $"{stepCount++}";
             }
         }
     }

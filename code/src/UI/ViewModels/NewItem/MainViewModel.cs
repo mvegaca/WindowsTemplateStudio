@@ -56,8 +56,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         {
             get
             {
-                yield return StepData.MainStep(NewItemStepTemplateSelection, 0, StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
-                yield return StepData.MainStep(NewItemStepChangesSummary, 1, StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
+                yield return StepData.MainStep(NewItemStepTemplateSelection, "1", StringRes.NewItemStepOne, () => new TemplateSelectionPage(), true, true);
+                yield return StepData.MainStep(NewItemStepChangesSummary, "2", StringRes.NewItemStepTwo, () => new ChangesSummaryPage(_output));
             }
         }
 
@@ -133,7 +133,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private async Task<bool> IsStepAvailableAsync(StepData step)
         {
-            if (step.Index == 1 && !WizardStatus.HasValidationErrors)
+            if (step.Id == NewItemStepTemplateSelection && !WizardStatus.HasValidationErrors)
             {
                 _output = await CleanupAndGenerateNewItemAsync();
                 if (!_output.HasChangesToApply)
@@ -152,7 +152,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private void OnStepUpdated(object sender, StepData step)
         {
-            if (step.Index == 0)
+            if (step.Id == NewItemStepTemplateSelection)
             {
                 ChangesSummary.ClearSelected();
             }

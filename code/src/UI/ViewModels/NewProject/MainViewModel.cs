@@ -66,12 +66,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
         {
             get
             {
-                yield return StepData.MainStep(NewProjectStepProjectType, 0, StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
-                yield return StepData.MainStep(NewProjectStepFramework, 1, StringRes.NewProjectStepTwo, () => new FrameworkPage());
-                yield return StepData.MainStep(NewProjectStepPages, 2, StringRes.NewProjectStepThree, () => new AddPagesPage());
-                yield return StepData.MainStep(NewProjectStepFeatures, 3, StringRes.NewProjectStepFour, () => new AddFeaturesPage());
-                yield return StepData.MainStep(NewProjectStepTests, 4, StringRes.NewProjectStepFive, () => new AddTestingPage());
-                yield return StepData.MainStep(NewProjectStepServices, 5, StringRes.NewProjectStepSix, () => new AddServicesPage());
+                yield return StepData.MainStep(NewProjectStepProjectType, "1", StringRes.NewProjectStepOne, () => new ProjectTypePage(), true, true);
+                yield return StepData.MainStep(NewProjectStepFramework, "2", StringRes.NewProjectStepTwo, () => new FrameworkPage());
+                yield return StepData.MainStep(NewProjectStepPages, "3", StringRes.NewProjectStepThree, () => new AddPagesPage());
+                yield return StepData.MainStep(NewProjectStepFeatures, "4", StringRes.NewProjectStepFour, () => new AddFeaturesPage());
+                yield return StepData.MainStep(NewProjectStepTests, "5", StringRes.NewProjectStepFive, () => new AddTestingPage());
+                yield return StepData.MainStep(NewProjectStepServices, "6", StringRes.NewProjectStepSix, () => new AddServicesPage());
             }
         }
 
