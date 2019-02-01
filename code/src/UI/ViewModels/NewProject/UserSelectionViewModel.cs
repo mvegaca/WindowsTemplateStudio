@@ -194,6 +194,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             _isInitialized = false;
             Pages.Clear();
             Features.Clear();
+            WizardNavigation.Current.RemoveAllSubSteps();
         }
 
         private void BuildLicenses()

@@ -40,13 +40,5 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         {
             return Items.FirstOrDefault(t => t.Name == templateInfo.Name);
         }
-
-        public void ClearIsSelected()
-        {
-            foreach (var item in Items)
-            {
-                item.IsSelected = false;
-            }
-        }
     }
 }

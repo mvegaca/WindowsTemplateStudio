@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Templates.Core;
 using Microsoft.Templates.UI.Controls;
+using Microsoft.Templates.UI.Extensions;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.Services;
@@ -91,10 +92,6 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             _wizardShell.Close();
         }
 
-        public StepData GetCurrentStep() => GetStep(CurrentStep);
-
-        private StepData GetStep(StepData step) => Steps.FirstOrDefault(s => s.Equals(step));
-
         public async Task SetStepAsync(StepData newStep, bool navigate = true)
         {
             _origStep = _currentStep;
@@ -105,7 +102,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
             if (IsStepAvailable != null)
             {
-                if (!await IsStepAvailable(GetStep(newStep)))
+                if (!await IsStepAvailable(newStep))
                 {
                     DispatcherService.BeginInvoke(() =>
                     {
@@ -123,37 +120,28 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         private void UpdateStep(bool navigate)
         {
-            var compleatedSteps = Steps.Where(s => IsPrevious(s, CurrentStep));
-            foreach (var step in compleatedSteps)
-            {
-                step.Completed = true;
-            }
+            Steps.UnselectAll();
 
-            foreach (var step in Steps)
-            {
-                step.IsSelected = false;
-            }
+            // Mark previous steps as compleated
+            Steps.Where(s => IsPrevious(s, CurrentStep)).ToList()
+                 .ForEach(s => s.Completed = true);
 
-            var selectedStep = GetCurrentStep();
-            if (selectedStep != null)
+            if (CurrentStep != null)
             {
-                selectedStep.IsSelected = true;
+                CurrentStep.Completed = true;
+                CurrentStep.IsSelected = true;
                 if (navigate)
                 {
-                    NavigationService.NavigateSecondaryFrame(selectedStep.GetPage());
+                    NavigationService.NavigateSecondaryFrame(CurrentStep.GetPage());
                 }
             }
 
             UpdateBackForward();
-            OnStepUpdated?.Invoke(this, selectedStep);
+            OnStepUpdated?.Invoke(this, CurrentStep);
         }
 
         private bool IsPrevious(StepData value1, StepData value2)
-        {
-            var index1 = Steps.IndexOf(value1);
-            var index2 = Steps.IndexOf(value2);
-            return index1 < index2;
-        }
+            => Steps.IndexOf(value1) < Steps.IndexOf(value2);
 
         private void UpdateBackForward()
         {
@@ -219,7 +207,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
         public void RemoveAllSubSteps()
         {
-            Steps.RemoveAll((s) => s.IsSubStep == true);
+            Steps.RemoveAll((s) => s.IsSubStep);
             var stepCount = 1;
             foreach (var step in Steps)
             {

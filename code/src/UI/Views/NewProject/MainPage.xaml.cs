@@ -21,7 +21,7 @@ namespace Microsoft.Templates.UI.Views.NewProject
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
             MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-            Services.NavigationService.InitializeSecondaryFrame(stepFrame, WizardNavigation.Current.GetCurrentStep().GetPage());
+            Services.NavigationService.InitializeSecondaryFrame(stepFrame, WizardNavigation.Current.CurrentStep.GetPage());
             Services.OrderingService.Initialize(pagesList);
         }
 

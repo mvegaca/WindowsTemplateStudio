@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Templates.Core.Gen;
 using Microsoft.Templates.Core.PostActions.Catalog.Merge;
+using Microsoft.Templates.UI.Extensions;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.ViewModels.Common;
@@ -55,7 +56,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         {
             foreach (var group in FileGroups)
             {
-                group.CleanSelected();
+                group.Items.UnselectAll();
             }
 
             Selected = file;

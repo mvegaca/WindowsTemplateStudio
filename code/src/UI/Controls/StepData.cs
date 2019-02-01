@@ -11,7 +11,6 @@ namespace Microsoft.Templates.UI.Controls
     {
         private bool _completed;
         private string _index;
-        private string _stepText;
 
         public string Index
         {
@@ -19,52 +18,48 @@ namespace Microsoft.Templates.UI.Controls
             set => SetProperty(ref _index, value);
         }
 
-        public string Title { get; }
-
-        public Func<object> GetPage { get; }
-
         public bool Completed
         {
             get => _completed;
             set => SetProperty(ref _completed, value);
         }
 
-        public string StepText
-        {
-            get => _stepText;
-            set => SetProperty(ref _stepText, value);
-        }
+        public Func<object> GetPage { get; private set; }
 
-        public string Id { get; set; }
+        public string Id { get; private set; }
 
-        public string FatherId { get; set; }
+        public string FatherId { get; private set; }
 
         public bool IsSubStep { get; private set; }
 
-        private StepData(string stepId, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        public string Title { get; private set; }
+
+        private StepData(bool isSelected = false)
             : base(isSelected)
         {
-            Id = stepId;
-            Title = title;
-            GetPage = getPage;
-            Completed = completed;
         }
 
         public static StepData MainStep(string stepId, string index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
         {
-            return new StepData(stepId, title, getPage, completed, isSelected)
+            return new StepData(isSelected)
             {
+                Id = stepId,
                 Index = index,
-                IsSubStep = false,
+                Title = title,
+                GetPage = getPage,
+                Completed = completed,
             };
         }
 
-        public static StepData SubStep(string stepId, string fatherStepId, string index, string title, Func<object> getPage, bool completed = false, bool isSelected = false)
+        public static StepData SubStep(string stepId, string fatherStepId, string index, string title, Func<object> getPage)
         {
-            return new StepData(stepId, title, getPage, completed, isSelected)
+            return new StepData(false)
             {
+                Id = stepId,
                 FatherId = fatherStepId,
                 Index = index,
+                Title = title,
+                GetPage = getPage,
                 IsSubStep = true,
             };
         }

@@ -111,7 +111,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
             {
                 foreach (var group in Groups)
                 {
-                    group.ClearIsSelected();
+                    group.Items.UnselectAll();
                 }
 
                 template.IsSelected = true;

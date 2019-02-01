@@ -26,13 +26,5 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             Title = title;
             Items.AddRange(items);
         }
-
-        internal void CleanSelected()
-        {
-            foreach (var item in Items)
-            {
-                item.IsSelected = false;
-            }
-        }
     }
 }

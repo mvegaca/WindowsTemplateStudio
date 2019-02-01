@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using Microsoft.Templates.UI.Extensions;
 using Microsoft.Templates.UI.Mvvm;
 using Microsoft.Templates.UI.Services;
 
@@ -43,10 +44,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
 
                 if (_isSelectionEnabled())
                 {
-                    foreach (var item in Items)
-                    {
-                        item.IsSelected = false;
-                    }
+                    Items.UnselectAll();
 
                     _selected.IsSelected = true;
                     OnPropertyChanged(nameof(Selected));

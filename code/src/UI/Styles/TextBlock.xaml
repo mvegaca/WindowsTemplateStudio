@@ -85,6 +85,17 @@
         <Setter Property="FontWeight" Value="Normal" />
     </Style>
 
+    <Style TargetType="TextBlock" x:Key="WtsTextBlockSequentialFlowCheckMark">
+        <Setter Property="Text" Value="&#xE001;" />
+        <Setter Property="FontSize" Value="{Binding Environment100PercentFontSize, Source={x:Static services:UIStylesService.Instance}}" />
+        <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="10,5,10,5" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="FontWeight" Value="Normal" />
+    </Style>
+
     <!--Card-->
     <Style TargetType="TextBlock" x:Key="WtsTextBlockCardTitle">
         <Setter Property="FontSize" Value="{Binding Environment122PercentFontSize, Source={x:Static services:UIStylesService.Instance}}" />

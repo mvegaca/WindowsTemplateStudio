@@ -66,22 +66,43 @@ namespace Microsoft.Templates.UI.Extensions
         {
             var textBlock = d as TextBlock;
             var step = GetSequentialFlowStep(textBlock);
+            var index = GetSequentialFlowStepIndex(textBlock);
             var completed = GetSequentialFlowStepCompleted(textBlock);
+
             textBlock.Inlines.Clear();
-            if (completed)
+
+            //if (completed)
+            //{
+            //    textBlock.Inlines.Add(GetCheckMark());
+            //    textBlock.Inlines.Add(" ");
+            //}
+
+            if (step.IsSubStep)
             {
-                textBlock.Inlines.Add(new Run()
-                {
-                    FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                    Text = char.ConvertFromUtf32(0xE001).ToString(),
-                    BaselineAlignment = BaselineAlignment.Center,
-                });
-                textBlock.Inlines.Add($" {step.Title}");
+                // Add Identation
+                textBlock.Inlines.Add("   ");
             }
-            else
+
+            //if (completed)
+            //{
+            //    textBlock.Inlines.Add(GetCheckMark());
+            //}
+            //else
+            //{
+            //    textBlock.Inlines.Add($"{index}.");
+            //}
+
+            textBlock.Inlines.Add($"{index}. {step.Title}");
+        }
+
+        private static Run GetCheckMark()
+        {
+            return new Run()
             {
-                textBlock.Inlines.Add($"{step.Index}.  {step.Title}");
-            }
+                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                Text = char.ConvertFromUtf32(0xE001).ToString(),
+                BaselineAlignment = BaselineAlignment.Center,
+            };
         }
     }
 }
