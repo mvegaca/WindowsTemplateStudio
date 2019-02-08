@@ -20,5 +20,11 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             Title = metadataType == MetadataType.ProjectType ? StringRes.ProjectDetailsProjectTypeResetTitle : StringRes.ProjectDetailsFrameworkResetTitle;
             Description = metadataType == MetadataType.ProjectType ? StringRes.ProjectDetailsProjectTypeResetDescription : StringRes.ProjectDetailsFrameworkResetDescription;
         }
+
+        public QuestionDialogViewModel(string title, string description)
+        {
+            Title = title;
+            Description = description;
+        }
     }
 }

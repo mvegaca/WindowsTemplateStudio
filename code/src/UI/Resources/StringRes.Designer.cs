@@ -577,6 +577,96 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Log In with Azure to configure Identity in your App..
+        /// </summary>
+        public static string IdentityConfigurationAzureAuthenticationLoginDescription {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationAzureAuthenticationLoginDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure authentication.
+        /// </summary>
+        public static string IdentityConfigurationAzureAuthenticationTitle {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationAzureAuthenticationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User to configure the Identity feature in Azure..
+        /// </summary>
+        public static string IdentityConfigurationAzureAuthenticationUserDescription {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationAzureAuthenticationUserDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose Azure Active Directory.
+        /// </summary>
+        public static string IdentityConfigurationChooseAADTitle {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationChooseAADTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no AAD available for this Azure account. Please create a new one at Azure portal..
+        /// </summary>
+        public static string IdentityConfigurationNoAADText {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationNoAADText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity configuration (Optional).
+        /// </summary>
+        public static string IdentityConfigurationTitle {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log in.
+        /// </summary>
+        public static string IdentityLogInButton {
+            get {
+                return ResourceManager.GetString("IdentityLogInButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log Out.
+        /// </summary>
+        public static string IdentityLogOutButton {
+            get {
+                return ResourceManager.GetString("IdentityLogOutButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Azure portal.
+        /// </summary>
+        public static string IdentityOpenAzurePortalButton {
+            get {
+                return ResourceManager.GetString("IdentityOpenAzurePortalButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign up.
+        /// </summary>
+        public static string IdentitySignUpButton {
+            get {
+                return ResourceManager.GetString("IdentitySignUpButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Identity config.
         /// </summary>
         public static string IdentityStepTitle {

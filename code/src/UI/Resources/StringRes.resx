@@ -722,4 +722,34 @@ Please verify the following list of packages needed by your project's code and m
   <data name="AddServicesTitle" xml:space="preserve">
     <value>Add services</value>
   </data>
+  <data name="IdentityLogInButton" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="IdentityConfigurationTitle" xml:space="preserve">
+    <value>Identity configuration (Optional)</value>
+  </data>
+  <data name="IdentityConfigurationAzureAuthenticationTitle" xml:space="preserve">
+    <value>Azure authentication</value>
+  </data>
+  <data name="IdentityConfigurationAzureAuthenticationLoginDescription" xml:space="preserve">
+    <value>Log In with Azure to configure Identity in your App.</value>
+  </data>
+  <data name="IdentityLogOutButton" xml:space="preserve">
+    <value>Log Out</value>
+  </data>
+  <data name="IdentitySignUpButton" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="IdentityConfigurationAzureAuthenticationUserDescription" xml:space="preserve">
+    <value>User to configure the Identity feature in Azure.</value>
+  </data>
+  <data name="IdentityConfigurationChooseAADTitle" xml:space="preserve">
+    <value>Choose Azure Active Directory</value>
+  </data>
+  <data name="IdentityConfigurationNoAADText" xml:space="preserve">
+    <value>There are no AAD available for this Azure account. Please create a new one at Azure portal.</value>
+  </data>
+  <data name="IdentityOpenAzurePortalButton" xml:space="preserve">
+    <value>Open Azure portal</value>
+  </data>
 </root>

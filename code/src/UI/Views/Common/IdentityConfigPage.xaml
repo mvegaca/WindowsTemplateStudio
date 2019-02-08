@@ -4,6 +4,119 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:strings="clr-namespace:Microsoft.Templates.UI.Resources"
+      xmlns:converters="clr-namespace:Microsoft.Templates.UI.Converters"
+      xmlns:controls="clr-namespace:Microsoft.Templates.UI.Controls"
       mc:Ignorable="d"
       d:DesignHeight="300" d:DesignWidth="300">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Microsoft.Templates.UI;component/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        </ResourceDictionary>
+    </Page.Resources>
+    <ScrollViewer>
+        <StackPanel>
+            <TextBlock
+                Grid.Row="0"
+                Text="{x:Static strings:StringRes.IdentityConfigurationTitle}"
+                Margin="{StaticResource Margin_L_LeftRight_M2_Top}"
+                Style="{StaticResource WtsTextBlockSectionTitle}" />
+            <TextBlock
+                Visibility="{Binding Name, Converter={StaticResource StringVisibilityConverter}}"
+                Text="{x:Static strings:StringRes.IdentityConfigurationAzureAuthenticationTitle}"
+                Margin="{StaticResource Margin_L_LeftRight_M_Top}"
+                Style="{StaticResource WtsTextBlockSubSectionTitle}" />
+
+            <StackPanel Visibility="{Binding IsLoggedIn, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=reverse}">
+                <TextBlock
+                    Visibility="{Binding Name, Converter={StaticResource StringVisibilityConverter}}"
+                    Text="{x:Static strings:StringRes.IdentityConfigurationAzureAuthenticationLoginDescription}"
+                    Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                    Style="{StaticResource WtsTextBlockSubSectionText}" />
+                <TextBlock
+                    AutomationProperties.Name="{x:Static strings:StringRes.IdentityLogInButton}"
+                    Margin="{StaticResource Margin_M3_LeftRight_S_Top}">
+                    <Hyperlink
+                        Style="{StaticResource WtsHyperlink}"
+                        Command="{Binding LoginCommand}"
+                        AutomationProperties.Name="{x:Static strings:StringRes.IdentityLogInButton}">
+                        <Grid Background="Transparent">
+                            <TextBlock Text="{x:Static strings:StringRes.IdentityLogInButton}" Style="{StaticResource WtsTextBlockHyperlink}" Margin="4,4,4,4" />
+                        </Grid>
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock
+                    AutomationProperties.Name="{x:Static strings:StringRes.IdentitySignUpButton}"
+                    Margin="{StaticResource Margin_M3_LeftRight}">
+                    <Hyperlink
+                        Style="{StaticResource WtsHyperlink}"
+                        Command="{Binding SignUpCommand}"
+                        AutomationProperties.Name="{x:Static strings:StringRes.IdentitySignUpButton}">
+                        <Grid Background="Transparent">
+                            <TextBlock Text="{x:Static strings:StringRes.IdentitySignUpButton}" Style="{StaticResource WtsTextBlockHyperlink}" Margin="4,4,4,4" />
+                        </Grid>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding IsLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock
+                    Visibility="{Binding Name, Converter={StaticResource StringVisibilityConverter}}"
+                    Text="{x:Static strings:StringRes.IdentityConfigurationAzureAuthenticationUserDescription}"
+                    Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                    Style="{StaticResource WtsTextBlockSubSectionText}" />
+                <TextBlock
+                    Visibility="{Binding Account, Converter={StaticResource StringVisibilityConverter}}"
+                    Text="{Binding Account.Account}"
+                    Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                    Style="{StaticResource WtsTextBlockSubSectionText}" />
+                <TextBlock
+                    AutomationProperties.Name="{x:Static strings:StringRes.IdentityLogOutButton}"
+                    Margin="{StaticResource Margin_M3_LeftRight_S_Top}">
+                    <Hyperlink
+                        Style="{StaticResource WtsHyperlink}"
+                        Command="{Binding LogOutCommand}"
+                        AutomationProperties.Name="{x:Static strings:StringRes.IdentityLogOutButton}">
+                        <Grid Background="Transparent">
+                            <TextBlock Text="{x:Static strings:StringRes.IdentityLogOutButton}" Style="{StaticResource WtsTextBlockHyperlink}" Margin="4,4,4,4" />
+                        </Grid>
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock
+                    Visibility="{Binding Name, Converter={StaticResource StringVisibilityConverter}}"
+                    Text="{x:Static strings:StringRes.IdentityConfigurationChooseAADTitle}"
+                    Margin="{StaticResource Margin_L_LeftRight_M_Top}"
+                    Style="{StaticResource WtsTextBlockSubSectionTitle}" />
+                <StackPanel Visibility="{Binding Account.HasTenants, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=reverse}">
+                    <TextBlock
+                        Visibility="{Binding Account, Converter={StaticResource StringVisibilityConverter}}"
+                        Text="{x:Static strings:StringRes.IdentityConfigurationNoAADText}"
+                        Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                        Style="{StaticResource WtsTextBlockSubSectionText}" />
+                    <TextBlock
+                        AutomationProperties.Name="{x:Static strings:StringRes.IdentityOpenAzurePortalButton}"
+                        Margin="{StaticResource Margin_M3_LeftRight_S_Top}">
+                        <Hyperlink
+                            Style="{StaticResource WtsHyperlink}"
+                            Command="{Binding OpenAzurePortalCommand}"
+                            AutomationProperties.Name="{x:Static strings:StringRes.IdentityOpenAzurePortalButton}">
+                            <Grid Background="Transparent">
+                                <TextBlock Text="{x:Static strings:StringRes.IdentityOpenAzurePortalButton}" Style="{StaticResource WtsTextBlockHyperlink}" Margin="4,4,4,4" />
+                            </Grid>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Visibility="{Binding Account.HasTenants, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <ComboBox
+                        Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                        ItemsSource="{Binding Account.Tenants}"
+                        SelectedItem="{Binding Tenant, Mode=TwoWay}"
+                        Style="{StaticResource WtsComboBoxTenantStyle}" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

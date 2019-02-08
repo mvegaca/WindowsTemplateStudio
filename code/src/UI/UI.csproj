@@ -215,6 +215,7 @@
       <HintPath>..\..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
     </Reference>
@@ -253,12 +254,19 @@
     <Compile Include="Extensions\ImageExtensions.cs" />
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Converters\TextToFlowDocumentConverter.cs" />
+    <Compile Include="Extensions\PSObjectExtensions.cs" />
     <Compile Include="Extensions\SelectableExtensions.cs" />
     <Compile Include="Extensions\WindowExtensions.cs" />
     <Compile Include="Extensions\AnimationExtensions.cs" />
     <Compile Include="..\..\GlobalSuppressions.cs">
       <Link>GlobalSuppressions.cs</Link>
     </Compile>
+    <Compile Include="Models\AzAccount.cs" />
+    <Compile Include="Models\AzTenant.cs" />
+    <Compile Include="Services\FakePowerShellService.cs" />
+    <Compile Include="Services\FileService.cs" />
+    <Compile Include="Services\PowerShellService.cs" />
+    <Compile Include="Services\PSResult.cs" />
     <Compile Include="ViewModels\NewProject\AddServicesViewModel.cs" />
     <Compile Include="ViewModels\NewProject\AddTestingViewModel.cs" />
     <Compile Include="Views\IWizardShell.cs" />
@@ -513,6 +521,21 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Assets\PS\ConnectAzAccount.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\GetExecutionPolicy.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\SetExecutionPolicyUnrestricted.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\GetAzTenant.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\DisconnectAzAccount.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

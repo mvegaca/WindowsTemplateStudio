@@ -133,7 +133,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private async Task<bool> IsStepAvailableAsync(StepData step)
         {
-            if (step.Id == NewItemStepTemplateSelection && !WizardStatus.HasValidationErrors)
+            if (step.Id == NewItemStepChangesSummary && !WizardStatus.HasValidationErrors)
             {
                 _output = await CleanupAndGenerateNewItemAsync();
                 if (!_output.HasChangesToApply)
