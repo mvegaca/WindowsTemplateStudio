@@ -1,0 +1,1 @@
+﻿Set-AzContext -Tenant ##tenant##

@@ -97,6 +97,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Identity mode.
+        /// </summary>
+        public static string AccessibilityIdentityModeList {
+            get {
+                return ResourceManager.GetString("AccessibilityIdentityModeList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Navigation menu.
         /// </summary>
         public static string AccessibilityNavigationMenu {
@@ -613,11 +622,65 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to App registration (preview).
+        /// </summary>
+        public static string IdentityConfigurationChooseApp {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationChooseApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose identity mode.
+        /// </summary>
+        public static string IdentityConfigurationChooseIdentityModeTitle {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationChooseIdentityModeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no AAD available for this Azure account. Please create a new one at Azure portal..
         /// </summary>
         public static string IdentityConfigurationNoAADText {
             get {
                 return ResourceManager.GetString("IdentityConfigurationNoAADText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accounts in any organizational directory.
+        /// </summary>
+        public static string IdentityConfigurationSupportedAccountTypeAnyOrg {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationSupportedAccountTypeAnyOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Who can use this application?.
+        /// </summary>
+        public static string IdentityConfigurationSupportedAccountTypesText {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationSupportedAccountTypesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported account types.
+        /// </summary>
+        public static string IdentityConfigurationSupportedAccountTypesTitle {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationSupportedAccountTypesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accounts in this organizational directory (mycompany).
+        /// </summary>
+        public static string IdentityConfigurationSupportedAccountTypeThisOrg {
+            get {
+                return ResourceManager.GetString("IdentityConfigurationSupportedAccountTypeThisOrg", resourceCulture);
             }
         }
         
@@ -645,6 +708,42 @@ namespace Microsoft.Templates.UI.Resources {
         public static string IdentityLogOutButton {
             get {
                 return ResourceManager.GetString("IdentityLogOutButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure Active Directory only internal users..
+        /// </summary>
+        public static string IdentityModeAADDescription {
+            get {
+                return ResourceManager.GetString("IdentityModeAADDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AAD.
+        /// </summary>
+        public static string IdentityModeAADTitle {
+            get {
+                return ResourceManager.GetString("IdentityModeAADTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AAD internal and external users, and external Microsoft account users..
+        /// </summary>
+        public static string IdentityModeB2BDescription {
+            get {
+                return ResourceManager.GetString("IdentityModeB2BDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B2B.
+        /// </summary>
+        public static string IdentityModeB2BTitle {
+            get {
+                return ResourceManager.GetString("IdentityModeB2BTitle", resourceCulture);
             }
         }
         

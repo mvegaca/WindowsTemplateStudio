@@ -262,11 +262,16 @@
       <Link>GlobalSuppressions.cs</Link>
     </Compile>
     <Compile Include="Models\AzAccount.cs" />
+    <Compile Include="Models\AzADApplication.cs" />
     <Compile Include="Models\AzTenant.cs" />
     <Compile Include="Services\FakePowerShellService.cs" />
     <Compile Include="Services\FileService.cs" />
     <Compile Include="Services\PowerShellService.cs" />
+    <Compile Include="Services\PSCommandSettings.cs" />
+    <Compile Include="Services\PSParam.cs" />
     <Compile Include="Services\PSResult.cs" />
+    <Compile Include="Models\IdentityMode.cs" />
+    <Compile Include="ViewModels\Common\IdentityModesViewModel.cs" />
     <Compile Include="ViewModels\NewProject\AddServicesViewModel.cs" />
     <Compile Include="ViewModels\NewProject\AddTestingViewModel.cs" />
     <Compile Include="Views\IWizardShell.cs" />
@@ -521,19 +526,31 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Assets\PS\ConnectAzAccount.ps1">
+    <Content Include="Assets\PS\Az\ConnectAzAccount.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\GetExecutionPolicy.ps1">
+    <Content Include="Assets\PS\Common\GetExecutionPolicy.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\SetExecutionPolicyUnrestricted.ps1">
+    <Content Include="Assets\PS\Az\SetExecutionPolicyUnrestricted.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\GetAzTenant.ps1">
+    <Content Include="Assets\PS\Az\GetAzTenant.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\DisconnectAzAccount.ps1">
+    <Content Include="Assets\PS\Az\DisconnectAzAccount.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\Az\SetAzContext.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\Az\GetAzADApplication.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\Aad\ConnectAzureAD.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\PS\Common\ImportModule.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config">
@@ -1007,6 +1024,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.9\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets" Condition="Exists('..\..\packages\Microsoft.VisualStudio.SDK.EmbedInteropTypes.15.0.9\build\Microsoft.VisualStudio.SDK.EmbedInteropTypes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

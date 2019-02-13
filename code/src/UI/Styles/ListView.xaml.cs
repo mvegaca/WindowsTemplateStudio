@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using Microsoft.Templates.UI.Controls;
+using Microsoft.Templates.UI.Models;
 using Microsoft.Templates.UI.Resources;
 using Microsoft.Templates.UI.ViewModels.Common;
 
@@ -100,6 +101,9 @@ namespace Microsoft.Templates.UI.Styles
                     break;
                 case NewItemFileViewModel file:
                     SelectFile(file);
+                    break;
+                case IdentityMode identityMode:
+                    IdentityConfigViewModel.Current.SelectIdentityMode(identityMode);
                     break;
                 default:
                     break;

@@ -752,4 +752,38 @@ Please verify the following list of packages needed by your project's code and m
   <data name="IdentityOpenAzurePortalButton" xml:space="preserve">
     <value>Open Azure portal</value>
   </data>
+  <data name="IdentityConfigurationChooseIdentityModeTitle" xml:space="preserve">
+    <value>Choose identity mode</value>
+  </data>
+  <data name="IdentityModeAADDescription" xml:space="preserve">
+    <value>Azure Active Directory only internal users.</value>
+  </data>
+  <data name="IdentityModeAADTitle" xml:space="preserve">
+    <value>AAD</value>
+  </data>
+  <data name="IdentityModeB2BDescription" xml:space="preserve">
+    <value>AAD internal and external users, and external Microsoft account users.</value>
+  </data>
+  <data name="IdentityModeB2BTitle" xml:space="preserve">
+    <value>B2B</value>
+  </data>
+  <data name="AccessibilityIdentityModeList" xml:space="preserve">
+    <value>Identity mode</value>
+    <comment>Identity mode list to accessobility</comment>
+  </data>
+  <data name="IdentityConfigurationSupportedAccountTypesText" xml:space="preserve">
+    <value>Who can use this application?</value>
+  </data>
+  <data name="IdentityConfigurationSupportedAccountTypesTitle" xml:space="preserve">
+    <value>Supported account types</value>
+  </data>
+  <data name="IdentityConfigurationChooseApp" xml:space="preserve">
+    <value>App registration (preview)</value>
+  </data>
+  <data name="IdentityConfigurationSupportedAccountTypeAnyOrg" xml:space="preserve">
+    <value>Accounts in any organizational directory</value>
+  </data>
+  <data name="IdentityConfigurationSupportedAccountTypeThisOrg" xml:space="preserve">
+    <value>Accounts in this organizational directory (mycompany)</value>
+  </data>
 </root>

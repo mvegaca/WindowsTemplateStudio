@@ -121,6 +121,45 @@
             </TextBlock>
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="WtsItemIdentityMode">
+        <Grid Width="162" Height="200">
+            <Grid Margin="{StaticResource Margin_M_LeftTopRightBottom}">
+                <Grid.RowDefinitions>
+                    <!--Image-->
+                    <RowDefinition Height="55" />
+                    <!--Title-->
+                    <RowDefinition Height="Auto" />
+                    <!--Description-->
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <controls:ImageEx
+                    Grid.Row="0"
+                    SourcePath="{Binding Icon}"
+                    Style="{StaticResource WtsImageEx}"/>
+                <TextBlock
+                    Grid.Row="1"
+                    Text="{Binding Title}"
+                    Style="{StaticResource WtsTextBlockCardTitle}" />
+                <TextBlock
+                    Grid.Row="2"
+                    Text="{Binding Description}"
+                    Style="{StaticResource WtsTextBlockCardDescription}"
+                    Margin="0,4,0,12" />
+            </Grid>
+            <!--<TextBlock VerticalAlignment="Bottom"
+                       AutomationProperties.Name="{x:Static res:StringRes.ButtonDetails}"
+                       AutomationProperties.HelpText="{Binding Title, StringFormat={x:Static res:StringRes.ButtonDetailsHelpText}}">
+                <Hyperlink Command="{Binding DetailsCommand}"
+                           Style="{StaticResource WtsHyperlink}"
+                           AutomationProperties.Name="{x:Static res:StringRes.ButtonDetails}"
+                           AutomationProperties.HelpText="{Binding Title, StringFormat={x:Static res:StringRes.ButtonDetailsHelpText}}">
+                    <Grid Background="Transparent">
+                        <TextBlock Text="{x:Static res:StringRes.ButtonDetails}" Style="{StaticResource WtsTextBlockHyperlink}" Margin="12,8,12,8" />
+                    </Grid>
+                </Hyperlink>
+            </TextBlock>-->
+        </Grid>
+    </DataTemplate>
 
     <DataTemplate x:Key="WtsGroupTemplatePageFeature">
         <Grid>

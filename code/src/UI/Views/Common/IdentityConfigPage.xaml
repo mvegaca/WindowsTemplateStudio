@@ -115,6 +115,40 @@
                         ItemsSource="{Binding Account.Tenants}"
                         SelectedItem="{Binding Tenant, Mode=TwoWay}"
                         Style="{StaticResource WtsComboBoxTenantStyle}" />
+                    <TextBlock
+                        Visibility="{Binding Name, Converter={StaticResource StringVisibilityConverter}}"
+                        Text="{x:Static strings:StringRes.IdentityConfigurationChooseIdentityModeTitle}"
+                        Margin="{StaticResource Margin_L_LeftRight_M_Top}"
+                        Style="{StaticResource WtsTextBlockSubSectionTitle}" />
+                    <ListView
+                        Style="{StaticResource WtsListViewSingleSelectionWithoutScroll}"
+                        ItemsSource="{Binding IdentityModes.Items}"
+                        ItemTemplate="{StaticResource WtsItemIdentityMode}"
+                        AutomationProperties.Name="{x:Static strings:StringRes.AccessibilityIdentityModeList}" />
+                    <StackPanel Visibility="{Binding IsAADIdentityMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock                        
+                            Text="{x:Static strings:StringRes.IdentityConfigurationSupportedAccountTypesTitle}"
+                            Margin="{StaticResource Margin_L_LeftRight_M_Top}"
+                            Style="{StaticResource WtsTextBlockSubSectionTitle}" />
+                        <TextBlock
+                            Text="{x:Static strings:StringRes.IdentityConfigurationSupportedAccountTypesText}"
+                            Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                            Style="{StaticResource WtsTextBlockSubSectionText}" />
+                        <RadioButton
+                            Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                            IsChecked="{Binding SupportedAccountTypeThisOrg, Mode=TwoWay}"
+                            Content="{x:Static strings:StringRes.IdentityConfigurationSupportedAccountTypeThisOrg}"
+                            GroupName="SupportedAccountTypes"/>
+                        <RadioButton
+                            Margin="{StaticResource Margin_L_LeftRight_S_Top}"
+                            Content="{x:Static strings:StringRes.IdentityConfigurationSupportedAccountTypeAnyOrg}"
+                            GroupName="SupportedAccountTypes"/>
+                    </StackPanel>
+                    <TextBlock
+                        Visibility="{Binding Name, Converter={StaticResource StringVisibilityConverter}}"
+                        Text="{x:Static strings:StringRes.IdentityConfigurationChooseApp}"
+                        Margin="{StaticResource Margin_L_LeftRight_M_Top}"
+                        Style="{StaticResource WtsTextBlockSubSectionTitle}" />
                 </StackPanel>
             </StackPanel>
         </StackPanel>
