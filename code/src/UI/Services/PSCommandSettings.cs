@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using PS = System.Management.Automation;
 
 namespace Microsoft.Templates.UI.Services
@@ -12,6 +15,8 @@ namespace Microsoft.Templates.UI.Services
 
     public class PSCommandSettings
     {
+        private const string _powerShellPath = "c:/windows/sysnative/windowspowershell/v1.0/powershell";
+
         public PsCommand Command { get; set; }
 
         public string FileName { get; set; }
@@ -48,6 +53,23 @@ namespace Microsoft.Templates.UI.Services
                     ps.AddParameter(psParam.Name, psParam.Value);
                 }
             }
+        }
+
+        public ProcessStartInfo GetProcessInfo()
+        {
+            // WorkingDirectory = "C:/Users/mvega/Desktop/",
+            // Arguments = $".\\All.ps1",
+            return new ProcessStartInfo()
+            {
+                FileName = _powerShellPath,
+                WorkingDirectory = FileService.ExecutingDirectory,
+                Arguments = $@"Assets\PS\{Command}\{FileName}.ps1",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+            };
+
         }
     }
 }
