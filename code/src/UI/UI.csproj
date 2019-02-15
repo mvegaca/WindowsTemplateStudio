@@ -526,34 +526,28 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Assets\PS\Az\ConnectAzAccount.ps1">
+    <Content Include="Assets\PS\ConnectAzAccount.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Common\GetExecutionPolicy.ps1">
+    <Content Include="Assets\PS\GetExecutionPolicy.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Common\SetExecutionPolicyUnrestricted.ps1">
+    <Content Include="Assets\PS\SetExecutionPolicyUnrestricted.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Az\GetAzTenant.ps1">
+    <Content Include="Assets\PS\GetAzTenant.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Az\DisconnectAzAccount.ps1">
+    <Content Include="Assets\PS\DisconnectAzAccount.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Az\SetAzContext.ps1">
+    <Content Include="Assets\PS\SetAzContext.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Az\GetAzADApplication.ps1">
+    <Content Include="Assets\PS\GetAzADApplication.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\PS\Aad\ConnectAzureAD.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\PS\Common\ImportModule.ps1">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\PS\Common\All.ps1">
+    <Content Include="Assets\PS\ImportModule.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config">

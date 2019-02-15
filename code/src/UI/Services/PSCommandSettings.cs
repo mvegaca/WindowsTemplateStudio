@@ -1,24 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+﻿using System.Collections.Generic;
 using PS = System.Management.Automation;
 
 namespace Microsoft.Templates.UI.Services
 {
-    public enum PsCommand
-    {
-        Az,
-        Aad,
-        Common,
-    }
-
     public class PSCommandSettings
     {
-        private const string _powerShellPath = "c:/windows/sysnative/windowspowershell/v1.0/powershell";
-
-        public PsCommand Command { get; set; }
-
         public string FileName { get; set; }
 
         public Dictionary<string, string> FileParameters { get; } = new Dictionary<string, string>();
@@ -33,7 +19,7 @@ namespace Microsoft.Templates.UI.Services
         {
             if (!string.IsNullOrEmpty(FileName))
             {
-                var script = FileService.Read($@"Assets\PS\{Command}\{FileName}.ps1");
+                var script = FileService.Read($@"Assets\PS\{FileName}.ps1");
                 foreach (var param in FileParameters)
                 {
                     script = script.Replace(param.Key, param.Value);
@@ -53,23 +39,6 @@ namespace Microsoft.Templates.UI.Services
                     ps.AddParameter(psParam.Name, psParam.Value);
                 }
             }
-        }
-
-        public ProcessStartInfo GetProcessInfo()
-        {
-            // WorkingDirectory = "C:/Users/mvega/Desktop/",
-            // Arguments = $".\\All.ps1",
-            return new ProcessStartInfo()
-            {
-                FileName = _powerShellPath,
-                WorkingDirectory = FileService.ExecutingDirectory,
-                Arguments = $@"Assets\PS\{Command}\{FileName}.ps1",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true,
-            };
-
         }
     }
 }

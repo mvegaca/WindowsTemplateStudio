@@ -10,31 +10,25 @@ namespace Microsoft.Templates.UI.Services
 {
     public class PSResult
     {
-        //public Collection<PSObject> Data { get; set; }
+        public Collection<PSObject> Data { get; set; }
 
-        //public PSDataCollection<ErrorRecord> Errors { get; set; }
+        public PSDataCollection<ErrorRecord> Errors { get; set; }
 
-        public string Result { get; set; }
+        public bool Success
+        {
+            get
+            {
+                if (Errors != null && Errors.Any())
+                {
+                    return false;
+                }
+                else if (Data == null)
+                {
+                    return false;
+                }
 
-        public string Error { get; set; }
-
-        public int ExitCode { get; set; }
-
-        //public bool Success
-        //{
-        //    get
-        //    {
-        //        if (Errors != null && Errors.Any())
-        //        {
-        //            return false;
-        //        }
-        //        else if (Data == null)
-        //        {
-        //            return false;
-        //        }
-
-        //        return true;
-        //    }
-        //}
+                return true;
+            }
+        }
     }
 }

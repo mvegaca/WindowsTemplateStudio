@@ -135,8 +135,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
                 else
                 {
                     _powerShell.ImportModule();
-                    _powerShell.ConnectAzureAD();
-                    //Account = _powerShell.ConnectAzureAD();
+                    Account = _powerShell.ConnectAzAccount();
                 }
 
                 if (Account.HasTenants)
@@ -165,7 +164,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
                 }
                 else
                 {
-                    //_powerShell.DisconnectAzAccount(Account.Account);
+                    _powerShell.DisconnectAzAccount(Account.Account);
                 }
 
             }
@@ -189,9 +188,9 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             }
             else
             {
-                //_powerShell.SetTenant(Tenant.Id);
-                //Applications.Clear();
-                //_powerShell.GetAzADApplication().ForEach(app => Applications.Add(app));
+                _powerShell.SetTenant(Tenant.Id);
+                Applications.Clear();
+                _powerShell.GetAzADApplication().ForEach(app => Applications.Add(app));
             }
         }
 
