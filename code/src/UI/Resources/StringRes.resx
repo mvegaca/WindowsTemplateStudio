@@ -786,4 +786,8 @@ Please verify the following list of packages needed by your project's code and m
   <data name="IdentityConfigurationSupportedAccountTypeThisOrg" xml:space="preserve">
     <value>Accounts in this organizational directory (mycompany)</value>
   </data>
+  <data name="TemplateGroup_Testing" xml:space="preserve">
+    <value>Testing</value>
+    <comment>Group header for Testing templates</comment>
+  </data>
 </root>
