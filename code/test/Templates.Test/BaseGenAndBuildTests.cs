@@ -22,6 +22,7 @@ namespace Microsoft.Templates.Test
     public class BaseGenAndBuildTests
     {
         protected BaseGenAndBuildFixture _fixture;
+        private readonly string _emptyBackendFramework = string.Empty;
 
         public BaseGenAndBuildTests(BaseGenAndBuildFixture fixture, IContextProvider contextProvider = null, string framework = "")
         {
@@ -53,6 +54,8 @@ namespace Microsoft.Templates.Test
                     return "SV";
                 case "TabbedNav":
                     return "TN";
+                case "MenuBar":
+                    return "MB";
                 default:
                     return projectType;
             }
@@ -68,7 +71,7 @@ namespace Microsoft.Templates.Test
             Func<ITemplateInfo, bool> selector =
                 t => t.GetTemplateType() == TemplateType.Project
                      && t.GetProjectTypeList().Contains(projectType)
-                     && t.GetFrameworkList().Contains(framework)
+                     && t.GetFrontEndFrameworkList().Contains(framework)
                      && !t.GetIsHidden()
                      && t.GetLanguage() == language;
 
@@ -84,14 +87,14 @@ namespace Microsoft.Templates.Test
             Func<ITemplateInfo, bool> selector =
                 t => t.GetTemplateType() == TemplateType.Project
                      && t.GetProjectTypeList().Contains(projectType)
-                     && t.GetFrameworkList().Contains(framework)
+                     && t.GetFrontEndFrameworkList().Contains(framework)
                      && t.GetPlatform() == platform
                      && !t.GetIsHidden()
                      && t.GetLanguage() == language;
 
             Func<ITemplateInfo, bool> templateSelector =
                 t => (t.GetTemplateType() == TemplateType.Page || t.GetTemplateType() == TemplateType.Feature)
-                     && t.GetFrameworkList().Contains(framework)
+                     && t.GetFrontEndFrameworkList().Contains(framework)
                      && t.GetPlatform() == platform
                      && !t.GetIsHidden();
 
@@ -264,7 +267,7 @@ namespace Microsoft.Templates.Test
 
             var rightClickTemplates = _fixture.Templates().Where(
                                            t => (t.GetTemplateType() == TemplateType.Feature || t.GetTemplateType() == TemplateType.Page)
-                                             && t.GetFrameworkList().Contains(framework)
+                                             && t.GetFrontEndFrameworkList().Contains(framework)
                                              && t.GetPlatform() == platform
                                              && !t.GetIsHidden()
                                              && t.GetRightClickEnabled());
@@ -304,7 +307,7 @@ namespace Microsoft.Templates.Test
                     GenerationOutputPath = GenContext.GetTempGenerationPath(projectName),
                 };
 
-                var newUserSelection = new UserSelection(projectType, framework, platform, language)
+                var newUserSelection = new UserSelection(projectType, framework, _emptyBackendFramework, platform, language)
                 {
                     HomeName = string.Empty,
                     ItemGenerationType = ItemGenerationType.GenerateAndMerge,
@@ -323,7 +326,7 @@ namespace Microsoft.Templates.Test
             BaseGenAndBuildFixture.SetCurrentLanguage(language);
             BaseGenAndBuildFixture.SetCurrentPlatform(platform);
 
-            var projectTemplate = _fixture.Templates().FirstOrDefault(t => t.GetTemplateType() == TemplateType.Project && t.GetProjectTypeList().Contains(projectType) && t.GetFrameworkList().Contains(framework) && t.GetPlatform() == platform);
+            var projectTemplate = _fixture.Templates().FirstOrDefault(t => t.GetTemplateType() == TemplateType.Project && t.GetProjectTypeList().Contains(projectType) && t.GetFrontEndFrameworkList().Contains(framework) && t.GetPlatform() == platform);
             var itemTemplate = _fixture.Templates().FirstOrDefault(t => t.Identity == itemId);
             var finalName = itemTemplate.GetDefaultName();
             var validators = new List<Validator>
@@ -391,7 +394,7 @@ namespace Microsoft.Templates.Test
             BaseGenAndBuildFixture.SetCurrentLanguage(language);
             BaseGenAndBuildFixture.SetCurrentPlatform(Platforms.Uwp);
 
-            var projectTemplate = _fixture.Templates().FirstOrDefault(t => t.GetTemplateType() == TemplateType.Project && t.GetProjectTypeList().Contains(projectType) && t.GetFrameworkList().Contains(framework));
+            var projectTemplate = _fixture.Templates().FirstOrDefault(t => t.GetTemplateType() == TemplateType.Project && t.GetProjectTypeList().Contains(projectType) && t.GetFrontEndFrameworkList().Contains(framework));
 
             var singlePageName = string.Empty;
 
@@ -418,7 +421,7 @@ namespace Microsoft.Templates.Test
             {
                 ITemplateInfo itemTemplate = _fixture.Templates()
                                                      .FirstOrDefault(t => (t.Identity.StartsWith($"{identity}.") || t.Identity.Equals(identity))
-                                                                        && t.GetFrameworkList().Contains(framework));
+                                                                        && t.GetFrontEndFrameworkList().Contains(framework));
 
                 _fixture.AddItem(userSelection, itemTemplate, BaseGenAndBuildFixture.GetDefaultName);
 
@@ -432,7 +435,7 @@ namespace Microsoft.Templates.Test
             if (lastPageIsHome)
             {
                 // Useful if creating a blank project type and want to change the start page
-                userSelection.HomeName = userSelection.Pages.Last().name;
+                userSelection.HomeName = userSelection.Pages.Last().Name;
 
                 if (projectType == "TabbedNav")
                 {
@@ -456,6 +459,7 @@ namespace Microsoft.Templates.Test
         private const string NavigationPanel = "SplitView";
         private const string Blank = "Blank";
         private const string TabbedNav = "TabbedNav";
+        private const string MenuBar = "MenuBar";
         private const string MvvmBasic = "MVVMBasic";
         private const string MvvmLight = "MVVMLight";
         private const string CodeBehind = "CodeBehind";
@@ -472,6 +476,11 @@ namespace Microsoft.Templates.Test
             yield return new object[] { TabbedNav, CodeBehind };
             yield return new object[] { TabbedNav, MvvmBasic };
             yield return new object[] { TabbedNav, MvvmLight };
+
+            // Re-enable when VB MenuBar templates are added
+            // yield return new object[] { MenuBar, CodeBehind };
+            // yield return new object[] { MenuBar, MvvmBasic };
+            // yield return new object[] { MenuBar, MvvmLight };
         }
 
         // Gets a list of partial identities for page and feature templates supported by C# and VB

@@ -12,13 +12,26 @@ namespace Microsoft.Templates.UI.Services
 {
     public static class DataService
     {
-        public static bool LoadProjectTypes(ObservableCollection<MetadataInfoViewModel> projectTypes, string platform)
+        public static bool LoadProjectTypes(ObservableCollection<ProjectTypeMetaDataViewModel> projectTypes, string platform)
         {
             var templateProjectTypes = GenComposer.GetSupportedProjectTypes(platform);
+            var frameworksMetadata = GenContext.ToolBox.Repo.GetFrontEndFrameworks(platform);
 
-            var data = GenContext.ToolBox.Repo.GetProjectTypes(platform)
-                        .Where(m => templateProjectTypes.Contains(m.Name) && !string.IsNullOrEmpty(m.Description))
-                        .Select(m => new MetadataInfoViewModel(m))
+            var newProjectTypes = GenContext.ToolBox.Repo.GetProjectTypes(platform).Where(m => templateProjectTypes.Contains(m.Name) && !string.IsNullOrEmpty(m.Description));
+
+            var data = newProjectTypes
+                        .Select(m =>
+                        {
+                            var templateFrameworks = GenComposer.GetSupportedFx(m.Name, platform);
+
+                            var targetFrameworks = frameworksMetadata
+                                        .Where(fx => templateFrameworks.Any(f => f.Type == FrameworkTypes.FrontEnd && f.Name == fx.Name))
+                                        .Select(fx => new FrameworkMetaDataViewModel(fx, platform))
+                                        .OrderBy(f => f.Order)
+                                        .ToList();
+
+                            return new ProjectTypeMetaDataViewModel(m, platform, targetFrameworks);
+                        })
                         .OrderBy(pt => pt.Order).ToList();
 
             projectTypes.Clear();
@@ -38,13 +51,13 @@ namespace Microsoft.Templates.UI.Services
             }
         }
 
-        public static bool LoadFrameworks(ObservableCollection<MetadataInfoViewModel> frameworks, string projectTypeName, string platform)
+        public static bool LoadFrameworks(ObservableCollection<FrameworkMetaDataViewModel> frameworks, string projectTypeName, string platform)
         {
             var templateFrameworks = GenComposer.GetSupportedFx(projectTypeName, platform);
 
-            var targetFrameworks = GenContext.ToolBox.Repo.GetFrameworks(platform)
-                                        .Where(m => templateFrameworks.Contains(m.Name))
-                                        .Select(m => new MetadataInfoViewModel(m))
+            var targetFrameworks = GenContext.ToolBox.Repo.GetFrontEndFrameworks(platform)
+                                        .Where(fx => templateFrameworks.Any(f => f.Type == FrameworkTypes.FrontEnd && f.Name == fx.Name))
+                                        .Select(m => new FrameworkMetaDataViewModel(m, platform))
                                         .OrderBy(f => f.Order)
                                         .ToList();
 
@@ -64,7 +77,7 @@ namespace Microsoft.Templates.UI.Services
             {
                 var templates = GenContext.ToolBox.Repo.Get(t =>
                                     t.GetTemplateType() == templateType &&
-                                    t.GetFrameworkList().Contains(frameworkName) &&
+                                    t.GetFrontEndFrameworkList().Contains(frameworkName) &&
                                     t.GetPlatform() == platform &&
                                     !t.GetIsHidden());
 

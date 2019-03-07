@@ -55,7 +55,7 @@ namespace TemplateValidator
             {
                 var fileContents = File.ReadAllText(configFilePath);
 
-                // The analyzer compares the JSON with the POCO type. It identifies discrepencies in types, missing or extra properties, etc.
+                // The analyzer compares the JSON with the POCO type. It identifies discrepancies in types, missing or extra properties, etc.
                 var analyzerResults = await Analyzer.AnalyzeJsonAsync(fileContents, typeof(ValidationTemplateInfo));
 
                 // The "other" checks are specific to what the wizard does with the config file and expectations of the content
@@ -173,7 +173,8 @@ namespace TemplateValidator
                     case "wts.compositionOrder":
                         VerifyWtsCompositionOrderTagValue(tag, results);
                         break;
-                    case "wts.framework":
+                    case "wts.frontendframework":
+                    case "wts.backendframework":
                         VerifyWtsFrameworkTagValue(tag, results);
                         break;
                     case "wts.projecttype":
@@ -231,9 +232,9 @@ namespace TemplateValidator
                 }
             }
 
-            if (template.TemplateTags.ContainsKey("language") && template.TemplateTags.ContainsKey("wts.framework"))
+            if (template.TemplateTags.ContainsKey("language") && template.TemplateTags.ContainsKey("wts.frontendframework"))
             {
-                VerifyFrameworksAreAppropriateForLanguage(template.TemplateTags["language"], template.TemplateTags["wts.framework"], results);
+                VerifyFrameworksAreAppropriateForLanguage(template.TemplateTags["language"], template.TemplateTags["wts.frontendframework"], results);
             }
         }
 
@@ -311,10 +312,16 @@ namespace TemplateValidator
 
         private static void VerifyWtsLicensesTagValue(KeyValuePair<string, string> tag, List<string> results)
         {
-            // This is a really crude regex designed to catch basic variation from a markdown URI link
-            if (!new Regex(@"^\[([\w .\-]){3,}\]\(http([\w ./?=\-:]){9,}\)$").IsMatch(tag.Value))
+            // Allow for multiple pipe separated links
+            var values = tag.Value.Split('|');
+
+            foreach (var value in values)
             {
-                results.Add($"'{tag.Value}' specified in the wts.licenses tag does not match the expected format.");
+                // This is a really crude regex designed to catch basic variation from a markdown URI link
+                if (!new Regex(@"^\[([\w .\-]){3,}\]\(http([\w ./?=\-:]){9,}\)$").IsMatch(value))
+                {
+                    results.Add($"'{value}' specified in the wts.licenses tag does not match the expected format.");
+                }
             }
         }
 
@@ -374,7 +381,7 @@ namespace TemplateValidator
             // This tag may contain a single value or multiple ones separated by the pipe character
             foreach (var projectType in tag.Value.Split('|'))
             {
-                if (!new[] { "Blank", "SplitView", "TabbedNav" }.Contains(projectType))
+                if (!new[] { "Blank", "SplitView", "TabbedNav", "all" }.Contains(projectType))
                 {
                     results.Add($"Invalid value '{tag.Value}' specified in the wts.projecttype tag.");
                 }

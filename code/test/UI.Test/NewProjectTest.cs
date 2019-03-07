@@ -55,7 +55,7 @@ namespace Microsoft.UI.Test
             var viewModel = new MainViewModel(null, stylesProviders);
             await viewModel.InitializeAsync(Platforms.Uwp, GenContext.CurrentLanguage);
 
-            Assert.True(viewModel.ProjectType.Items.Count == 3);
+            Assert.True(viewModel.ProjectType.Items.Count == 4);
             Assert.True(viewModel.Framework.Items.Count == 5);
             Assert.True(viewModel.AddPages.Groups.Count > 0);
             Assert.True(viewModel.AddFeatures.Groups.Count > 0);
@@ -73,14 +73,14 @@ namespace Microsoft.UI.Test
 
             var userSelection = viewModel.UserSelection.GetUserSelection();
             Assert.True(userSelection.ProjectType == SplitView);
-            Assert.True(userSelection.Framework == CodeBehind);
-            Assert.True(userSelection.Pages.First().template.Identity == PageBlankCodeBehind);
+            Assert.True(userSelection.FrontEndFramework == CodeBehind);
+            Assert.True(userSelection.Pages.First().Template.Identity == PageBlankCodeBehind);
             SetProjectType(viewModel, Blank);
             SetFramework(viewModel, MVVMLight);
             userSelection = viewModel.UserSelection.GetUserSelection();
             Assert.True(userSelection.ProjectType == Blank);
-            Assert.True(userSelection.Framework == MVVMLight);
-            Assert.True(userSelection.Pages.First().template.Identity == PageBlank);
+            Assert.True(userSelection.FrontEndFramework == MVVMLight);
+            Assert.True(userSelection.Pages.First().Template.Identity == PageBlank);
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Microsoft.UI.Test
             var userSelection = viewModel.UserSelection.GetUserSelection();
             Assert.True(userSelection.Pages.Count == 2);
             Assert.True(userSelection.Features.Count == numOfDependencies);
-            Assert.True(userSelection.Features.First().template.Identity == FeatureSettingsStorage);
+            Assert.True(userSelection.Features.First().Template.Identity == FeatureSettingsStorage);
         }
 
         [Fact]
@@ -203,23 +203,23 @@ namespace Microsoft.UI.Test
             AddTemplate(viewModel, GetTemplate(viewModel.AddPages.Groups, PageBlankCodeBehind));
             AddTemplate(viewModel, GetTemplate(viewModel.AddPages.Groups, PageBlankCodeBehind));
             var userSelection = viewModel.UserSelection.GetUserSelection();
-            Assert.True(userSelection.Pages[1].name == "Blank");
-            Assert.True(userSelection.Pages[2].name == "Blank1");
-            Assert.True(userSelection.Pages[3].name == "Blank2");
-            Assert.True(userSelection.Pages[4].name == "Blank3");
+            Assert.True(userSelection.Pages[1].Name == "Blank");
+            Assert.True(userSelection.Pages[2].Name == "Blank1");
+            Assert.True(userSelection.Pages[3].Name == "Blank2");
+            Assert.True(userSelection.Pages[4].Name == "Blank3");
             viewModel.UserSelection.SelectedPage = viewModel.UserSelection.Pages[2]; // Select Blank1
             viewModel.UserSelection.MovePageDownCommand.Execute(null);
             userSelection = viewModel.UserSelection.GetUserSelection();
-            Assert.True(userSelection.Pages[1].name == "Blank");
-            Assert.True(userSelection.Pages[2].name == "Blank2");
-            Assert.True(userSelection.Pages[3].name == "Blank1");
-            Assert.True(userSelection.Pages[4].name == "Blank3");
+            Assert.True(userSelection.Pages[1].Name == "Blank");
+            Assert.True(userSelection.Pages[2].Name == "Blank2");
+            Assert.True(userSelection.Pages[3].Name == "Blank1");
+            Assert.True(userSelection.Pages[4].Name == "Blank3");
             viewModel.UserSelection.MovePageUpCommand.Execute(null);
             userSelection = viewModel.UserSelection.GetUserSelection();
-            Assert.True(userSelection.Pages[1].name == "Blank");
-            Assert.True(userSelection.Pages[2].name == "Blank1");
-            Assert.True(userSelection.Pages[3].name == "Blank2");
-            Assert.True(userSelection.Pages[4].name == "Blank3");
+            Assert.True(userSelection.Pages[1].Name == "Blank");
+            Assert.True(userSelection.Pages[2].Name == "Blank1");
+            Assert.True(userSelection.Pages[3].Name == "Blank2");
+            Assert.True(userSelection.Pages[4].Name == "Blank3");
         }
 
         [Fact]
@@ -231,14 +231,14 @@ namespace Microsoft.UI.Test
             await viewModel.InitializeAsync(Platforms.Uwp, GenContext.CurrentLanguage);
             AddTemplate(viewModel, GetTemplate(viewModel.AddPages.Groups, PageBlankCodeBehind));
             var userSelection = viewModel.UserSelection.GetUserSelection();
-            Assert.True(userSelection.Pages[0].name == "Main");
-            Assert.True(userSelection.Pages[1].name == "Blank");
+            Assert.True(userSelection.Pages[0].Name == "Main");
+            Assert.True(userSelection.Pages[1].Name == "Blank");
             Assert.True(userSelection.HomeName == "Main");
             viewModel.UserSelection.SelectedPage = viewModel.UserSelection.Pages[1]; // Select Blank
             viewModel.UserSelection.MovePageUpCommand.Execute(null);
             userSelection = viewModel.UserSelection.GetUserSelection();
-            Assert.True(userSelection.Pages[0].name == "Blank");
-            Assert.True(userSelection.Pages[1].name == "Main");
+            Assert.True(userSelection.Pages[0].Name == "Blank");
+            Assert.True(userSelection.Pages[1].Name == "Main");
             Assert.True(userSelection.HomeName == "Blank");
         }
 

@@ -26,6 +26,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
         private bool _isTextSelected;
         private ICommand _setFocusCommand;
         private ICommand _lostKeyboardFocusCommand;
+        private string _emptyBackendFramework = string.Empty;
 
         public string Name
         {
@@ -130,7 +131,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
                     WizardNavigation.Current.RemoveAllSubSteps();
                 }
 
-                var licenses = GenComposer.GetAllLicences(template.Template, MainViewModel.Current.ConfigFramework, MainViewModel.Current.ConfigPlatform);
+                var licenses = GenComposer.GetAllLicences(template.Template, MainViewModel.Current.ConfigFramework, _emptyBackendFramework, MainViewModel.Current.ConfigPlatform);
                 LicensesService.SyncLicenses(licenses, Licenses);
                 Dependencies.Clear();
                 foreach (var dependency in template.Dependencies)

@@ -16,6 +16,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
         private bool _hasMoreThanTwo;
         private bool _showAddedText;
         private bool _canBeAdded;
+        private string _emptyBackendFramework = string.Empty;
 
         public ITemplateInfo Template { get; }
 
@@ -83,7 +84,7 @@ namespace Microsoft.Templates.UI.ViewModels.Common
             Order = template.GetDisplayOrder();
             IsHidden = template.GetIsHidden();
             StepConfig = template.GetStepConfig();
-            var dependencies = GenComposer.GetAllDependencies(template, frameworkName, platform);
+            var dependencies = GenComposer.GetAllDependencies(template, frameworkName, _emptyBackendFramework, platform);
             Dependencies = dependencies.Select(d => new TemplateInfoViewModel(d, frameworkName, platform));
             Licenses = template.GetLicenses().Select(l => new LicenseViewModel(l));
 

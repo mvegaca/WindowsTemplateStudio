@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
+using PS = System.Management.Automation;
 using System.Threading.Tasks;
 using Microsoft.Templates.Core;
 using OpenQA.Selenium.Appium.Windows;
@@ -281,13 +281,13 @@ if ($wad -ne $null)
             ExecutePowerShellScript(script);
         }
 
-        private Collection<PSObject> ExecutePowerShellScript(string script, bool outputOnError = false)
+        private Collection<PS.PSObject> ExecutePowerShellScript(string script, bool outputOnError = false)
         {
-            using (var ps = System.Management.Automation.PowerShell.Create())
+            using (var ps = PS.PowerShell.Create())
             {
                 ps.AddScript(script);
 
-                Collection<PSObject> psOutput = ps.Invoke();
+                Collection<PS.PSObject> psOutput = ps.Invoke();
 
                 if (ps.Streams.Error.Count > 0)
                 {
@@ -299,7 +299,7 @@ if ($wad -ne $null)
                     // Some things (such as failing test execution) report an error but we still want the full output
                     if (!outputOnError)
                     {
-                        throw new PSInvalidOperationException(ps.Streams.Error.First().ToString());
+                        throw new PS.PSInvalidOperationException(ps.Streams.Error.First().ToString());
                     }
                 }
 

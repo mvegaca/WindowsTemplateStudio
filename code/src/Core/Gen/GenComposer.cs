@@ -15,6 +15,8 @@ namespace Microsoft.Templates.Core.Gen
 {
     public class GenComposer
     {
+        private const string All = "all";
+
         public static IEnumerable<string> GetSupportedProjectTypes(string platform)
         {
             return GenContext.ToolBox.Repo.GetAll()
@@ -24,61 +26,110 @@ namespace Microsoft.Templates.Core.Gen
                 .Distinct();
         }
 
-        public static IEnumerable<string> GetSupportedFx(string projectType, string platform)
+        public static IEnumerable<SupportedFramework> GetSupportedFx(string projectType, string platform)
         {
-            return GenContext.ToolBox.Repo.GetAll()
-                .Where(t => t.GetTemplateType() == TemplateType.Project
-                                && t.GetProjectTypeList().Contains(projectType)
-                                && t.GetPlatform() == platform)
-                .SelectMany(t => t.GetFrameworkList())
-                .Distinct();
+            var filtered = GenContext.ToolBox.Repo.GetAll()
+                          .Where(t => t.GetTemplateType() == TemplateType.Project
+                          && t.GetProjectTypeList().Contains(projectType)
+                          && t.GetPlatform().Equals(platform, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            var result = new List<SupportedFramework>();
+            result.AddRange(filtered.SelectMany(t => t.GetFrontEndFrameworkList()).Select(name => new SupportedFramework(name, FrameworkTypes.FrontEnd)).ToList());
+            result.AddRange(filtered.SelectMany(t => t.GetBackEndFrameworkList()).Select(name => new SupportedFramework(name, FrameworkTypes.BackEnd)));
+            result = result.Distinct().ToList();
+
+            return result;
         }
 
-        public static IEnumerable<(LayoutItem Layout, ITemplateInfo Template)> GetLayoutTemplates(string projectType, string framework, string platform)
+        public static IEnumerable<ITemplateInfo> GetPages(string projectType, string platform, string frontEndFramework = null, string backEndFramework = null)
         {
-            var projectTemplate = GetProjectTemplate(projectType, framework, platform);
-            var layout = projectTemplate?.GetLayout();
+            return GetTemplateTypeInfo(projectType, platform, TemplateType.Page, frontEndFramework, backEndFramework);
+        }
 
-            foreach (var item in layout)
+        public static IEnumerable<ITemplateInfo> GetFeatures(string projectType, string platform, string frontEndFramework = null, string backEndFramework = null)
+        {
+            return GetTemplateTypeInfo(projectType, platform, TemplateType.Feature, frontEndFramework, backEndFramework);
+        }
+
+        private static IEnumerable<ITemplateInfo> GetTemplateTypeInfo(string projectType, string platform, TemplateType type, string frontEndFramework = null, string backEndFramework = null)
+        {
+            return GenContext.ToolBox.Repo.Get(t => t.GetTemplateType() == type
+               && (t.GetProjectTypeList().Contains(projectType) || t.GetProjectTypeList().Contains(All))
+               && t.GetPlatform().Equals(platform, StringComparison.OrdinalIgnoreCase)
+               && IsMatchFrontEnd(t, frontEndFramework)
+               && IsMatchBackEnd(t, backEndFramework)).ToList();
+        }
+
+        private static bool IsMatchFrontEnd(ITemplateInfo info, string frontEndFramework)
+        {
+            return string.IsNullOrEmpty(frontEndFramework)
+                    || info.GetFrontEndFrameworkList().Contains(frontEndFramework, StringComparer.OrdinalIgnoreCase)
+                    || info.GetFrontEndFrameworkList().Contains(All, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private static bool IsMatchBackEnd(ITemplateInfo info, string backEndFramework)
+        {
+            return string.IsNullOrEmpty(backEndFramework)
+                    || info.GetBackEndFrameworkList().Contains(backEndFramework, StringComparer.OrdinalIgnoreCase)
+                    || info.GetBackEndFrameworkList().Contains(All, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public static IEnumerable<LayoutInfo> GetLayoutTemplates(string projectType, string frontEndFramework, string backEndFramework, string platform)
+        {
+            var projectTemplate = GetProjectTemplate(projectType, frontEndFramework, backEndFramework, platform);
+            var layout = projectTemplate?
+                .GetLayout()
+                .Where(l => l.ProjectType == null || l.ProjectType.GetMultiValue().Contains(projectType));
+
+            if (layout != null)
             {
-                var template = GenContext.ToolBox.Repo.Find(t => t.GroupIdentity == item.TemplateGroupIdentity && t.GetFrameworkList().Contains(framework) && t.GetPlatform() == platform);
-
-                if (template == null)
+                foreach (var item in layout)
                 {
-                    LogOrAlertException(string.Format(StringRes.ErrorLayoutNotFound, item.TemplateGroupIdentity, framework, platform));
-                }
-                else
-                {
-                    var templateType = template.GetTemplateType();
+                    var template = GenContext.ToolBox.Repo.Find(t => t.GroupIdentity == item.TemplateGroupIdentity
+                                                            && IsMatchFrontEnd(t, frontEndFramework)
+                                                            && IsMatchBackEnd(t, backEndFramework)
+                                                            && t.GetPlatform() == platform);
 
-                    if (templateType != TemplateType.Page && templateType != TemplateType.Feature)
+                    if (template == null)
                     {
-                        LogOrAlertException(string.Format(StringRes.ErrorLayoutType, template.Identity));
+                        LogOrAlertException(string.Format(StringRes.ErrorLayoutNotFound, item.TemplateGroupIdentity, frontEndFramework, backEndFramework, platform));
                     }
                     else
                     {
-                        yield return (item, template);
+                        var templateType = template.GetTemplateType();
+
+                        if (templateType != TemplateType.Page && templateType != TemplateType.Feature)
+                        {
+                            LogOrAlertException(string.Format(StringRes.ErrorLayoutType, template.Identity));
+                        }
+                        else
+                        {
+                            yield return new LayoutInfo() { Layout = item, Template = template };
+                        }
                     }
                 }
             }
         }
 
-        public static IEnumerable<ITemplateInfo> GetAllDependencies(ITemplateInfo template, string framework, string platform)
+        public static IEnumerable<ITemplateInfo> GetAllDependencies(ITemplateInfo template, string frontEndFramework, string backEndFramework, string platform)
         {
-            return GetDependencies(template, framework, platform, new List<ITemplateInfo>());
+            return GetDependencies(template, frontEndFramework, backEndFramework, platform, new List<ITemplateInfo>());
         }
 
-        private static IEnumerable<ITemplateInfo> GetDependencies(ITemplateInfo template, string framework, string platform, IList<ITemplateInfo> dependencyList)
+        private static IEnumerable<ITemplateInfo> GetDependencies(ITemplateInfo template, string frontEndFramework, string backEndFramework, string platform, IList<ITemplateInfo> dependencyList)
         {
             var dependencies = template.GetDependencyList();
 
             foreach (var dependency in dependencies)
             {
-                var dependencyTemplate = GenContext.ToolBox.Repo.Find(t => t.Identity == dependency && t.GetFrameworkList().Contains(framework) && t.GetPlatform() == platform);
+                var dependencyTemplate = GenContext.ToolBox.Repo.Find(t => t.Identity == dependency
+                                                                     && IsMatchFrontEnd(t, frontEndFramework)
+                                                                     && IsMatchBackEnd(t, backEndFramework)
+                                                                     && t.GetPlatform() == platform);
 
                 if (dependencyTemplate == null)
                 {
-                    LogOrAlertException(string.Format(StringRes.ErrorDependencyNotFound, dependency, framework, platform));
+                    LogOrAlertException(string.Format(StringRes.ErrorDependencyNotFound, dependency, frontEndFramework, backEndFramework, platform));
                 }
                 else
                 {
@@ -103,7 +154,7 @@ namespace Microsoft.Templates.Core.Gen
                             dependencyList.Add(dependencyTemplate);
                         }
 
-                        GetDependencies(dependencyTemplate, framework, platform, dependencyList);
+                        GetDependencies(dependencyTemplate, frontEndFramework, backEndFramework, platform, dependencyList);
                     }
                 }
             }
@@ -115,7 +166,7 @@ namespace Microsoft.Templates.Core.Gen
         {
             var genQueue = new List<GenInfo>();
 
-            if (string.IsNullOrEmpty(userSelection.ProjectType) || string.IsNullOrEmpty(userSelection.Framework))
+            if (string.IsNullOrEmpty(userSelection.ProjectType) || string.IsNullOrEmpty(userSelection.FrontEndFramework))
             {
                 return genQueue;
             }
@@ -137,11 +188,11 @@ namespace Microsoft.Templates.Core.Gen
                     .ToList();
         }
 
-        public static IEnumerable<TemplateLicense> GetAllLicences(ITemplateInfo template, string framework, string platform)
+        public static IEnumerable<TemplateLicense> GetAllLicences(ITemplateInfo template, string frontEndFramework, string backEndFramework, string platform)
         {
             var templates = new List<ITemplateInfo>();
             templates.Add(template);
-            templates.AddRange(GetAllDependencies(template, framework, platform));
+            templates.AddRange(GetAllDependencies(template, frontEndFramework, backEndFramework, platform));
             return templates.SelectMany(s => s.GetLicenses())
                 .Distinct(new TemplateLicenseEqualityComparer())
                 .ToList();
@@ -151,7 +202,7 @@ namespace Microsoft.Templates.Core.Gen
         {
             var genQueue = new List<GenInfo>();
 
-            if (string.IsNullOrEmpty(userSelection.ProjectType) || string.IsNullOrEmpty(userSelection.Framework))
+            if (string.IsNullOrEmpty(userSelection.ProjectType) || string.IsNullOrEmpty(userSelection.FrontEndFramework))
             {
                 return genQueue;
             }
@@ -166,35 +217,37 @@ namespace Microsoft.Templates.Core.Gen
 
         private static void AddProject(UserSelection userSelection, List<GenInfo> genQueue)
         {
-            var projectTemplate = GetProjectTemplate(userSelection.ProjectType, userSelection.Framework, userSelection.Platform);
+            var projectTemplate = GetProjectTemplate(userSelection.ProjectType, userSelection.FrontEndFramework, userSelection.BackEndFramework, userSelection.Platform);
             var genProject = CreateGenInfo(GenContext.Current.ProjectName, projectTemplate, genQueue, false);
 
             genProject.Parameters.Add(GenParams.Username, Environment.UserName);
             genProject.Parameters.Add(GenParams.WizardVersion, string.Concat("v", GenContext.ToolBox.WizardVersion));
             genProject.Parameters.Add(GenParams.TemplatesVersion, string.Concat("v", GenContext.ToolBox.TemplatesVersion));
             genProject.Parameters.Add(GenParams.ProjectType, userSelection.ProjectType);
-            genProject.Parameters.Add(GenParams.Framework, userSelection.Framework);
+            genProject.Parameters.Add(GenParams.FrontEndFramework, userSelection.FrontEndFramework);
+            genProject.Parameters.Add(GenParams.BackEndFramework, userSelection.BackEndFramework);
             genProject.Parameters.Add(GenParams.Platform, userSelection.Platform);
             genProject.Parameters.Add(GenParams.ProjectName, GenContext.Current.ProjectName);
         }
 
-        private static ITemplateInfo GetProjectTemplate(string projectType, string framework, string platform)
+        private static ITemplateInfo GetProjectTemplate(string projectType, string frontEndFramework, string backEndFramework, string platform)
         {
             return GenContext.ToolBox.Repo
-                                    .Find(t => t.GetTemplateType() == TemplateType.Project
-                                            && t.GetProjectTypeList().Any(p => p == projectType)
-                                            && t.GetFrameworkList().Any(f => f == framework)
-                                            && t.GetPlatform() == platform);
+                                .Find(t => t.GetTemplateType() == TemplateType.Project
+                                            && t.GetProjectTypeList().Any(p => p.Equals(projectType, StringComparison.OrdinalIgnoreCase))
+                                            && IsMatchFrontEnd(t, frontEndFramework)
+                                            && IsMatchBackEnd(t, backEndFramework)
+                                            && t.GetPlatform().Equals(platform, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static void AddTemplates(IEnumerable<(string name, ITemplateInfo template)> templates, List<GenInfo> genQueue, UserSelection userSelection, bool newItemGeneration)
+        private static void AddTemplates(IEnumerable<TemplateInfo> templates, List<GenInfo> genQueue, UserSelection userSelection, bool newItemGeneration)
         {
             foreach (var selectionItem in templates)
             {
-                if (!genQueue.Any(t => t.Name == selectionItem.name && t.Template.Identity == selectionItem.template.Identity))
+                if (!genQueue.Any(t => t.Name == selectionItem.Name && t.Template.Identity == selectionItem.Template.Identity))
                 {
                     AddDependencyTemplates(selectionItem, genQueue, userSelection, newItemGeneration);
-                    var genInfo = CreateGenInfo(selectionItem.name, selectionItem.template, genQueue, newItemGeneration);
+                    var genInfo = CreateGenInfo(selectionItem.Name, selectionItem.Template, genQueue, newItemGeneration);
                     genInfo?.Parameters.Add(GenParams.HomePageName, userSelection.HomeName);
                     genInfo?.Parameters.Add(GenParams.ProjectName, GenContext.Current.ProjectName);
                     genInfo?.Parameters.Add(GenParams.Username, Environment.UserName);
@@ -211,19 +264,19 @@ namespace Microsoft.Templates.Core.Gen
             }
         }
 
-        private static void AddDependencyTemplates((string name, ITemplateInfo template) selectionItem, List<GenInfo> genQueue, UserSelection userSelection, bool newItemGeneration)
+        private static void AddDependencyTemplates(TemplateInfo selectionItem, List<GenInfo> genQueue, UserSelection userSelection, bool newItemGeneration)
         {
-            var dependencies = GetAllDependencies(selectionItem.template, userSelection.Framework, userSelection.Platform);
+            var dependencies = GetAllDependencies(selectionItem.Template, userSelection.FrontEndFramework, userSelection.BackEndFramework, userSelection.Platform);
 
             foreach (var dependencyItem in dependencies)
             {
-                var dependencyTemplate = userSelection.PagesAndFeatures.FirstOrDefault(f => f.template.Identity == dependencyItem.Identity);
+                var dependencyTemplate = userSelection.PagesAndFeatures.FirstOrDefault(f => f.Template.Identity == dependencyItem.Identity);
 
-                if (dependencyTemplate.template != null)
+                if (dependencyTemplate.Template != null)
                 {
-                    if (!genQueue.Any(t => t.Name == dependencyTemplate.name && t.Template.Identity == dependencyTemplate.template.Identity))
+                    if (!genQueue.Any(t => t.Name == dependencyTemplate.Name && t.Template.Identity == dependencyTemplate.Template.Identity))
                     {
-                        var depGenInfo = CreateGenInfo(dependencyTemplate.name, dependencyTemplate.template, genQueue, newItemGeneration);
+                        var depGenInfo = CreateGenInfo(dependencyTemplate.Name, dependencyTemplate.Template, genQueue, newItemGeneration);
                         depGenInfo?.Parameters.Add(GenParams.HomePageName, userSelection.HomeName);
                         depGenInfo?.Parameters.Add(GenParams.ProjectName, GenContext.Current.ProjectName);
                     }
@@ -238,13 +291,23 @@ namespace Microsoft.Templates.Core.Gen
         private static List<GenInfo> AddInCompositionTemplates(List<GenInfo> genQueue, UserSelection userSelection, bool newItemGeneration)
         {
             var compositionCatalog = GetCompositionCatalog(userSelection.Platform).ToList();
+
             var context = new QueryablePropertyDictionary
             {
                 new QueryableProperty("projecttype", userSelection.ProjectType),
-                new QueryableProperty("framework", userSelection.Framework),
-                new QueryableProperty("page", string.Join("|", userSelection.Pages.Select(p => p.template.Identity))),
-                new QueryableProperty("feature", string.Join("|", userSelection.Features.Select(p => p.template.Identity))),
+                new QueryableProperty("page", string.Join("|", userSelection.Pages.Select(p => p.Template.Identity))),
+                new QueryableProperty("feature", string.Join("|", userSelection.Features.Select(p => p.Template.Identity))),
             };
+
+            if (!string.IsNullOrEmpty(userSelection.FrontEndFramework))
+            {
+                context.Add(new QueryableProperty("frontendframework", userSelection.FrontEndFramework));
+            }
+
+            if (!string.IsNullOrEmpty(userSelection.BackEndFramework))
+            {
+                context.Add(new QueryableProperty("backendframework", userSelection.BackEndFramework));
+            }
 
             var combinedQueue = new List<GenInfo>();
 
@@ -255,10 +318,10 @@ namespace Microsoft.Templates.Core.Gen
 
                 foreach (var compositionItem in compositionCatalog)
                 {
-                    if (compositionItem.template.GetLanguage() == userSelection.Language
-                     && compositionItem.query.Match(genItem.Template, context))
+                    if (compositionItem.Template.GetLanguage() == userSelection.Language
+                     && compositionItem.Query.Match(genItem.Template, context))
                     {
-                        AddTemplate(genItem, compositionQueue, compositionItem.template, userSelection, newItemGeneration);
+                        AddTemplate(genItem, compositionQueue, compositionItem.Template, userSelection, newItemGeneration);
                     }
                 }
 
@@ -268,11 +331,11 @@ namespace Microsoft.Templates.Core.Gen
             return combinedQueue;
         }
 
-        private static IEnumerable<(CompositionQuery query, ITemplateInfo template)> GetCompositionCatalog(string platform)
+        private static IEnumerable<CompositionInfo> GetCompositionCatalog(string platform)
         {
             return GenContext.ToolBox.Repo
                                         .Get(t => t.GetTemplateType() == TemplateType.Composition && t.GetPlatform() == platform)
-                                        .Select(t => (CompositionQuery.Parse(t.GetCompositionFilter()), t))
+                                        .Select(t => new CompositionInfo() { Query = CompositionQuery.Parse(t.GetCompositionFilter()), Template = t })
                                         .ToList();
         }
 
@@ -282,7 +345,7 @@ namespace Microsoft.Templates.Core.Gen
             {
                 foreach (var export in targetTemplate.GetExports())
                 {
-                    mainGenInfo.Parameters.Add(export.name, export.value);
+                    mainGenInfo.Parameters.Add(export.Key, export.Value);
                 }
 
                 var genInfo = CreateGenInfo(mainGenInfo.Name, targetTemplate, queue, newItemGeneration);

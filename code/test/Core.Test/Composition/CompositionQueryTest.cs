@@ -15,28 +15,28 @@ namespace Microsoft.Templates.Core.Test.Composition
         [Fact]
         public void ParseInvalidQueries()
         {
-            var query1 = "wts.framework = framework & wts.type != Page&$name == Map";
+            var query1 = "wts.frontendframework = framework & wts.type != Page&$name == Map";
 
             Assert.Throws<InvalidCompositionQueryException>(() =>
             {
                var result = CompositionQuery.Parse(query1);
             });
 
-            var query2 = "wts.framework= framework &wts.type ! Page&$name != Map";
+            var query2 = "wts.frontendframework= framework &wts.type ! Page&$name != Map";
 
             Assert.Throws<InvalidCompositionQueryException>(() =>
             {
                 var result = CompositionQuery.Parse(query2);
             });
 
-            var query3 = "wts.framework==framework&wts.type!Page&$name == Map";
+            var query3 = "wts.frontendframework==framework&wts.type!Page&$name == Map";
 
             Assert.Throws<InvalidCompositionQueryException>(() =>
             {
                 var result = CompositionQuery.Parse(query3);
             });
 
-            var query4 = "wts.framework   == framework & wts.type=Page& $name == Map";
+            var query4 = "wts.frontendframework   == framework & wts.type=Page& $name == Map";
 
             Assert.Throws<InvalidCompositionQueryException>(() =>
             {
@@ -47,30 +47,30 @@ namespace Microsoft.Templates.Core.Test.Composition
         [Fact]
         public void Parse()
         {
-            var query = "wts.framework == framework & wts.type != Page&$name == Map";
+            var query = "wts.frontendframework == framework & wts.type != Page&$name == Map";
             var result = CompositionQuery.Parse(query);
 
             Assert.Collection(
                 result.Items,
                 r1 =>
                 {
-                    Assert.Equal(r1.Field, "wts.framework");
-                    Assert.Equal(r1.Operator, QueryOperator.Equals);
-                    Assert.Equal(r1.Value, "framework");
+                    Assert.Equal("wts.frontendframework", r1.Field);
+                    Assert.Equal(QueryOperator.Equals, r1.Operator);
+                    Assert.Equal("framework", r1.Value);
                     Assert.False(r1.IsContext);
                 },
                 r2 =>
                 {
-                    Assert.Equal(r2.Field, "wts.type");
-                    Assert.Equal(r2.Operator, QueryOperator.NotEquals);
-                    Assert.Equal(r2.Value, "Page");
+                    Assert.Equal("wts.type", r2.Field);
+                    Assert.Equal(QueryOperator.NotEquals, r2.Operator);
+                    Assert.Equal("Page", r2.Value);
                     Assert.False(r2.IsContext);
                 },
                 r3 =>
                 {
-                    Assert.Equal(r3.Field, "name");
-                    Assert.Equal(r3.Operator, QueryOperator.Equals);
-                    Assert.Equal(r3.Value, "Map");
+                    Assert.Equal("name", r3.Field);
+                    Assert.Equal(QueryOperator.Equals, r3.Operator);
+                    Assert.Equal("Map", r3.Value);
                     Assert.True(r3.IsContext);
                 });
         }
@@ -80,7 +80,7 @@ namespace Microsoft.Templates.Core.Test.Composition
         {
             var query = new string[]
             {
-                "wts.framework == framework",
+                "wts.frontendframework == framework",
                 "wts.type != Page",
                 "$name == Map",
             };
@@ -91,23 +91,23 @@ namespace Microsoft.Templates.Core.Test.Composition
                 result.Items,
                 r1 =>
                 {
-                    Assert.Equal(r1.Field, "wts.framework");
-                    Assert.Equal(r1.Operator, QueryOperator.Equals);
-                    Assert.Equal(r1.Value, "framework");
+                    Assert.Equal("wts.frontendframework", r1.Field);
+                    Assert.Equal(QueryOperator.Equals, r1.Operator);
+                    Assert.Equal("framework", r1.Value);
                     Assert.False(r1.IsContext);
                 },
                 r2 =>
                 {
-                    Assert.Equal(r2.Field, "wts.type");
-                    Assert.Equal(r2.Operator, QueryOperator.NotEquals);
-                    Assert.Equal(r2.Value, "Page");
+                    Assert.Equal("wts.type", r2.Field);
+                    Assert.Equal(QueryOperator.NotEquals, r2.Operator);
+                    Assert.Equal("Page", r2.Value);
                     Assert.False(r2.IsContext);
                 },
                 r3 =>
                 {
-                    Assert.Equal(r3.Field, "name");
-                    Assert.Equal(r3.Operator, QueryOperator.Equals);
-                    Assert.Equal(r3.Value, "Map");
+                    Assert.Equal("name", r3.Field);
+                    Assert.Equal(QueryOperator.Equals, r3.Operator);
+                    Assert.Equal("Map", r3.Value);
                     Assert.True(r3.IsContext);
                 });
         }
@@ -115,7 +115,7 @@ namespace Microsoft.Templates.Core.Test.Composition
         [Fact]
         public void Parse_NoValueInParam()
         {
-            var query = "wts.framework == framework & wts.type";
+            var query = "wts.frontendframework == framework & wts.type";
 
             Assert.Throws<InvalidCompositionQueryException>(() =>
             {

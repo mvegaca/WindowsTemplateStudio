@@ -33,6 +33,8 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private GenerationService _generationService = GenerationService.Instance;
 
+        private string _emptyBackendFramework = string.Empty;
+
         public TemplateType TemplateType { get; set; }
 
         public string ConfigPlatform { get; private set; }
@@ -87,13 +89,29 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         public override void ProcessItem(object item)
         {
+            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, _emptyBackendFramework, ConfigPlatform, Language) { HomeName = string.Empty };
+            var dependencies = GenComposer.GetAllDependencies(TemplateSelection.Template, ConfigFramework, _emptyBackendFramework, ConfigPlatform);
+            var templateInfo = new TemplateInfo { Name = TemplateSelection.Name, Template = TemplateSelection.Template };
+            userSelection.Add(templateInfo);
+
+            foreach (var dependencyTemplate in dependencies)
             if (item is TemplateInfoViewModel template)
             {
+                var dependencyTemplateInfo = new TemplateInfo { Name = dependencyTemplate.GetDefaultName(), Template = dependencyTemplate };
+                userSelection.Add(dependencyTemplateInfo);
                 TemplateSelection.SelectTemplate(template);
             }
         }
 
         public override bool IsSelectionEnabled(MetadataType metadataType) => true;
+
+        private UserSelection GetUserSelection()
+        {
+            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, _emptyBackendFramework, ConfigPlatform, Language);
+            var templateInfo = new TemplateInfo { Name = TemplateSelection.Name, Template = TemplateSelection.Template };
+            userSelection.Add(templateInfo);
+            return userSelection;
+        }
 
         protected override async Task OnTemplatesAvailableAsync()
         {
@@ -160,8 +178,12 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private void OnFinish(object sender, EventArgs e)
         {
-            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, ConfigPlatform, Language);
-            userSelection.Add((TemplateSelection.Name, TemplateSelection.Template));
+            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, _emptyBackendFramework, ConfigPlatform, Language);
+            userSelection.Add(new TemplateInfo()
+            {
+                Name = TemplateSelection.Name,
+                Template = TemplateSelection.Template,
+            });
             WizardShell.Current.Result = userSelection;
             WizardShell.Current.Result.ItemGenerationType = ChangesSummary.DoNotMerge ? ItemGenerationType.Generate : ItemGenerationType.GenerateAndMerge;
         }
@@ -176,12 +198,20 @@ namespace Microsoft.Templates.UI.ViewModels.NewItem
 
         private UserSelection CreateUserSelection()
         {
-            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, ConfigPlatform, Language) { HomeName = string.Empty };
-            var dependencies = GenComposer.GetAllDependencies(TemplateSelection.Template, ConfigFramework, ConfigPlatform);
-            userSelection.Add((TemplateSelection.Name, TemplateSelection.Template));
+            var userSelection = new UserSelection(ConfigProjectType, ConfigFramework, _emptyBackendFramework, ConfigPlatform, Language) { HomeName = string.Empty };
+            var dependencies = GenComposer.GetAllDependencies(TemplateSelection.Template, ConfigFramework, _emptyBackendFramework, ConfigPlatform);
+            userSelection.Add(new TemplateInfo()
+            {
+                Name = TemplateSelection.Name,
+                Template = TemplateSelection.Template,
+            });
             foreach (var dependencyTemplate in dependencies)
             {
-                userSelection.Add((dependencyTemplate.GetDefaultName(), dependencyTemplate));
+                userSelection.Add(new TemplateInfo()
+                {
+                    Name = dependencyTemplate.GetDefaultName(),
+                    Template = dependencyTemplate,
+                });
             }
 
             return userSelection;
