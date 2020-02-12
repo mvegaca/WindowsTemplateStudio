@@ -220,14 +220,5 @@ namespace Param_RootNamespace.Core.Services
                 return false;
             }
         }
-
-        private void ConfigureCache(MsalCacheHelper cacheHelper)
-        {
-            if (cacheHelper != null)
-            {
-                // https://aka.ms/msal-net-token-cache-serialization
-                cacheHelper.RegisterCache(_client.UserTokenCache);
-            }
-        }
     }
 }

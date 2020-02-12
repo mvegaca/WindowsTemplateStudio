@@ -74,8 +74,8 @@ namespace Param_RootNamespace.ViewModels
             var userMenuItem = OptionMenuItems.OfType<HamburgerMenuImageItem>().FirstOrDefault();
             if (userMenuItem != null)
             {
-                userMenuItem.Thumbnail = user.Photo;
                 userMenuItem.Label = user.Name;
+                userMenuItem.Thumbnail = user.Photo;
             }
         }
 
