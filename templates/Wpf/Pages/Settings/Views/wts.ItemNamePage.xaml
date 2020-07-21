@@ -35,7 +35,7 @@
                     <TextBlock
                         Style="{StaticResource BodyTextStyle}"
                         Text="{x:Static properties:Resources.wts.ItemNamePageChooseThemeText}" />
-                    <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                    <StackPanel Margin="{StaticResource XSmallTopMargin}">                        
                         <RadioButton
                             GroupName="AppTheme"
                             Content="{x:Static properties:Resources.wts.ItemNamePageRadioButtonLightTheme}"
@@ -56,6 +56,18 @@
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Checked">
                                     <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
+                        <RadioButton
+                            GroupName="AppTheme"
+                            Content="{x:Static properties:Resources.wts.ItemNamePageRadioButtonWindowsDefaultTheme}"
+                            FontSize="{StaticResource MediumFontSize}"
+                            Margin="{StaticResource XSmallTopMargin}"
+                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Default" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </RadioButton>

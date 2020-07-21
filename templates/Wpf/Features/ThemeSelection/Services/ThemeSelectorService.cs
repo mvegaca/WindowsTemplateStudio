@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using ControlzEx.Theming;
-using Microsoft.Win32;
 using Param_RootNamespace.Contracts.Services;
 using Param_RootNamespace.Models;
 
@@ -14,56 +13,61 @@ namespace Param_RootNamespace.Services
 
         public ThemeSelectorService()
         {
-            SystemEvents.UserPreferenceChanging += OnUserPreferenceChanging;
+            ThemeManager.Current.ThemeChanged += OnThemeChanged;
         }
 
-        public bool SetTheme(AppTheme? theme = null)
+        public void InitializeTheme()
         {
             if (IsHighContrastActive)
             {
-                // TODO WTS: Set high contrast theme
-                // You can add custom themes following the docs on https://mahapps.com/docs/themes/thememanager
-            }
-            else if (theme == null)
-            {
-                if (App.Current.Properties.Contains("Theme"))
-                {
-                    // Read saved theme from properties
-                    var themeName = App.Current.Properties["Theme"].ToString();
-                    theme = (AppTheme)Enum.Parse(typeof(AppTheme), themeName);
-                }
-                else
-                {
-                    // Set default theme
-                    theme = AppTheme.Light;
-                }
+                SetHighContrastTheme();
+                return;
             }
 
-            var currentTheme = ThemeManager.Current.DetectTheme(Application.Current);
-            if (currentTheme == null || currentTheme.Name != theme.ToString())
+            var theme = GetCurrentTheme();
+            SetTheme(theme);
+        }
+
+        public void SetTheme(AppTheme theme)
+        {
+            if (theme == AppTheme.Default)
             {
+                ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncAll;
+                ThemeManager.Current.SyncTheme();
+            }
+            else
+            {
+                ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithHighContrast;
                 ThemeManager.Current.ChangeTheme(Application.Current, $"{theme}.Blue");
-                App.Current.Properties["Theme"] = theme.ToString();
-                return true;
             }
 
-            return false;
+            App.Current.Properties["Theme"] = theme.ToString();
         }
 
         public AppTheme GetCurrentTheme()
         {
-            var themeName = App.Current.Properties["Theme"]?.ToString();
-            Enum.TryParse(themeName, out AppTheme theme);
-            return theme;
+            if (App.Current.Properties.Contains("Theme"))
+            {
+                var themeName = App.Current.Properties["Theme"].ToString();
+                Enum.TryParse(themeName, out AppTheme theme);
+                return theme;
+            }
+
+            return AppTheme.Default;
         }
 
-        private void OnUserPreferenceChanging(object sender, UserPreferenceChangingEventArgs e)
+        private void OnThemeChanged(object sender, ThemeChangedEventArgs e)
         {
-            if (e.Category == UserPreferenceCategory.Color ||
-                e.Category == UserPreferenceCategory.VisualStyle)
+            if (e.NewTheme.IsHighContrast)
             {
-                SetTheme();
+                SetHighContrastTheme();
             }
+        }
+
+        private void SetHighContrastTheme()
+        {
+            // TODO WTS: Set high contrast theme
+            // You can add custom themes following the docs on https://mahapps.com/docs/themes/thememanager
         }
     }
 }

@@ -48,6 +48,15 @@
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Light.
+        /// </summary>
+        public static string wts.ItemNamePageRadioButtonLightTheme {
+            get {
+                return ResourceManager.GetString("wts.ItemNamePageRadioButtonLightTheme", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Dark.
         /// </summary>
         public static string wts.ItemNamePageRadioButtonDarkTheme {
@@ -57,11 +66,12 @@
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to Light.
+        ///   Looks up a localized string similar to Windows default.
         /// </summary>
-        public static string wts.ItemNamePageRadioButtonLightTheme {
+        public static string wts.ItemNamePageRadioButtonWindowsDefaultTheme
+        {
             get {
-                return ResourceManager.GetString("wts.ItemNamePageRadioButtonLightTheme", resourceCulture);
+                return ResourceManager.GetString("wts.ItemNamePageRadioButtonWindowsDefaultTheme", resourceCulture);
             }
         }
 //}]}

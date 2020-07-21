@@ -16,11 +16,14 @@
     <data name="wts.ItemNamePagePrivacyStatementText" xml:space="preserve">
         <value>Privacy Statement</value>
     </data>
+  <data name="wts.ItemNamePageRadioButtonLightTheme" xml:space="preserve">
+        <value>Light</value>
+    </data>
     <data name="wts.ItemNamePageRadioButtonDarkTheme" xml:space="preserve">
         <value>Dark</value>
     </data>
-    <data name="wts.ItemNamePageRadioButtonLightTheme" xml:space="preserve">
-        <value>Light</value>
+  <data name="wts.ItemNamePageRadioButtonWindowsDefaultTheme" xml:space="preserve">
+        <value>Windows default</value>
     </data>
 <!--}]}-->
 </root>
