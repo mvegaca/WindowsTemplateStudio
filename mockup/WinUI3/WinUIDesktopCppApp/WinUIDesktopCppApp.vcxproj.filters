@@ -4,7 +4,9 @@
     <ApplicationDefinition Include="App.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainWindow.xaml" />
+    <Page Include="ShellWindow.xaml">
+      <Filter>Views</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl" />
@@ -20,6 +22,9 @@
   <ItemGroup>
     <Filter Include="Assets">
       <UniqueIdentifier>{e48dc53e-40b1-40cb-970a-f89935452892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Views">
+      <UniqueIdentifier>{bde63b17-f5c0-4ad1-b526-ff86b9b86622}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

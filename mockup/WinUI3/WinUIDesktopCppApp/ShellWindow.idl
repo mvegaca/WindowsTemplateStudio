@@ -1,9 +1,9 @@
 namespace WinUIDesktopCppApp
 {
     [default_interface]
-    runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+    runtimeclass ShellWindow : Microsoft.UI.Xaml.Window
     {
-        MainWindow();
+        ShellWindow();
         Int32 MyProperty;
     }
 }

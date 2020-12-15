@@ -105,13 +105,16 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="MainWindow.xaml.h">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <ClInclude Include="ShellWindow.xaml.h">
+      <DependentUpon>ShellWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
-    <Page Include="MainWindow.xaml" />
+    <Page Include="ShellWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -120,19 +123,20 @@
     <ClCompile Include="App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="MainWindow.xaml.cpp">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-    </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="ShellWindow.xaml.cpp">
+      <DependentUpon>ShellWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl">
       <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
     </Midl>
-    <Midl Include="MainWindow.idl">
+    <Midl Include="ShellWindow.idl">
+      <DependentUpon>ShellWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
-      <DependentUpon>MainWindow.xaml</DependentUpon>
     </Midl>
   </ItemGroup>
   <ItemGroup>
