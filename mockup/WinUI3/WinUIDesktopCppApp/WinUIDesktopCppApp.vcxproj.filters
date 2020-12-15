@@ -7,6 +7,9 @@
     <Page Include="ShellWindow.xaml">
       <Filter>Views</Filter>
     </Page>
+    <Page Include="MainPage.xaml">
+      <Filter>Views</Filter>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl" />
@@ -15,9 +18,15 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="NavigationService.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="NavigationService.h">
+      <Filter>Services</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Assets">
@@ -25,6 +34,9 @@
     </Filter>
     <Filter Include="Views">
       <UniqueIdentifier>{bde63b17-f5c0-4ad1-b526-ff86b9b86622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Services">
+      <UniqueIdentifier>{0fcd17ad-a569-455e-ba2d-a994a3cb98fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,5 @@ namespace WinUIDesktopCppApp
     runtimeclass ShellWindow : Microsoft.UI.Xaml.Window
     {
         ShellWindow();
-        Int32 MyProperty;
     }
 }

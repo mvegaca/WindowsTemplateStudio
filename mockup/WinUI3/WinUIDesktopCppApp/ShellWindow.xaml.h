@@ -6,10 +6,7 @@ namespace winrt::WinUIDesktopCppApp::implementation
 {
     struct ShellWindow : ShellWindowT<ShellWindow>
     {
-        ShellWindow();
-
-        int32_t MyProperty();
-        void MyProperty(int32_t value);
+        ShellWindow();        
     };
 }
 

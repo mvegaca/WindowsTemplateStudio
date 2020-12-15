@@ -4,6 +4,7 @@
 #undef GetCurrentTime
 
 #include "App.xaml.g.h"
+#include "NavigationService.h"
 
 #pragma pop_macro("GetCurrentTime")
 
