@@ -10,5 +10,11 @@
         "templateGroupIdentity": "wts.WinUI.Feat.MSIXPackaging",
         "readonly": "true",
         "projecttype": "SplitView"
+    },
+    {
+        "name": "UWP",
+        "templateGroupIdentity": "wts.WinUI.Pack.UWP",
+        "readonly": "true",
+        "projecttype": "SplitView"
     }
 ]

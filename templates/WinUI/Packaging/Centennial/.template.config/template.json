@@ -1,0 +1,37 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "Universal" ],
+  "name": "Centennial",
+  "shortName": "Centennial",
+  "groupIdentity": "wts.WinUI.Pack.Centennial",
+  "identity": "wts.WinUI.Pack.Centennial",
+  "description": "",
+  "tags": {
+    "language": "C#",
+    "type": "item",
+    "wts.type": "packaging",
+    "wts.projecttype": "all",
+    "wts.frontendframework": "all",
+    "wts.platform": "WinUI",
+    "wts.version": "1.0.0",
+    "wts.displayOrder": "1",
+    "wts.isGroupExclusiveSelection": "true",
+    "wts.defaultInstance": "Centennial",
+    "wts.multipleInstance": "false",
+    "wts.rightClickEnabled": "false",
+    "wts.outputToParent": "false"
+  },
+  "sourceName": "wts.ItemName",
+  "preferNameDirectory": true,
+  "PrimaryOutputs": [
+  ],
+  "symbols": {
+    "wts.projectName":
+    {
+      "type": "parameter",
+      "replaces": "Param_ProjectName",
+      "fileRename": "Param_ProjectName"
+    }
+  }
+}
