@@ -26,6 +26,7 @@ namespace Microsoft.Templates.VsEmulator.Main
         private string _platform;
         private string _language;
         private string _time;
+        private string _packaging;
         private GenerationService _generationService = GenerationService.Instance;
         private Visibility _isAddNewPageCommandVisible;
         private Visibility _isAddNewFeatureCommandVisible;
@@ -136,6 +137,12 @@ namespace Microsoft.Templates.VsEmulator.Main
             set => SetProperty(ref _time, value);
         }
 
+        public string Packaging
+        {
+            get => _packaging;
+            set => SetProperty(ref _packaging, value);
+        }
+
         public GeneratedProjectInfo()
         {
             OpenInVsCommand = new RelayCommand(OpenInVs);
@@ -163,7 +170,7 @@ namespace Microsoft.Templates.VsEmulator.Main
             GenerationOutputPath = destinationPath;
         }
 
-        public void SetProjectData(string projectType, string framework, string platform, string language, bool useStyleCop)
+        public void SetProjectData(string projectType, string framework, string platform, string language, bool useStyleCop, string packaging = null)
         {
             ProjectType = projectType;
             Framework = framework;
@@ -171,6 +178,7 @@ namespace Microsoft.Templates.VsEmulator.Main
             Language = language;
             StyleCopTextVisibility = useStyleCop ? Visibility.Visible : Visibility.Collapsed;
             Time = DateTime.Now.ToShortTimeString();
+            Packaging = packaging;
         }
 
         public void SetContextInfo()

@@ -86,6 +86,7 @@
       <Link>GlobalSuppressions.cs</Link>
     </Compile>
     <Compile Include="CommandLineOptions.cs" />
+    <Compile Include="Converters\StringVisibilityConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="GlobalSuppressions1.cs" />
     <Compile Include="LoadProject\LoadProjectView.xaml.cs">

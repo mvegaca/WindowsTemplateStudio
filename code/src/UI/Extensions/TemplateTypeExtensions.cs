@@ -13,6 +13,7 @@ namespace Microsoft.Templates.UI.Extensions
         private const string _newProjectStepFeatures = "04Features";
         private const string _newProjectStepServices = "05Services";
         private const string _newProjectStepTests = "06Tests";
+        private const string _newProjectStepPackaging = "07Packaging";
 
         public static string GetNewProjectStepId(this TemplateType templateType)
         {
@@ -26,6 +27,8 @@ namespace Microsoft.Templates.UI.Extensions
                     return _newProjectStepServices;
                 case TemplateType.Testing:
                     return _newProjectStepTests;
+                case TemplateType.Packaging:
+                    return _newProjectStepPackaging;
                 default:
                     return string.Empty;
             }
@@ -43,6 +46,8 @@ namespace Microsoft.Templates.UI.Extensions
                     return StringRes.NewProjectStepServices;
                 case TemplateType.Testing:
                     return StringRes.NewProjectStepTesting;
+                case TemplateType.Packaging:
+                    return StringRes.NewProjectStepPackaging;
                 default:
                     return string.Empty;
             }
@@ -60,6 +65,8 @@ namespace Microsoft.Templates.UI.Extensions
                     return StringRes.AddServiceTitle;
                 case TemplateType.Testing:
                     return StringRes.AddTestingTitle;
+                case TemplateType.Packaging:
+                    return StringRes.AddPackagingTitle;
                 default:
                     return string.Empty;
             }

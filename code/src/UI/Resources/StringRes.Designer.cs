@@ -169,6 +169,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose packaging.
+        /// </summary>
+        public static string AddPackagingTitle {
+            get {
+                return ResourceManager.GetString("AddPackagingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add pages.
         /// </summary>
         public static string AddPagesTitle {
@@ -811,6 +820,15 @@ namespace Microsoft.Templates.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Packaging.
+        /// </summary>
+        public static string NewProjectStepPackaging {
+            get {
+                return ResourceManager.GetString("NewProjectStepPackaging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pages.
         /// </summary>
         public static string NewProjectStepPages {
@@ -1212,6 +1230,15 @@ namespace Microsoft.Templates.UI.Resources {
         public static string ProjectDetailsLicensesSectionTitle {
             get {
                 return ResourceManager.GetString("ProjectDetailsLicensesSectionTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Packaging.
+        /// </summary>
+        public static string ProjectDetailsPackagingSectionTitle {
+            get {
+                return ResourceManager.GetString("ProjectDetailsPackagingSectionTitle", resourceCulture);
             }
         }
         

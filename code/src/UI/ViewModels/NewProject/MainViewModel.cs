@@ -213,6 +213,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             await BuildStepViewModelAsync(TemplateType.Feature);
             await BuildStepViewModelAsync(TemplateType.Service);
             await BuildStepViewModelAsync(TemplateType.Testing);
+            await BuildStepViewModelAsync(TemplateType.Packaging);
             await UserSelection.InitializeAsync(ProjectType.Selected.Name, Framework.Selected.Name, Platform, Language);
             WizardStatus.IsLoading = false;
         }

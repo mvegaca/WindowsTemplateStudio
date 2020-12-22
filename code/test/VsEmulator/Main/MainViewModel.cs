@@ -235,7 +235,8 @@ namespace Microsoft.Templates.VsEmulator.Main
                         }
                         await _generationService.GenerateProjectAsync(userSelection);
                         GenContext.ToolBox.Shell.ShowStatusBarMessage("Project created!!!");
-                        newProject.SetProjectData(userSelection.ProjectType, userSelection.FrontEndFramework, platform, language, UseStyleCop);
+                        var packaging = platform == Platforms.WinUI ? userSelection.Packaging.First().Name : null;
+                        newProject.SetProjectData(userSelection.ProjectType, userSelection.FrontEndFramework, platform, language, UseStyleCop, packaging);
                         newProject.SetContextInfo();
                         Projects.Insert(0, newProject);
                     }
@@ -273,7 +274,8 @@ namespace Microsoft.Templates.VsEmulator.Main
                     }
                     await _generationService.GenerateProjectAsync(userSelection);
                     GenContext.ToolBox.Shell.ShowStatusBarMessage("Project created!!!");
-                    newProject.SetProjectData(userSelection.ProjectType, userSelection.FrontEndFramework, userSelection.Platform, userSelection.Language, UseStyleCop);
+                    var packaging = userSelection.Platform == Platforms.WinUI ? userSelection.Packaging.First().Name : null;
+                    newProject.SetProjectData(userSelection.ProjectType, userSelection.FrontEndFramework, userSelection.Platform, userSelection.Language, UseStyleCop, packaging);
                     newProject.SetContextInfo();
                     Projects.Insert(0, newProject);
                     return userSelection;

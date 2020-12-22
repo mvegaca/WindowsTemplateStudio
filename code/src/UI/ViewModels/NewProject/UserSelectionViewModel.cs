@@ -47,6 +47,7 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
             Groups.Add(new UserSelectionGroup(TemplateType.Feature, StringRes.ProjectDetailsFeaturesSectionTitle));
             Groups.Add(new UserSelectionGroup(TemplateType.Service, StringRes.ProjectDetailsServicesSectionTitle));
             Groups.Add(new UserSelectionGroup(TemplateType.Testing, StringRes.ProjectDetailsTestingSectionTitle));
+            Groups.Add(new UserSelectionGroup(TemplateType.Packaging, StringRes.ProjectDetailsPackagingSectionTitle));
         }
 
         public async Task InitializeAsync(string projectTypeName, string frameworkName, string platform, string language)
@@ -193,6 +194,9 @@ namespace Microsoft.Templates.UI.ViewModels.NewProject
 
             var tests = Groups.First(g => g.TemplateType == TemplateType.Testing).Items;
             selection.Testing.AddRange(tests.Select(i => i.ToUserSelectionItem()));
+
+            var packaging = Groups.First(g => g.TemplateType == TemplateType.Packaging).Items;
+            selection.Packaging.AddRange(packaging.Select(i => i.ToUserSelectionItem()));
             return selection;
         }
 

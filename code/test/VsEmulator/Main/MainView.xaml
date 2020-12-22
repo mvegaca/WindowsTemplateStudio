@@ -12,6 +12,7 @@
 
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:StringVisibilityConverter x:Key="StringVisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -172,6 +173,10 @@
                                 <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                     <TextBlock Text="Framework: " Style="{StaticResource Label1}" />
                                     <TextBlock Text="{Binding Framework}" Style="{StaticResource Label1}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,4,0,0" Visibility="{Binding Packaging, Converter={StaticResource StringVisibilityConverter}}">
+                                    <TextBlock Text="Packaging: " Style="{StaticResource Label1}" />
+                                    <TextBlock Text="{Binding Packaging}" Style="{StaticResource Label1}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
                                     <TextBlock Text="Time: " Style="{StaticResource Label1}" />

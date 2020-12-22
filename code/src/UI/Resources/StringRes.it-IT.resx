@@ -912,4 +912,13 @@ Verifica il seguente elenco di pacchetti necessario al codice del progetto e agg
     <value>Could not open project overview.</value>
     <comment>Error message for unable to open project overview dialog</comment>
   </data>
+  <data name="NewProjectStepPackaging" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
+  <data name="AddPackagingTitle" xml:space="preserve">
+    <value>Choose packaging</value>
+  </data>
+  <data name="ProjectDetailsPackagingSectionTitle" xml:space="preserve">
+    <value>Packaging</value>
+  </data>
 </root>
