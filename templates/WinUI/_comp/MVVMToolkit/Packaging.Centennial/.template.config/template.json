@@ -1,0 +1,28 @@
+﻿{
+    "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft Community",
+    "classifications": [
+      "Universal"
+    ],
+    "name": "wts.WinUI.MVVMToolkit.Packaging.Centennial",
+    "shortName": "wts.WinUI.MVVMToolkit.Packaging.Centennial",
+    "identity": "wts.WinUI.MVVMToolkit.Packaging.Centennial",
+    "tags": {
+    "language": "C#",
+    "type": "item",
+    "wts.type": "composition",
+    "wts.platform": "WinUI",
+    "wts.version": "1.0.0",
+    "wts.compositionFilter": "$frontendframework == MVVMToolkit & wts.type == project & $packaging == wts.WinUI.Pack.Centennial"
+  },
+    "sourceName": "wts.ItemName",
+    "preferNameDirectory": true,
+    "PrimaryOutputs": [
+    ],
+    "symbols": {
+      "wts.rootNamespace": {
+        "type": "parameter",
+        "replaces": "Param_RootNamespace"
+      }
+    }
+  }

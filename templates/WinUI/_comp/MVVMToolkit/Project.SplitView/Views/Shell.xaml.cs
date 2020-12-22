@@ -1,14 +1,12 @@
-﻿using Microsoft.UI.Xaml;
-using Param_RootNamespace.Contracts.Views;
-using Param_RootNamespace.ViewModels;
+﻿using Param_RootNamespace.ViewModels;
 
 namespace Param_RootNamespace.Views
 {
-    public sealed partial class ShellWindow : Window, IShellWindow
+    public sealed partial class Shell : SHELL_TYPE
     {
         public ShellViewModel ViewModel { get; }
 
-        public ShellWindow(ShellViewModel viewModel)
+        public Shell(ShellViewModel viewModel)
         {
             ViewModel = viewModel;
             InitializeComponent();

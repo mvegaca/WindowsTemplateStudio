@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Param_RootNamespace.Activation;
 using Param_RootNamespace.Contracts.Services;
-using Param_RootNamespace.Contracts.Views;
 
 namespace Param_RootNamespace.Services
 {
@@ -14,9 +13,8 @@ namespace Param_RootNamespace.Services
         private readonly IEnumerable<IActivationHandler> _activationHandlers;
         private readonly INavigationService _navigationService;
 
-        public ActivationService(IShellWindow shellWindow, ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService)
+        public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService)
         {
-            App.MainWindow = shellWindow as Window;
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
             _navigationService = navigationService;
@@ -27,8 +25,6 @@ namespace Param_RootNamespace.Services
             // Initialize services that you need before app activation
             // take into account that the splash screen is shown while this code runs.
             await InitializeAsync();
-
-            App.MainWindow.Activate();
 
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
             // will navigate to the first page
