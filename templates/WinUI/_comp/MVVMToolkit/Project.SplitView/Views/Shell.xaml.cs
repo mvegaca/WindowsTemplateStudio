@@ -8,7 +8,6 @@ namespace Param_RootNamespace.Views
 
         public Shell(ShellViewModel viewModel)
         {
-            Title = "AppDisplayName".GetLocalized();
             ViewModel = viewModel;
             InitializeComponent();
             ViewModel.NavigationService.Frame = shellFrame;
