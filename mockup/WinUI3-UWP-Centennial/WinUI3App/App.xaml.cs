@@ -15,7 +15,26 @@ namespace WinUI3App
 {
     public partial class App : Application
     {
-        public static Window MainWindow { get; set; }
+#if CENTENNIAL
+        private static Window _mainWindow;
+#endif
+        public static Window MainWindow
+        {
+            get
+            {
+#if CENTENNIAL
+                return _mainWindow;
+#else
+                return Window.Current;
+#endif
+            }
+#if CENTENNIAL
+            set
+            {
+                _mainWindow = value;
+            }
+#endif
+        }
 
         public App()
         {

@@ -19,7 +19,9 @@ namespace WinUI3App.Services
 
         public ActivationService(IShellWindow shellWindow, ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService, IThemeSelectorService themeSelectorService)
         {
+#if USING_CSWINRT
             App.MainWindow = shellWindow as Window;
+#endif
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
             _navigationService = navigationService;
