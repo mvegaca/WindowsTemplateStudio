@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
 
 using WinUI3App.Activation;
 using WinUI3App.Contracts.Services;
-using WinUI3App.Contracts.Views;
+using WinUI3App.Helpers;
+using WinUI3App.Views;
 
 namespace WinUI3App.Services
 {
@@ -17,11 +18,8 @@ namespace WinUI3App.Services
         private readonly INavigationService _navigationService;
         private readonly IThemeSelectorService _themeSelectorService;
 
-        public ActivationService(IShellWindow shellWindow, ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService, IThemeSelectorService themeSelectorService)
+        public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService, IThemeSelectorService themeSelectorService)
         {
-#if USING_CSWINRT
-            App.MainWindow = shellWindow as Window;
-#endif
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
             _navigationService = navigationService;
@@ -30,31 +28,41 @@ namespace WinUI3App.Services
 
         public async Task ActivateAsync(object activationArgs)
         {
-            // Initialize services that you need before app activation
-            // take into account that the splash screen is shown while this code runs.
-            await InitializeAsync();
+            if (IsInteractive(activationArgs))
+            {
+                // Initialize services that you need before app activation
+                // take into account that the splash screen is shown while this code runs.
+                await InitializeAsync();
 
-            App.MainWindow.Activate();
+                if (App.MainWindow.Content == null)
+                {
+                    App.MainWindow.Content = Ioc.Default.GetService<ShellPage>();
+                }
+            }
 
             // Depending on activationArgs one of ActivationHandlers or DefaultActivationHandler
             // will navigate to the first page
             await HandleActivationAsync(activationArgs);
+            if (IsInteractive(activationArgs))
+            {
+                // Ensure the current window is active
+                App.MainWindow.Activate();
 
-            // Tasks after activation
-            await StartupAsync();
+                // Tasks after activation
+                await StartupAsync();
+            }
         }
 
         private async Task HandleActivationAsync(object activationArgs)
         {
             var activationHandler = _activationHandlers
                                                 .FirstOrDefault(h => h.CanHandle(activationArgs));
-
             if (activationHandler != null)
             {
                 await activationHandler.HandleAsync(activationArgs);
             }
 
-            if (_defaultHandler.CanHandle(activationArgs))
+            if (IsInteractive(activationArgs) && _defaultHandler.CanHandle(activationArgs))
             {
                 await _defaultHandler.HandleAsync(activationArgs);
             }
@@ -70,6 +78,20 @@ namespace WinUI3App.Services
         {
             await _themeSelectorService.SetRequestedThemeAsync();
             await Task.CompletedTask;
+        }
+
+        private bool IsInteractive(object args)
+        {
+#if CENTENNIAL
+            return true;
+#else
+            if (args is LaunchActivatedEventArgs launchArgs)
+            {
+                return launchArgs.UWPLaunchActivatedEventArgs is Windows.ApplicationModel.Activation.IActivatedEventArgs;
+            }
+
+            return false;
+#endif
         }
     }
 }

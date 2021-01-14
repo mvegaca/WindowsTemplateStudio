@@ -3,23 +3,21 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.18362.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
-    <RootNamespace>WinUI3App</RootNamespace>    
-    <!--
-    UWP VALUES
-    <WindowsAppContainer>true</WindowsAppContainer>
-    -->    
-    <!--
-    CENTENNIAL VALUES
-    -->
-    <DefineConstants>CENTENNIAL</DefineConstants>
-    <WindowsAppContainer>false</WindowsAppContainer>
-    
+    <RootNamespace>WinUI3App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
-    
-    
+    <!--
+    Set this to 'false' if you want your app to launch as a Win32 application.
+    Set this to 'true' if you want your app to launch as a UWP application.
+    -->
+    <WindowsAppContainer>true</WindowsAppContainer>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(WindowsAppContainer)'=='false'">
+    <DefineConstants>CENTENNIAL</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>

@@ -1,5 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
 using WinUI3App.Contracts.Services;
@@ -20,12 +19,6 @@ namespace WinUI3App.Services
         {
             get
             {
-                if (_frame == null)
-                {
-                    _frame = Window.Current.Content as Frame;
-                    RegisterFrameEvents();
-                }
-
                 return _frame;
             }
 

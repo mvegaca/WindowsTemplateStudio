@@ -4,7 +4,7 @@ using Microsoft.UI.Xaml;
 
 using WinUI3App.Activation;
 using WinUI3App.Contracts.Services;
-using WinUI3App.Contracts.Views;
+using WinUI3App.Helpers;
 using WinUI3App.Services;
 using WinUI3App.ViewModels;
 using WinUI3App.Views;
@@ -16,25 +16,10 @@ namespace WinUI3App
     public partial class App : Application
     {
 #if CENTENNIAL
-        private static Window _mainWindow;
-#endif
-        public static Window MainWindow
-        {
-            get
-            {
-#if CENTENNIAL
-                return _mainWindow;
+        public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };
 #else
-                return Window.Current;
+        public static Window MainWindow => Window.Current;
 #endif
-            }
-#if CENTENNIAL
-            set
-            {
-                _mainWindow = value;
-            }
-#endif
-        }
 
         public App()
         {
@@ -85,7 +70,7 @@ namespace WinUI3App
             // Core Services
 
             // Views and ViewModels
-            services.AddTransient<IShellWindow, ShellWindow>();
+            services.AddTransient<ShellPage>();
             services.AddTransient<ShellViewModel>();
 
             services.AddTransient<MainViewModel>();
