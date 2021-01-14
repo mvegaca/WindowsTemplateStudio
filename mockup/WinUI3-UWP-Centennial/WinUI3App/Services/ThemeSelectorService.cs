@@ -36,12 +36,26 @@ namespace WinUI3App.Services
 
         public async Task SetRequestedThemeAsync()
         {
+#if CENTENNIAL
+            InternalSetRequestedTheme();
+            await Task.CompletedTask;
+#else
+            await App.MainWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                InternalSetRequestedTheme();
+            });
+#endif
+
+#if !CENTENNIAL
+#endif
+        }
+
+        private void InternalSetRequestedTheme()
+        {
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = Theme;
             }
-
-            await Task.CompletedTask;
         }
 
         private async Task<ElementTheme> LoadThemeFromSettingsAsync()
