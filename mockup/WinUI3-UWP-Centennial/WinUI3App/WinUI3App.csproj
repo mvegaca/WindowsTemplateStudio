@@ -11,7 +11,7 @@
     Set this to 'false' if you want your app to launch as a Win32 application.
     Set this to 'true' if you want your app to launch as a UWP application.
     -->
-    <WindowsAppContainer>true</WindowsAppContainer>
+    <WindowsAppContainer>false</WindowsAppContainer>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(WindowsAppContainer)'=='false'">
@@ -27,6 +27,7 @@
     <PackageReference Include="Microsoft.VCRTForwarders.140" Version="1.0.6" />
     <PackageReference Include="Microsoft.WinUI" Version="3.0.0-preview3.201113.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="2.0.3-rc4" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.78" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WinUI3App.Core\WinUI3App.Core.csproj" />

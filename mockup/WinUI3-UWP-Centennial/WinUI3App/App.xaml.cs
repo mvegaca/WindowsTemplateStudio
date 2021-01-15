@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Runtime.InteropServices;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
-
+using WinRT;
 using WinUI3App.Activation;
 using WinUI3App.Contracts.Services;
 using WinUI3App.Helpers;
@@ -16,7 +17,14 @@ namespace WinUI3App
     public partial class App : Application
     {
 #if CENTENNIAL
-        public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };
+        [ComImport]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
+        internal interface IWindowNative { System.IntPtr WindowHandle { get; } }
+
+        public System.IntPtr WindowHandle { get; private set; }
+
+        public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };        
 #else
         public static Window MainWindow => Window.Current;
 #endif
@@ -38,6 +46,9 @@ namespace WinUI3App
             base.OnLaunched(args);
             var activationService = Ioc.Default.GetService<IActivationService>();
             await activationService.ActivateAsync(args);
+#if CENTENNIAL
+            WindowHandle = MainWindow.As<IWindowNative>().WindowHandle;
+#endif
         }
 
         protected override async void OnActivated(Windows.ApplicationModel.Activation.IActivatedEventArgs args)
@@ -78,6 +89,6 @@ namespace WinUI3App
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             return services.BuildServiceProvider();
-        }
+        }        
     }
 }

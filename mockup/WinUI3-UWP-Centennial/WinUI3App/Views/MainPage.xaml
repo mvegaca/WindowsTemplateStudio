@@ -8,12 +8,31 @@
     Style="{StaticResource PageStyle}">
 
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <!--
-                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content.
-                Place your content here.
-            -->
-        </Grid>
+        <StackPanel>
+            <TextBlock
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="Win32 exclusive features" />
+            <Button
+                Margin="0,12,0,0"
+                Content="Show the content of path C:/"
+                Command="{x:Bind ViewModel.ShowContentInFolderCommand}" />
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <Button
+                    Content="Minimize"
+                    Command="{x:Bind ViewModel.MinimizeCommand}" />
+                <Button
+                    Margin="12,0,0,0"
+                    Content="Maximize"
+                    Command="{x:Bind ViewModel.MaximizeCommand}" />
+                <Button
+                    Margin="12,0,0,0"
+                    Content="Restore"
+                    Command="{x:Bind ViewModel.RestoreCommand}" />
+                <Button
+                    Margin="12,0,0,0"
+                    Content="Send to bottom"
+                    Command="{x:Bind ViewModel.SendToBottomCommand}" />
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>
