@@ -58,6 +58,13 @@ namespace WinUI3App
             await activationService.ActivateAsync(args);
         }
 
+        protected override async void OnBackgroundActivated(Windows.ApplicationModel.Activation.BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+            var activationService = Ioc.Default.GetService<IActivationService>();
+            await activationService.ActivateAsync(args);
+        }
+
         private void OnSuspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
         {
         }
@@ -68,6 +75,7 @@ namespace WinUI3App
 
             // Default Activation Handler
             services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+            services.AddTransient<IActivationHandler, BackgroundTaskActivationHandler>();
 
             // Other Activation Handlers
 
@@ -77,6 +85,7 @@ namespace WinUI3App
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IBackgroundTaskService, BackgroundTaskService>();
 
             // Core Services
 
@@ -89,6 +98,6 @@ namespace WinUI3App
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
             return services.BuildServiceProvider();
-        }        
+        }
     }
 }

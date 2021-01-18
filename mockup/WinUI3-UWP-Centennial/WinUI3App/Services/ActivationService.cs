@@ -17,13 +17,15 @@ namespace WinUI3App.Services
         private readonly IEnumerable<IActivationHandler> _activationHandlers;
         private readonly INavigationService _navigationService;
         private readonly IThemeSelectorService _themeSelectorService;
+        private readonly IBackgroundTaskService _backgroundTaskService;
 
-        public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService, IThemeSelectorService themeSelectorService)
+        public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, INavigationService navigationService, IThemeSelectorService themeSelectorService, IBackgroundTaskService backgroundTaskService)
         {
             _defaultHandler = defaultHandler;
             _activationHandlers = activationHandlers;
             _navigationService = navigationService;
             _themeSelectorService = themeSelectorService;
+            _backgroundTaskService = backgroundTaskService;
         }
 
         public async Task ActivateAsync(object activationArgs)
@@ -70,7 +72,10 @@ namespace WinUI3App.Services
 
         private async Task InitializeAsync()
         {
-            await _themeSelectorService.InitializeAsync().ConfigureAwait(false);
+#if !CENTENNIAL
+            await _backgroundTaskService.RegisterBackgroundTasksAsync().ConfigureAwait(false);
+#endif
+            await _themeSelectorService.InitializeAsync().ConfigureAwait(false);            
             await Task.CompletedTask;
         }
 
