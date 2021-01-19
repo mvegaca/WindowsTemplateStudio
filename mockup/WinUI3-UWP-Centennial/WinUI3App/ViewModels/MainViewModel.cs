@@ -5,19 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.Input;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Popups;
+using WinUI3App.Contracts.Services;
+using WinUI3App.Contracts.ViewModels;
+using WinUI3App.Helpers;
 
 namespace WinUI3App.ViewModels
 {
-    public class MainViewModel : ObservableRecipient
+    public class MainViewModel : ObservableRecipient, INavigationAware
     {
+        private readonly ISuspendAndResumeService _suspendAndResumeService;
+        private string _data;
         private ICommand _showContentInFolderCommand;
         private ICommand _minimizeCommand;
         private ICommand _maximizeCommand;
         private ICommand _restoreCommand;
         private ICommand _sendToBottomCommand;
+
+        public string Data
+        {
+            get => _data;
+            set => SetProperty(ref _data, value);
+        }
 
         public ICommand ShowContentInFolderCommand => _showContentInFolderCommand ?? (_showContentInFolderCommand = new AsyncRelayCommand(OnShowContentInFolder));
 
@@ -31,7 +43,10 @@ namespace WinUI3App.ViewModels
 
         public MainViewModel()
         {
-        }        
+#if !CENTENNIAL
+            _suspendAndResumeService = Ioc.Default.GetService<ISuspendAndResumeService>();
+#endif
+        }
 
         private async Task OnShowContentInFolder()
         {
@@ -132,5 +147,33 @@ namespace WinUI3App.ViewModels
             var dialog = new MessageDialog("This feature is exclusive for Win32 Apps") { Title = "Packaging error" };
             await dialog.ShowAsync();
         }
+
+        public void OnNavigatedTo(object parameter)
+        {
+#if !CENTENNIAL
+            _suspendAndResumeService.OnBackgroundEntering += OnBackgroundEntering;
+            _suspendAndResumeService.OnDataRestored += OnDataRestored;
+#endif
+        }
+
+        public void OnNavigatedFrom()
+        {
+#if !CENTENNIAL
+            _suspendAndResumeService.OnBackgroundEntering -= OnBackgroundEntering;
+            _suspendAndResumeService.OnDataRestored -= OnDataRestored;
+#endif
+        }
+
+#if !CENTENNIAL
+        private void OnBackgroundEntering(object sender, SuspendAndResumeArgs e)
+        {
+            e.SuspensionState.Data = Data;
+        }
+
+        private void OnDataRestored(object sender, SuspendAndResumeArgs e)
+        {
+            Data = e.SuspensionState.Data?.ToString();
+        }
+#endif
     }
 }

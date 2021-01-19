@@ -33,6 +33,17 @@
                     Content="Send to bottom"
                     Command="{x:Bind ViewModel.SendToBottomCommand}" />
             </StackPanel>
+            <TextBlock
+                Margin="0,24,0,0"
+                Style="{StaticResource SubtitleTextBlockStyle}"
+                Text="UWP exclusive features" />
+            <TextBlock
+                Margin="0,12,0,0"
+                Style="{StaticResource BodyTextBlockStyle}"
+                Text="The text in the following TextBox will be saved and restored on suspend and resume lifecycle events." />
+            <TextBox
+                Margin="0,12,0,0"
+                Text="{x:Bind ViewModel.Data, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </Page>

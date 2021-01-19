@@ -19,9 +19,14 @@ namespace WinUI3App.Services
         {
             get
             {
+                if (_frame == null)
+                {
+                    _frame = App.MainWindow.Content as Frame;
+                    RegisterFrameEvents();
+                }
+
                 return _frame;
             }
-
             set
             {
                 UnregisterFrameEvents();

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Windows.ApplicationModel;
 using WinRT;
 using WinUI3App.Activation;
 using WinUI3App.Contracts.Services;
@@ -24,7 +25,7 @@ namespace WinUI3App
 
         public System.IntPtr WindowHandle { get; private set; }
 
-        public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };        
+        public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };
 #else
         public static Window MainWindow => Window.Current;
 #endif
@@ -32,7 +33,11 @@ namespace WinUI3App
         public App()
         {
             InitializeComponent();
+#if !CENTENNIAL
+            EnteredBackground += App_EnteredBackground;
+            Resuming += App_Resuming;
             Suspending += OnSuspending;
+#endif
             UnhandledException += App_UnhandledException;
             Ioc.Default.ConfigureServices(ConfigureServices());
         }
@@ -75,7 +80,10 @@ namespace WinUI3App
 
             // Default Activation Handler
             services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+#if !CENTENNIAL
             services.AddTransient<IActivationHandler, BackgroundTaskActivationHandler>();
+            services.AddTransient<IActivationHandler, SuspendAndResumeActivationHandler>();
+#endif
 
             // Other Activation Handlers
 
@@ -85,7 +93,10 @@ namespace WinUI3App
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
+#if !CENTENNIAL
             services.AddSingleton<IBackgroundTaskService, BackgroundTaskService>();
+            services.AddSingleton<ISuspendAndResumeService, SuspendAndResumeService>();
+#endif
 
             // Core Services
 
@@ -99,5 +110,21 @@ namespace WinUI3App
             services.AddTransient<SettingsPage>();
             return services.BuildServiceProvider();
         }
+
+#if !CENTENNIAL
+        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+        {
+            var deferral = e.GetDeferral();
+            var suspendAndResumeService = Ioc.Default.GetService<ISuspendAndResumeService>();
+            await suspendAndResumeService.SaveStateAsync();
+            deferral.Complete();
+        }
+
+        private void App_Resuming(object sender, object e)
+        {
+            var suspendAndResumeService = Ioc.Default.GetService<ISuspendAndResumeService>();
+            suspendAndResumeService.ResumeApp();
+        }
+#endif
     }
 }
