@@ -36,7 +36,7 @@ namespace WinUI3App.Services
 
         public async Task SetRequestedThemeAsync()
         {
-#if CENTENNIAL
+#if Win32
             InternalSetRequestedTheme();
             await Task.CompletedTask;
 #else
@@ -46,7 +46,7 @@ namespace WinUI3App.Services
             });
 #endif
 
-#if !CENTENNIAL
+#if UWP
 #endif
         }
 

@@ -1,8 +1,10 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.System;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.UI.Xaml;
-using Windows.ApplicationModel;
 using WinRT;
 using WinUI3App.Activation;
 using WinUI3App.Contracts.Services;
@@ -17,7 +19,7 @@ namespace WinUI3App
 {
     public partial class App : Application
     {
-#if CENTENNIAL
+#if Win32
         [ComImport]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         [Guid("EECDBF0E-BAE9-4CB6-A68E-9598E1CB57BB")]
@@ -33,7 +35,7 @@ namespace WinUI3App
         public App()
         {
             InitializeComponent();
-#if !CENTENNIAL
+#if UWP
             EnteredBackground += App_EnteredBackground;
             Resuming += App_Resuming;
             Suspending += OnSuspending;
@@ -42,7 +44,7 @@ namespace WinUI3App
             Ioc.Default.ConfigureServices(ConfigureServices());
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
         {
         }
 
@@ -50,8 +52,23 @@ namespace WinUI3App
         {
             base.OnLaunched(args);
             var activationService = Ioc.Default.GetService<IActivationService>();
+#if Win32
+            // https://docs.microsoft.com/windows/uwp/design/shell/tiles-and-notifications/send-local-toast
+            ToastNotificationManagerCompat.OnActivated += async (toastArgs) =>
+            {
+                // This fails because we should handle thread sync using a dispatcher
+                await activationService.ActivateAsync(toastArgs.Argument);
+            };
+
+            if (ToastNotificationManagerCompat.WasCurrentProcessToastActivated())
+            {
+                // ToastNotificationActivator code will run after this completes and will show a window if necessary.
+                return;
+            }
+#endif
+
             await activationService.ActivateAsync(args);
-#if CENTENNIAL
+#if Win32
             WindowHandle = MainWindow.As<IWindowNative>().WindowHandle;
 #endif
         }
@@ -80,9 +97,10 @@ namespace WinUI3App
 
             // Default Activation Handler
             services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
-#if !CENTENNIAL
+            services.AddTransient<IActivationHandler, ToastNotificationsActivationHandler>();
+#if UWP
             services.AddTransient<IActivationHandler, BackgroundTaskActivationHandler>();
-            services.AddTransient<IActivationHandler, SuspendAndResumeActivationHandler>();
+            services.AddTransient<IActivationHandler, SuspendAndResumeActivationHandler>();            
 #endif
 
             // Other Activation Handlers
@@ -93,9 +111,10 @@ namespace WinUI3App
             services.AddSingleton<IActivationService, ActivationService>();
             services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
-#if !CENTENNIAL
+            services.AddSingleton<IToastNotificationsService, ToastNotificationsService>();
+#if UWP
             services.AddSingleton<IBackgroundTaskService, BackgroundTaskService>();
-            services.AddSingleton<ISuspendAndResumeService, SuspendAndResumeService>();
+            services.AddSingleton<ISuspendAndResumeService, SuspendAndResumeService>();            
 #endif
 
             // Core Services
@@ -111,8 +130,8 @@ namespace WinUI3App
             return services.BuildServiceProvider();
         }
 
-#if !CENTENNIAL
-        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
+#if UWP
+        private async void App_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             var deferral = e.GetDeferral();
             var suspendAndResumeService = Ioc.Default.GetService<ISuspendAndResumeService>();

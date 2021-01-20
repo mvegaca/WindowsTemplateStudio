@@ -19,7 +19,7 @@ namespace WinUI3App.Services
         private readonly IEnumerable<IActivationHandler> _activationHandlers;
         private readonly INavigationService _navigationService;
         private readonly IThemeSelectorService _themeSelectorService;
-#if !CENTENNIAL
+#if UWP
         private readonly IBackgroundTaskService _backgroundTaskService;
         private readonly ISuspendAndResumeService _suspendAndResumeService;
 #endif
@@ -30,7 +30,7 @@ namespace WinUI3App.Services
             _activationHandlers = activationHandlers;
             _navigationService = navigationService;
             _themeSelectorService = themeSelectorService;
-#if !CENTENNIAL
+#if UWP
             _backgroundTaskService = Ioc.Default.GetService<IBackgroundTaskService>();
             _suspendAndResumeService = Ioc.Default.GetService<ISuspendAndResumeService>();
 #endif
@@ -56,7 +56,7 @@ namespace WinUI3App.Services
             await HandleActivationAsync(activationArgs);
             if (IsInteractive(activationArgs))
             {
-#if !CENTENNIAL
+#if UWP
                 var launchActivation = activationArgs as LaunchActivatedEventArgs;
                 var activation = launchActivation.UWPLaunchActivatedEventArgs as Windows.ApplicationModel.Activation.IActivatedEventArgs;
                 if (activation.PreviousExecutionState == Windows.ApplicationModel.Activation.ApplicationExecutionState.Terminated)
@@ -90,7 +90,7 @@ namespace WinUI3App.Services
 
         private async Task InitializeAsync()
         {
-#if !CENTENNIAL
+#if UWP
             await _backgroundTaskService.RegisterBackgroundTasksAsync().ConfigureAwait(false);
 #endif
             await _themeSelectorService.InitializeAsync().ConfigureAwait(false);
@@ -105,7 +105,7 @@ namespace WinUI3App.Services
 
         private bool IsInteractive(object args)
         {
-#if CENTENNIAL
+#if Win32
             return true;
 #else
             if (args is LaunchActivatedEventArgs launchArgs)
