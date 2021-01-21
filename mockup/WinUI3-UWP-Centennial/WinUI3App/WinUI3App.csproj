@@ -11,11 +11,14 @@
     Set this to 'false' if you want your app to launch as a Win32 application.
     Set this to 'true' if you want your app to launch as a UWP application.
     -->
-    <WindowsAppContainer>true</WindowsAppContainer>
+    <WindowsAppContainer>false</WindowsAppContainer>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(WindowsAppContainer)'=='false'">
-    <DefineConstants>CENTENNIAL</DefineConstants>
+    <DefineConstants>Win32</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(WindowsAppContainer)'=='true'">
+    <DefineConstants>UWP</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

@@ -15,7 +15,7 @@ namespace WinUI3App
 {
     public partial class App : Application
     {
-#if CENTENNIAL
+#if Win32
         public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };
 #else
         public static Window MainWindow => Window.Current;

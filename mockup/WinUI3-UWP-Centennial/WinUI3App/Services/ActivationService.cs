@@ -3,16 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.DependencyInjection;
 using Microsoft.UI.Xaml;
-
+using Microsoft.UI.Xaml.Controls;
 using WinUI3App.Activation;
 using WinUI3App.Contracts.Services;
-using WinUI3App.Helpers;
 using WinUI3App.Views;
 
 namespace WinUI3App.Services
 {
     public class ActivationService : IActivationService
     {
+    	private UIElement _shell = null;
         private readonly ActivationHandler<LaunchActivatedEventArgs> _defaultHandler;
         private readonly IEnumerable<IActivationHandler> _activationHandlers;
         private readonly INavigationService _navigationService;
@@ -36,7 +36,8 @@ namespace WinUI3App.Services
 
                 if (App.MainWindow.Content == null)
                 {
-                    App.MainWindow.Content = Ioc.Default.GetService<ShellPage>();
+                    _shell = Ioc.Default.GetService<ShellPage>();
+                    App.MainWindow.Content = _shell ?? new Frame();
                 }
             }
 
@@ -82,7 +83,7 @@ namespace WinUI3App.Services
 
         private bool IsInteractive(object args)
         {
-#if CENTENNIAL
+#if Win32
             return true;
 #else
             if (args is LaunchActivatedEventArgs launchArgs)
