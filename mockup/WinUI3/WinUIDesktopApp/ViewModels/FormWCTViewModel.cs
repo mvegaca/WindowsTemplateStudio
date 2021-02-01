@@ -142,18 +142,8 @@ namespace WinUIDesktopApp.ViewModels
 
         private async void Submit()
         {
-            // TODO: Validate property errors in all of these properties
-            // OrderID
-            // OrderDate
-            // OrderTime
-            // Company
-            // Symbol
-            // OrderTotal
-            // Freight
-            // Status
-            // ShipperName
-            // ShipperPhone
-            // ShipTo
+            ValidateAllProperties();
+
             if (HasErrors)
             {
                 return;
@@ -173,20 +163,19 @@ namespace WinUIDesktopApp.ViewModels
                 SymbolCode = Symbol
             });
 
-            // TODO: Set default values and clean all erros in all of these properties
-            // OrderID
-            // OrderDate
-            // OrderTime
-            // Company
-            // Symbol
-            // OrderTotal
-            // Freight
-            // Status
-            // ShipperName
-            // ShipperPhone
-            // ShipTo
-
-            // TODO Clean all erros
+            // Set default values
+            OrderID = default;
+            OrderDate = DateTime.Now;
+            OrderTime = DateTime.Now.TimeOfDay;
+            ShipperName = string.Empty;
+            ShipperPhone = string.Empty;
+            Company = string.Empty;
+            ShipTo = string.Empty;
+            OrderTotal = default;
+            Freight = default;
+            Status = StatusValues.First();
+            Symbol = SymbolValues.First();
+            ClearErrors();
         }
 
         public static ValidationResult ValidateDoubleProperty(string property)
