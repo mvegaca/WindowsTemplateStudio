@@ -6,7 +6,13 @@ namespace Param_RootNamespace
 {
     public partial class App : Application
     {
-        public static Window MainWindow { get; set; } = new Window() { Title = "AppDisplayName".GetLocalized() };
+//-:cnd:noEmit
+#if Win32
+        public static readonly Window MainWindow = new Window() { Title = "AppDisplayName".GetLocalized() };
+#else
+        public static Window MainWindow => Window.Current;
+#endif
+//+:cnd:noEmit
 
         public App()
         {

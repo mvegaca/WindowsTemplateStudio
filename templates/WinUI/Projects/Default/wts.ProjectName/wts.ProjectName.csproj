@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<!--/-:msbuild-conditional:noEmit -->
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.18362.0</TargetFramework>
@@ -8,7 +9,19 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <!--
+    Set this to 'false' if you want your app to launch as a Win32 application.
+    Set this to 'true' if you want your app to launch as a UWP application.
+    -->
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(WindowsAppContainer)'=='false'">
+    <DefineConstants>Win32</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(WindowsAppContainer)'=='true'">
+    <DefineConstants>UWP</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
@@ -16,3 +29,4 @@
     <PRIResource Include="Strings\en-us\Resources.resw" />
   </ItemGroup>
 </Project>
+<!--/+:msbuild-conditional:noEmit -->

@@ -1,0 +1,30 @@
+﻿{
+    "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft Community",
+    "classifications": [
+      "Universal"
+    ],
+    "name": "wts.WinUI.AppModel.WindowsAppContainer.Desktop",
+    "shortName": "wts.WinUI.AppModel.WindowsAppContainer.Desktop",
+    "identity": "wts.WinUI.AppModel.WindowsAppContainer.Desktop",
+    "tags": {
+    "language": "C#",
+    "type": "item",
+    "wts.type": "composition",
+    "wts.platform": "WinUI",
+    "wts.appmodel": "Desktop",
+    "wts.version": "1.0.0",
+    "wts.compositionFilter": "wts.type == project"
+  },
+    "sourceName": "wts.ItemName",
+    "preferNameDirectory": true,
+    "PrimaryOutputs": [
+    ],
+    "symbols": {
+      "wts.projectName": {
+        "type": "parameter",
+        "replaces": "Param_ProjectName",
+        "fileRename": "Param_ProjectName"
+      }
+    }
+  }

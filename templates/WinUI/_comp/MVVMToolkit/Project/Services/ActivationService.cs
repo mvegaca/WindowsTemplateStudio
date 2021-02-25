@@ -63,7 +63,7 @@ namespace Param_RootNamespace.Services
                 await activationHandler.HandleAsync(activationArgs);
             }
 
-            if (_defaultHandler.CanHandle(activationArgs))
+            if (IsInteractive(activationArgs) && _defaultHandler.CanHandle(activationArgs))
             {
                 await _defaultHandler.HandleAsync(activationArgs);
             }
@@ -81,7 +81,18 @@ namespace Param_RootNamespace.Services
 
         private bool IsInteractive(object args)
         {
+//-:cnd:noEmit
+#if Win32
             return true;
+#else
+            if (args is LaunchActivatedEventArgs launchArgs)
+            {
+                return launchArgs.UWPLaunchActivatedEventArgs is Windows.ApplicationModel.Activation.IActivatedEventArgs;
+            }
+
+            return false;
+#endif
+//+:cnd:noEmit
         }
     }
 }

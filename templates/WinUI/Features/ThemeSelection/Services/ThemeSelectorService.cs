@@ -30,12 +30,25 @@ namespace Param_RootNamespace.Services
 
         public async Task SetRequestedThemeAsync()
         {
+//-:cnd:noEmit
+#if Win32
+            InternalSetRequestedTheme();
+            await Task.CompletedTask;
+#else
+            await App.MainWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                InternalSetRequestedTheme();
+            });
+#endif
+//+:cnd:noEmit
+        }
+
+        private void InternalSetRequestedTheme()
+        {
             if (App.MainWindow.Content is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = Theme;
             }
-
-            await Task.CompletedTask;
         }
 
         private async Task<ElementTheme> LoadThemeFromSettingsAsync()

@@ -1,0 +1,10 @@
+﻿  <PropertyGroup>
+    <!--
+    Set this to 'false' if you want your app to launch as a Win32 application.
+    Set this to 'true' if you want your app to launch as a UWP application.
+    -->
+<!--^^-->
+<!--{[{-->
+    <WindowsAppContainer>true</WindowsAppContainer>
+<!--}]}-->
+  </PropertyGroup>
