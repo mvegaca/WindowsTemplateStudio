@@ -25,7 +25,6 @@
 
             <converters:HasItemsVisibilityConverter x:Key="HasItemsVisibilityConverter"/>
             <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
-            <!--<utilities:BrushToColorConverter x:Key="BrushToColorConverter"/>-->
         </ResourceDictionary>
     </Page.Resources>
 
@@ -100,7 +99,6 @@
                     Orientation="Horizontal"
                     Margin="{StaticResource Margin_M_Top}"
                     Visibility="{Binding Deprecated, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <!--theming:ImageThemingUtilities.ImageBackgroundColor="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}, AncestorLevel=2}, Converter={StaticResource BrushToColorConverter}}"-->
                     <!--<imaging:CrispImage
                         Style="{StaticResource WtsCrispImageTemplateDetailsDeprecatedIcon}"
                         Moniker="{x:Static catalog:KnownMonikers.StatusWarning}" />-->
