@@ -43,18 +43,10 @@
                     Grid.Row="1"
                     Text="{Binding Title}"
                     Style="{StaticResource WtsTextBlockCardTitle}" />
-                <StackPanel
+                <controls:WarningImageControl
                     Grid.Row="2"
-                    Orientation="Horizontal"
                     Margin="{StaticResource Margin_XS_TopBottom}"
-                    Visibility="{Binding Deprecated, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <!--<imaging:CrispImage
-                        Style="{StaticResource WtsCrispImageCardDeprecatedIcon}"
-                        Moniker="{x:Static catalog:KnownMonikers.StatusWarning}" />-->
-                    <TextBlock
-                        Text="{x:Static res:StringRes.DeprecatedMessage}" 
-                        Style="{StaticResource WtsTextBlockCardDeprecatedMessage}"/>
-                </StackPanel>
+                    Visibility="{Binding Deprecated, Converter={StaticResource BoolToVisibilityConverter}}" />
                 <TextBlock
                     Grid.Row="3"
                     Text="{Binding Summary}"

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Microsoft.Templates.UI.Services
 {
@@ -19,6 +20,9 @@ namespace Microsoft.Templates.UI.Services
             _stylesProvider.ThemeChanged += StylesProvider_ThemeChanged;
             SetStyles();
         }
+
+        public UserControl GetWarningImageControl()
+            => _stylesProvider.GetWarningImageControl();
 
         public void UnsubscribeEventHandlers()
         {

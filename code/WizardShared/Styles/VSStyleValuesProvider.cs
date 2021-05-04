@@ -4,8 +4,9 @@
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
-
+using Microsoft.Templates.UI.UserControls;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 
@@ -140,5 +141,8 @@ namespace Microsoft.Templates.UI.Services
 
             throw new Exception($"The style is not valid.");
         }
+
+        public override UserControl GetWarningImageControl()
+            => new WarningImageControl();
     }
 }

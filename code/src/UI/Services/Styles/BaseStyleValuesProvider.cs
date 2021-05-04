@@ -4,6 +4,7 @@
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Microsoft.Templates.UI.Services
@@ -17,6 +18,8 @@ namespace Microsoft.Templates.UI.Services
         public abstract Style GetStyle(object resourceKey);
 
         public abstract double GetFontSize(string fontSizeResourceKey);
+
+        public abstract UserControl GetWarningImageControl();
 
         public abstract FontFamily GetFontFamily();
 

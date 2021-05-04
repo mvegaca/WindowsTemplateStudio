@@ -12,6 +12,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Styles\VSStyleValuesProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Styles\WindowsTemplateStudioColors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Threading\SafeThreading.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UserControls\WarningImageControl.xaml.cs">
+      <DependentUpon>WarningImageControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)VisualStudio\IPackageInstallerService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VisualStudio\RightClickActions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VisualStudio\RightClickAvailability.cs" />
@@ -30,5 +33,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)VisualStudio\VsTelemetryProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VisualStudio\VSTelemetryService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VisualStudio\WizardLauncher.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)UserControls\WarningImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>
